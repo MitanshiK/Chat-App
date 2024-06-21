@@ -1,0 +1,3 @@
+class DataModel{
+ String? id;
+}
