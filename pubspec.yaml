@@ -59,6 +59,18 @@ dependencies:
   dio: ^5.4.3+1            #download media
   permission_handler: ^11.3.1  #download media
   downloads_path_provider_28: ^0.1.2   #download media
+  audioplayers: ^6.0.0
+  flutter_sound_record: ^3.3.2
+  just_audio: ^0.9.38
+  device_info_plus: ^10.1.0
+  # flutter_sound: ^9.6.0
+  # record: ^5.0.4
+  # voice_message_package: ^2.2.1
+  # get: ^4.6.6
+  # sizer: ^2.0.15
+  # audioplayers: ^6.0.0
+  # record_mp3: ^3.0.0
+
 
   
   

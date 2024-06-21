@@ -21,6 +21,8 @@ import 'package:proj/push_notif/push_noti_services.dart';
 import 'package:proj/realtime_db/save.dart';
 import 'package:proj/register.dart';
 import 'package:proj/screen.dart';
+import 'package:proj/storage/aaa.dart';
+import 'package:proj/storage/audio_player.dart';
 import 'package:proj/storage/download_from_storage.dart';
 import 'package:proj/storage/strorage.dart';
 import 'package:proj/video_picker.dart';
@@ -90,10 +92,12 @@ void  main() async {
    
    if(userModel!=null){
    runApp(
-    MyAppLoggedIn(
-      firebaseUser:currentUser,
-      userModel: userModel,
-    ));
+RecordAud()
+    // MyAppLoggedIn(
+    //   firebaseUser:currentUser,
+    //   userModel: userModel,
+    // )
+    );
    }else{
      runApp(const MyApp());
    }
