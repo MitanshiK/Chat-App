@@ -19,7 +19,7 @@ class SendMedia extends StatefulWidget {
       required this.chatRoom,
       required this.userModel,
       required this.type});
-  PlatformFile mediaToSend;
+  dynamic  mediaToSend;                       // PlatformFile mediaToSend;
   ChatRoomModel chatRoom;
   UserModel userModel;
   String type;
@@ -40,6 +40,10 @@ class _SendMediaState extends State<SendMedia> {
           VideoPlayerController.file(File(widget.mediaToSend.path!));
       _initializeVideoPlayerFuture = videoController!.initialize();
     }
+    if(widget.type== "audio"){
+      print("audio reached to sending class");
+      sendMedia();
+    }
     super.initState();
   }
 
@@ -50,7 +54,7 @@ class _SendMediaState extends State<SendMedia> {
         backgroundColor: Colors.black,
       ),
       backgroundColor: Colors.black,
-      body: Center(
+      body: Center(               // shows preview od media
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -108,7 +112,7 @@ class _SendMediaState extends State<SendMedia> {
       floatingActionButton: IconButton(
           onPressed: () {
             Navigator.pop(context);
-            sendImage();
+            sendMedia();
           },
           icon: const Icon(
             Icons.send,
@@ -118,16 +122,28 @@ class _SendMediaState extends State<SendMedia> {
     );
   }
 
-  void sendImage() async {
+  void sendMedia() async {
     late MediaModel newMessage;
+late final result;
 
     if (widget.mediaToSend != "") {
-      final result = await FirebaseStorage.instance
+      
+      if(widget.type=="audio"){
+ result = await FirebaseStorage.instance
+          .ref("AllSharedMedia")
+          .child(widget.chatRoom.chatRoomId.toString())
+          .child("sharedMedia")
+          .child(uuid.v1())
+          .putFile(File(widget.mediaToSend));
+      }
+      else{
+       result = await FirebaseStorage.instance
           .ref("AllSharedMedia")
           .child(widget.chatRoom.chatRoomId.toString())
           .child("sharedMedia")
           .child(uuid.v1())
           .putFile(File(widget.mediaToSend.path!));
+      }
 
       // getting the download link of image uploaded in storage
       String? mediaUrl = await result.ref.getDownloadURL();
@@ -147,7 +163,18 @@ class _SendMediaState extends State<SendMedia> {
             fileUrl: mediaUrl,
             createdOn: DateTime.now(),
             type: "video");
+
+      }else if (widget.type=="audio"){
+        newMessage = MediaModel(
+            // creating message
+            mediaId: uuid.v1(),
+            senderId: widget.userModel.uId,
+            fileUrl: mediaUrl,
+            createdOn: DateTime.now(),
+            type: "audio");
       }
+
+
       // creating a messages collection inside chatroom docs and saving messages in them
       FirebaseFirestore.instance
           .collection("chatrooms")

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:permission_handler/permission_handler.dart';
-import 'package:proj/storage/audio_playerr2.dart';
+import 'package:proj/storage/audioRecording/audio_playerr2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sound_record/flutter_sound_record.dart';
@@ -18,6 +18,7 @@ class AudioRecorder extends StatefulWidget {
 
   @override
   _AudioRecorderState createState() => _AudioRecorderState();
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
@@ -42,9 +43,6 @@ if(Platform.isAndroid)  {
   debugPrint("could not get permission");
 }
 }
-
-
-
 
   bool _isRecording = false;
   bool _isPaused = false;
@@ -214,7 +212,6 @@ if(Platform.isAndroid)  {
     final String? path = await _audioRecorder.stop();
 
     widget.onStop(path!);
-
     setState(() => _isRecording = false);
   }
 
@@ -301,4 +298,5 @@ class _RecordAudState extends State<RecordAud> {
     properties.add(DiagnosticsProperty<bool>('showPlayer', showPlayer));
     properties.add(DiagnosticsProperty<ap.AudioSource?>('audioSource', audioSource));
   }
+
 }

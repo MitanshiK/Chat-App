@@ -63,6 +63,7 @@ dependencies:
   flutter_sound_record: ^3.3.2
   just_audio: ^0.9.38
   device_info_plus: ^10.1.0
+  cubit_form: ^2.0.2 
   # flutter_sound: ^9.6.0
   # record: ^5.0.4
   # voice_message_package: ^2.2.1

@@ -1,17 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cubit_form/cubit_form.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:keyboard_emoji_picker/keyboard_emoji_picker.dart';
+import 'package:proj/ChatApp/models/Blocs/player_bloc.dart';
+
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
+import 'package:proj/ChatApp/models/Blocs/message_bloc.dart';
 import 'package:proj/ChatApp/models/message_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
+import 'package:proj/ChatApp/pages/audio_recording/mic_widget.dart';
+import 'package:proj/ChatApp/pages/audio_recording/recorded_player.dart';
 import 'package:proj/ChatApp/pages/open_media.dart';
 import 'package:proj/ChatApp/pages/send_media.dart';
 import 'package:proj/main.dart';
 import 'package:video_player/video_player.dart';
+import 'package:just_audio/just_audio.dart' as ap;
 
 class ChatRoomPage extends StatefulWidget {
   final User firebaseUser; // <us> or current user on our side
@@ -31,9 +38,17 @@ class ChatRoomPage extends StatefulWidget {
   State<ChatRoomPage> createState() => _ChatRoomPageState();
 }
 
-class _ChatRoomPageState extends State<ChatRoomPage> {
+class _ChatRoomPageState extends State<ChatRoomPage>
+    with TickerProviderStateMixin {
+  bool showPlayer = false;
+  ap.AudioSource? audioSource;
+  String? audioFilePath;
+
+  late final animationController =
+      AnimationController(vsync: this, duration: const Duration(seconds: 2));
   VideoPlayerController? videoController; // video controller for videoPlayer
   late Future<void> _initializeVideoPlayerFuture; // future for video
+  TextEditingController messageController = TextEditingController();
 
   PlatformFile? pickedImage;
   String? messageType;
@@ -41,8 +56,6 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController messageController = TextEditingController();
-
     void sendMessage() async {
       String msg = messageController.text.trim();
       messageController
@@ -218,15 +231,22 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                                                           senderUid:
                                                                               currentMessage.senderId,
                                                                           date:
-                                                                              currentMessage.createdOn, type: currentMessage.type,
+                                                                              currentMessage.createdOn,
+                                                                          type:
+                                                                              currentMessage.type,
                                                                         )));
                                                       },
-                                                      child: (messageType =="image")
+                                                      child: (messageType ==
+                                                              "image")
                                                           ? ConstrainedBox(
-                                                              constraints:const BoxConstraints(
-                                                                      maxHeight: 200,
-                                                                      maxWidth:200),
-                                                              child:Image.network(
+                                                              constraints:
+                                                                  const BoxConstraints(
+                                                                      maxHeight:
+                                                                          200,
+                                                                      maxWidth:
+                                                                          200),
+                                                              child:
+                                                                  Image.network(
                                                                 currentMessage
                                                                     .fileUrl
                                                                     .toString(),
@@ -238,11 +258,13 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                                               FutureBuilder(
                                                                   future:
                                                                       _initializeVideoPlayerFuture,
-                                                                  builder: (BuildContext context,AsyncSnapshot<dynamic>
+                                                                  builder: (BuildContext
+                                                                          context,
+                                                                      AsyncSnapshot<
+                                                                              dynamic>
                                                                           snapshot) {
                                                                     return Stack(
                                                                       children: [
-                                                                        
                                                                         ConstrainedBox(
                                                                           constraints: const BoxConstraints(
                                                                               maxHeight: 200,
@@ -256,9 +278,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
                                                                           ),
                                                                         ),
                                                                         const Positioned(
-                                                                            bottom: 10,
-                                                                            left: 10,
-                                                                            child: Icon(
+                                                                            bottom:
+                                                                                10,
+                                                                            left:
+                                                                                10,
+                                                                            child:
+                                                                                Icon(
                                                                               Icons.play_arrow,
                                                                               color: Colors.white,
                                                                               size: 25,
@@ -297,88 +322,187 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
             )),
 
             // for typing messages
-            Container(
-                padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
-                color: const Color.fromARGB(255, 230, 229, 229),
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () async {
-                          try {
-                            await KeyboardEmojiPicker().checkHasEmojiKeyboard();
-                            debugPrint("emojii");
-                          } catch (e) {
-                            debugPrint("the emoji error is $e");
-                          }
+            MultiBlocProvider(
+                providers: [
+                  //1
+                  BlocProvider<MessageBloc>(
+                    // bloc provider
+                    create: (_) => MessageBloc(),
+                  ),
+                  //2
+                  BlocProvider<PlayerVisBloc>(
+                    // bloc provider
+                    create: (_) => PlayerVisBloc(false),
+                  ),
+                ],
+                child: BlocBuilder<MessageBloc, bool>(// bloc builder
+                    builder: (BuildContext context, state) {
+                  return
+                      //
+                      Container(
+                    child: ListTile(
+                            minLeadingWidth: 0,
+                            dense: true,
+                            contentPadding: EdgeInsets.zero,
+                            title:  Container(
+                                padding: const EdgeInsets.fromLTRB(10, 5, 5, 0),
+                                margin:
+                                    const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                    color: const Color.fromARGB(
+                                        255, 230, 229, 229),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child:   context.watch<PlayerVisBloc>().state
+                        ?  // Audio Player
+                        Padding(   
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: AudioPlayer(
+                              source: audioSource!,
+                              onDelete: () {
+                                context.read<PlayerVisBloc>().add(PlayerVisibility());
+                                context.read<MessageBloc>().add(NoText());
+                              },
+                            ),
+                          )
+                        :     Row(    
+                                  children: [
+                                    // for emoji
+                                    IconButton(
+                                        onPressed: () async {},
+                                        icon: const Icon(Icons.emoji_emotions)),
 
-                          // final hasEmojiKeyBoard= await KeyboardEmojiPicker().checkHasEmojiKeyboard();
-                          // if(hasEmojiKeyBoard==true){
-                          //  await KeyboardEmojiPicker().pickEmoji();
-                          //  debugPrint("emojii");
-                          // }
-                          // else{
-                          //   debugPrint("no emoji");
-                          // }
-                        },
-                        icon: const Icon(Icons.emoji_emotions)),
-                    PopupMenuButton(
-                      icon: const Icon(Icons.attach_file),
-                      itemBuilder: (BuildContext context) => [
-                        // to share image
-                        PopupMenuItem(
-                            child: ListTile(
-                          onTap: () async {
-                            Navigator.pop(context);
-                            await selectImage(FileType.image);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SendMedia(
-                                          mediaToSend: pickedImage!,
-                                          chatRoom: widget.chatRoomModel,
-                                          userModel: widget.userModel,
-                                          type: "image",
-                                        ))); // await bcs , it will wait for pic to be selected then navigate to next page
-                          },
-                          title: const Text("Image"),
-                          leading: const Icon(Icons.image),
-                        )),
+                                    // message Field
+                                    Expanded(
+                                      child: TextFormField(
+                                        maxLines: null,
+                                        controller: messageController,
+                                        decoration: const InputDecoration(
+                                            hintText: "message",
+                                            border: InputBorder.none),
+                                        onChanged: (value) {
+                                          if (value == "") {
+                                            context.read<MessageBloc>().add(NoText());
+                                          } else {
+                                            context.read<MessageBloc>().add(HasText());
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    // for media
+                                    PopupMenuButton(
+                                      icon: const Icon(Icons.attach_file),
+                                      itemBuilder: (BuildContext context) => [
+                                        // to share image
+                                        PopupMenuItem(
+                                            child: ListTile(
+                                          onTap: () async {
+                                            Navigator.pop(context);
+                                            await selectImage(FileType.image);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SendMedia(
+                                                          mediaToSend:
+                                                              pickedImage!,
+                                                          chatRoom: widget.chatRoomModel,
+                                                          userModel:
+                                                              widget.userModel,
+                                                          type: "image",
+                                                        ))); // await bcs , it will wait for pic to be selected then navigate to next page
+                                          },
+                                          title: const Text("Image"),
+                                          leading: const Icon(Icons.image),
+                                        )),
 
-                        // to share video
-                        PopupMenuItem(
-                            child: ListTile(
-                          onTap: () async {
-                            Navigator.pop(context);
-                            await selectImage(FileType.video);
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => SendMedia(
-                                          mediaToSend: pickedImage!,
-                                          chatRoom: widget.chatRoomModel,
-                                          userModel: widget.userModel,
-                                          type: 'video',
-                                        ))); // await bcs , it will wait for pic to be selected then navigate to next page
-                          },
-                          title: const Text("Video"),
-                          leading: const Icon(Icons.video_camera_front),
-                        )),
-                      ],
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                        maxLines: null,
-                        controller: messageController,
-                        decoration: const InputDecoration(hintText: "message"),
-                      ),
-                    ),
-                    IconButton(
-                        onPressed: () {
-                          sendMessage();
-                        },
-                        icon: const Icon(Icons.send))
-                  ],
-                ))
+                                        // to share video
+                                        PopupMenuItem(
+                                            child: ListTile(
+                                          onTap: () async {
+                                            Navigator.pop(context);
+                                            await selectImage(FileType.video);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        SendMedia(
+                                                          mediaToSend:
+                                                              pickedImage!,
+                                                          chatRoom: widget
+                                                              .chatRoomModel,
+                                                          userModel:
+                                                              widget.userModel,
+                                                          type: 'video',
+                                                        ))); // await bcs , it will wait for pic to be selected then navigate to next page
+                                          },
+                                          title: const Text("Video"),
+                                          leading: const Icon(
+                                              Icons.video_camera_front),
+                                        )),
+                                      ],
+                                    ),
+
+                                    // camera
+                                    Visibility(
+                                      visible:
+                                          context.watch<MessageBloc>().state
+                                              ? false
+                                              : true,
+                                      child: IconButton(
+                                          onPressed: () async {},
+                                          icon: const Icon(
+                                              Icons.camera_alt_outlined)),
+                                    ),
+                                  ],
+                                  // );  },
+                                  //   ),
+                                )),
+                            trailing: Container(
+                              width: 60,
+                              height: 60,
+                              margin: const EdgeInsets.only(right: 5),
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color.fromARGB(255, 230, 229, 229)),
+                              child: context.watch<MessageBloc>().state  ? 
+                                  context.watch<PlayerVisBloc>().state ?
+                                  // audio message 
+                                  IconButton(
+                                      onPressed: () {
+                                        
+                                        try{
+                                          SendMedia(mediaToSend: audioFilePath!, chatRoom: widget.chatRoomModel, userModel: widget.userModel, type: "audio");
+                                           print("audio sent");
+                                        }catch(e){
+                                          print("error in sending audio is $e");
+                                        }                                    
+                                      },
+                                      icon: const Icon(Icons.send_outlined))
+                                  :
+                                  // text message
+                                  IconButton(
+                                      onPressed: () {
+                                        
+                                        sendMessage();
+                                                                                 
+                                      },
+                                      icon: const Icon(Icons.send))
+                                  : MicWidget(  
+                                      onStop: (String path) {
+                                        // setState(() {
+                                        audioFilePath=path;
+                                       audioSource =
+                                            ap.AudioSource.uri(Uri.parse(path));  // set the source
+                                        // });
+                                        context.read<PlayerVisBloc>().add(PlayerVisibility());  // make audio player visible 
+                                        context.read<MessageBloc>().add(HasText());   // showing send arrow
+                                      },
+                                    ),
+                            ),
+                          ),
+                  ); //
+                }) //
+                ) //
           ],
         ),
       )),

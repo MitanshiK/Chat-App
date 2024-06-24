@@ -67,7 +67,13 @@ class AudioPlayerState extends State<AudioPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
+
+// The LayoutBuilder widget in Flutter is a widget that builds a widget tree that can depend on the parent widget's size
+//  It is similar to the Builder widget except that the framework calls the builder function at layout time and provides the parent widget's constraints
+// This is useful when the parent constrains the child's size and doesn't depend on the child's intrinsic size
+//  The LayoutBuilder's final size will match its child's size
+
+    return LayoutBuilder(           
       builder: (BuildContext context, BoxConstraints constraints) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -98,27 +104,35 @@ class AudioPlayerState extends State<AudioPlayer> {
     if (_audioPlayer.playerState.playing) {
       icon = const Icon(Icons.pause, color: Colors.red, size: 30);
       color = Colors.red.withOpacity(0.1);
-    } else {
+    } 
+    else {
       final ThemeData theme = Theme.of(context);
       icon = Icon(Icons.play_arrow, color: theme.primaryColor, size: 30);
       color = theme.primaryColor.withOpacity(0.1);
     }
 
-    return ClipOval(
-      child: Material(
-        color: color,
-        child: InkWell(
-          child: SizedBox(width: _controlSize, height: _controlSize, child: icon),
-          onTap: () {
-            if (_audioPlayer.playerState.playing) {
+    return IconButton(onPressed: (){
+       if (_audioPlayer.playerState.playing) {
               pause();
             } else {
               play();
             }
-          },
-        ),
-      ),
-    );
+    }, icon: icon);
+    // ClipOval(
+    //   child: Material(
+    //     color: color,
+    //     child: InkWell(
+    //       child: SizedBox(width: _controlSize, height: _controlSize, child: icon),
+    //       onTap: () {
+    //         if (_audioPlayer.playerState.playing) {
+    //           pause();
+    //         } else {
+    //           play();
+    //         }
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 
   Widget _buildSlider(double widgetWidth) {
@@ -127,7 +141,7 @@ class AudioPlayerState extends State<AudioPlayer> {
     bool canSetValue = false;
     if (duration != null) {
       canSetValue = position.inMilliseconds > 0;
-      canSetValue &= position.inMilliseconds < duration.inMilliseconds;
+      canSetValue &= position.inMilliseconds < duration.inMilliseconds; //canSetValue and position.inMilliseconds are smaller than duration.inMilliseconds
     }
 
     double width = widgetWidth - _controlSize - _deleteBtnSize;
@@ -138,10 +152,10 @@ class AudioPlayerState extends State<AudioPlayer> {
       child: Slider(
         activeColor: Theme.of(context).primaryColor,
         inactiveColor: Theme.of(context).colorScheme.secondary,
-        onChanged: (double v) {
+        onChanged: (double v) { 
           if (duration != null) {
-            final double position = v * duration.inMilliseconds;
-            _audioPlayer.seek(Duration(milliseconds: position.round()));
+            final double position = v * duration.inMilliseconds; // getting the position of audio when changed by users 
+            _audioPlayer.seek(Duration(milliseconds: position.round()));  // setting audio to the changed duration
           }
         },
         value: canSetValue && duration != null ? position.inMilliseconds / duration.inMilliseconds : 0.0,
