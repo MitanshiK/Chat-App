@@ -10,11 +10,12 @@ import 'package:proj/main.dart';
 
 class CreateGroupPage extends StatefulWidget {
   const CreateGroupPage(
-      {super.key, required this.firebaseUser, required this.userModel ,required this.existing ,this.exisitingGroupRoom});
+      {super.key, required this.firebaseUser, required this.userModel ,required this.existing ,this.exisitingGroupRoom ,this.exisitingMembers});
   final User firebaseUser;
   final UserModel userModel;
   final bool existing;
   final GroupRoomModel? exisitingGroupRoom;
+  final List<UserModel>? exisitingMembers;
 
 
   @override
@@ -42,15 +43,7 @@ Future<GroupRoomModel?> getGroupRoomModel(List<UserModel> groupMembers) async {
       .where("participantsId", arrayContainsAny: groupMembers.map((e) => e.uId).toList());
 
   var querySnapshot = await chatRoomQuery.get();
-  
-  //  if(querySnapshot.docs.isNotEmpty){
-  //       // fetch existing one 
-  // var docData=querySnapshot.docs[0].data();
-  // GroupRoomModel existingChatRoomModel=GroupRoomModel.fromMap(docData);
 
-  // groupRoomModel =existingChatRoomModel; // for returning
-  // debugPrint("chatroom already exists");
-  //  }
   
 
   var matchingChatRooms = querySnapshot.docs.where((doc) {
@@ -65,7 +58,6 @@ Future<GroupRoomModel?> getGroupRoomModel(List<UserModel> groupMembers) async {
     var docData = matchingChatRooms[0].data() as Map<String, dynamic>;
     groupRoomModel = GroupRoomModel.fromMap(docData);
     print("Chatroom already exists: ${groupRoomModel.groupRoomId}");
-    
     } 
     else {
     // Create new chat room
@@ -103,7 +95,40 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
       "participantsId.${newMember.uId}": true
     });
     }
+////////////////////////////
 
+  widget.exisitingMembers!.addAll(newMemberss);
+  GroupRoomModel? groupRoomModel;
+  Map<String, bool> participantsId = {};
+
+  for (var member in widget.exisitingMembers!) {
+    participantsId[member.uId!] = true;
+  }
+
+  // Firestore query to check if chatroom exists
+  var chatRoomQuery = FirebaseFirestore.instance
+      .collection("GroupChats")
+      .where("participantsId", arrayContainsAny: widget.exisitingMembers!.map((e) => e.uId).toList());
+
+  var querySnapshot = await chatRoomQuery.get();
+
+  
+
+  var matchingChatRooms = querySnapshot.docs.where((doc) {
+    var data = doc.data() as Map<String, dynamic>;
+    var participantIds = data['participantsId'] as Map<String, dynamic>;
+    return  widget.exisitingMembers!.every((user) => participantIds.containsKey(user.uId));
+  }).toList();
+
+
+  if (matchingChatRooms.isNotEmpty) {
+    // Fetch existing chat room
+    var docData = matchingChatRooms[0].data() as Map<String, dynamic>;
+    groupRoomModel = GroupRoomModel.fromMap(docData);
+    print("Chatroom already exists: ${groupRoomModel.groupRoomId}");
+    } 
+
+///////////////////////////
     print("Participant added successfully.");
   } catch (e) {
     print("Error adding participant: $e");
