@@ -64,13 +64,13 @@ dependencies:
   just_audio: ^0.9.38
   device_info_plus: ^10.1.0
   cubit_form: ^2.0.2 
-  # flutter_sound: ^9.6.0
-  # record: ^5.0.4
-  # voice_message_package: ^2.2.1
-  # get: ^4.6.6
-  # sizer: ^2.0.15
-  # audioplayers: ^6.0.0
-  # record_mp3: ^3.0.0
+  flutter_contacts: ^1.1.8   # read contacts
+  url_launcher: ^6.3.0      # read contacts and redirect to make calls 
+ 
+  flutter_local_notifications: ^17.1.2  #local flutter Notifications
+  carousel_slider: ^4.2.1
+  bubble_tab_indicator: "^0.1.5"
+
 
 
   

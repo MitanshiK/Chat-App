@@ -4,40 +4,37 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/models/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/home_page.dart';
+import 'package:proj/ChatApp/models/group_room_model.dart';
+import 'package:proj/ChatApp/pages/groupchatroom.dart';
 
 
-
-
-import 'package:flutter/widgets.dart';
-
-class CompleteUserProfile extends StatefulWidget {
+class CreateGroupProfile extends StatefulWidget {
+  CreateGroupProfile({super.key ,required this.firebaseUser , required this.userModel ,required this.groupRoomModel ,required this.groupMembers});
   final  UserModel userModel;
-  final User firebaseUser;             // firebase auth user
-
-  const CompleteUserProfile({super.key ,required this.userModel ,required this.firebaseUser});
+  final  User firebaseUser;  
+  final GroupRoomModel  groupRoomModel;
+  List<UserModel> groupMembers;
 
   @override
-  State<CompleteUserProfile> createState() => _CompleteUserProfileState();
+  State<CreateGroupProfile> createState() => _CreateGroupProfileState();
 }
 
-class _CompleteUserProfileState extends State<CompleteUserProfile> {
+class _CreateGroupProfileState extends State<CreateGroupProfile> {
 
-  // PlatformFile? profilePic;
-  File? profilePic;
+ File? profilePic;
   bool picked = false;
   String name = "";
 
+
   @override
   Widget build(BuildContext context) {
-        // String? userId =Provider.of<StateClass>(context).uId; 
-    final profileKey = GlobalKey<FormState>();
+    final groupProfileKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -80,7 +77,7 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
               height: 30,
             ),
             Form(
-                key: profileKey,
+                key: groupProfileKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -106,9 +103,11 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                       width: MediaQuery.sizeOf(context).width,
                       child: TextButton(
                           onPressed: () {
-                             profileKey.currentState!.save();
-                             if( profileKey.currentState!.validate()){
+
+                             groupProfileKey.currentState!.save();
+                             if( groupProfileKey.currentState!.validate()){
                              uploadData();
+                             
                              }
                           },
                           style: ButtonStyle(
@@ -128,14 +127,37 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
                           )),
-                    )
+                    ),
+                  
+                    
                   ],
-                ))
+                )),
+                  Expanded(
+                    child: Container(
+                      width: MediaQuery.sizeOf(context).width/1.2,
+                     height: MediaQuery.sizeOf(context).height/3,
+                     
+                      child: ListView(
+                          children:List.generate(widget.groupMembers.length, (index){
+                           return ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor:  Color.fromARGB(255, 240, 217, 148),
+                                backgroundImage: NetworkImage(widget.groupMembers[index].profileUrl!),
+                                radius: 30,
+                                ),
+                                title: Text(widget.groupMembers[index].name!),
+                                subtitle:  Text(widget.groupMembers[index].email!),
+                            );
+                          }),
+                        ),
+                    ),
+                  )
           ],
         ),
       ),
     );
   }
+  //////////////
 
 ///////1
 
@@ -215,29 +237,27 @@ void cropImageCamera(XFile file) async {
     print("path of cropped image file is ${profilePic!.path}  and picked value is $picked");
   }
 
-  // 4
+  // 4//////////////////////////////////////////////////to change
   void uploadData() async{
     // uploading image to the firebase storage 
     UiHelper.loadingDialogFun(context, "Saving..");
-    final result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.userModel.uId.toString()).putFile(profilePic!);  
+    final result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.groupRoomModel.groupRoomId.toString()).putFile(profilePic!);  
     
     // getting the download link of image uploaded in storage
     String? imageUrl= await result.ref.getDownloadURL();
 
 
     // saving name and imageurl in the empty fields of usermodel
-    widget.userModel.name=name;
-    widget.userModel.profileUrl =imageUrl;
+    widget.groupRoomModel.groupName=name;
+    widget.groupRoomModel.profilePic =imageUrl;
 
    // updating data in firestore 
-    await FirebaseFirestore.instance.collection("ChatAppUsers").doc(widget.userModel.uId).set(widget.userModel.toMap()).then((value){
+    await FirebaseFirestore.instance.collection("GroupChats").doc(widget.groupRoomModel.groupRoomId).set(widget.groupRoomModel.toMap()).then((value){
     debugPrint("profile complete !");
     
-    Navigator.popUntil(context, (route) => route.isFirst);   
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => HomePage(firebaseUser: widget.firebaseUser, userModel: widget.userModel))));
+    Navigator.pop(context);   
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: ((context) => GroupRoomPage(firebaseUser: widget.firebaseUser, userModel: widget.userModel, groupMembers: widget.groupMembers, groupRoomModel: widget.groupRoomModel,))));
     });
   }
   
 }
-
-

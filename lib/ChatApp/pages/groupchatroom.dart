@@ -21,12 +21,15 @@ import 'package:proj/ChatApp/models/Blocs/player_bloc.dart';
 
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/contacts_model.dart';
+import 'package:proj/ChatApp/models/firebase_helper.dart';
+import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/Blocs/message_bloc.dart';
 import 'package:proj/ChatApp/models/message_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/audio_recording/mic_widget.dart';
 import 'package:proj/ChatApp/pages/audio_recording/recorded_player.dart';
+import 'package:proj/ChatApp/pages/group_info.dart';
 import 'package:proj/ChatApp/pages/open_media.dart';
 import 'package:proj/ChatApp/pages/send_media.dart';
 import 'package:proj/ChatApp/pages/share_bottom_modal.dart';
@@ -35,25 +38,25 @@ import 'package:proj/main.dart';
 import 'package:video_player/video_player.dart';
 import 'package:just_audio/just_audio.dart' as ap;
 
-class ChatRoomPage extends StatefulWidget {
+class GroupRoomPage extends StatefulWidget {
   final User firebaseUser; // <us> or current user on our side
   final UserModel userModel; // <us> our info
 
-  final UserModel targetUser; // <other> person we are talking to
-  final ChatRoomModel chatRoomModel;
+  final List<UserModel> groupMembers; // <other> person we are talking to
+  final GroupRoomModel groupRoomModel;
 
-  const ChatRoomPage(
+  const GroupRoomPage(
       {super.key,
       required this.firebaseUser,
       required this.userModel,
-      required this.targetUser,
-      required this.chatRoomModel});
+      required this.groupMembers,
+      required this.groupRoomModel});
 
   @override
-  State<ChatRoomPage> createState() => _ChatRoomPageState();
+  State<GroupRoomPage> createState() => _GroupRoomPageState();
 }
 
-class _ChatRoomPageState extends State<ChatRoomPage>
+class _GroupRoomPageState extends State<GroupRoomPage>
     with TickerProviderStateMixin {
   bool showPlayer = false;
   ap.AudioSource? audioSource;
@@ -69,6 +72,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
   String? capturedFile; // captured by camera
   String? messageType;
   String? time;
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +93,8 @@ class _ChatRoomPageState extends State<ChatRoomPage>
 
         // creating a messages collection inside chatroom docs and saving messages in them
         FirebaseFirestore.instance
-            .collection("chatrooms")
-            .doc(widget.chatRoomModel.chatRoomId)
+            .collection("GroupChats")
+            .doc(widget.groupRoomModel.groupRoomId)
             .collection("messages")
             .doc(newMessage.messageId)
             .set(newMessage.toMap())
@@ -99,12 +103,13 @@ class _ChatRoomPageState extends State<ChatRoomPage>
         });
 
         // setting last message in chatroom and saving in firestore
-        widget.chatRoomModel.lastMessage = msg;
-        widget.chatRoomModel.lastTime = newMessage.createdOn;
+        widget.groupRoomModel.lastMessage = msg;
+        widget.groupRoomModel.lastTime = newMessage.createdOn;
+          widget.groupRoomModel.lastMessageBy=newMessage.senderId;
         FirebaseFirestore.instance
-            .collection("chatrooms")
-            .doc(widget.chatRoomModel.chatRoomId)
-            .set(widget.chatRoomModel.toMap());
+            .collection("GroupChats")
+            .doc(widget.groupRoomModel.groupRoomId)
+            .set(widget.groupRoomModel.toMap());
       }
     }
 
@@ -115,7 +120,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
     void crophatBg(XFile file) async {
       final croppedImage = await ImageCropper().cropImage(
           sourcePath: file.path,
-          aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 2),
+          aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 2),
           compressQuality: 30);
 
       if (croppedImage != null) {
@@ -142,7 +147,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
               itemBuilder: (BuildContext context) => [
                     PopupMenuItem(
                         child: ListTile(
-                      title: Text("Change Background"),
+                      title: const Text("Change Background"),
                       trailing: PopupMenuButton(
                         itemBuilder: (BuildContext context) => [
                           //default bg
@@ -153,14 +158,14 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                       defaultBg = true;
                                     });
                                   },
-                                  title: Text("Default"))),
+                                  title: const Text("Default"))),
 
                           //pic bgImage
                           PopupMenuItem(
                               onTap: () {
                                 pickChatBg();
                               },
-                              child: ListTile(title: Text("Form Gallary"))),
+                              child: const ListTile(title: Text("Form Gallary"))),
                         ],
                       ),
                     ))
@@ -168,24 +173,25 @@ class _ChatRoomPageState extends State<ChatRoomPage>
         ],
         title: GestureDetector(
           onTap: (){
-           
+         //   group Info page
+
             Navigator.push(context, MaterialPageRoute(
-              builder: (context)=>  UserProfile(firebaseUser: widget.firebaseUser,
-                                                   userModel: widget.targetUser,
-                                                   targetUser: widget.targetUser,
-                                                   chatRoomModel: widget.chatRoomModel,)));
+              builder: (context)=>  GroupInfo(firebaseUser: widget.firebaseUser,
+                                                   userModel: widget.userModel,
+                                                   groupMembers: widget.groupMembers,
+                                                   groupRoomModel: widget.groupRoomModel,)));
           },
           child: Row(
             children: [
               CircleAvatar(
                 backgroundImage:
-                    NetworkImage(widget.targetUser.profileUrl.toString()),
+                    NetworkImage(widget.groupRoomModel.profilePic.  toString()),
                 backgroundColor: const Color.fromARGB(255, 240, 217, 148),
               ),
               const SizedBox(
                 width: 20,
               ),
-              Text(widget.targetUser.name.toString())
+              Text(widget.groupRoomModel.groupName.toString())
             ],
           ),
         ),
@@ -210,22 +216,23 @@ class _ChatRoomPageState extends State<ChatRoomPage>
             Expanded(
                 child: Container(
               margin: const EdgeInsets.all(12),
+              // messages stream builder
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
-                    .collection("chatrooms")
-                    .doc(widget.chatRoomModel.chatRoomId)
+                    .collection("GroupChats")
+                    .doc(widget.groupRoomModel.groupRoomId)
                     .collection("messages")
                     .orderBy("createdOn",
                         descending:
                             false) // so that messages appear from newer to older
                     .snapshots(), // to convert into streams
 
-                builder: (context, snapshot) {
+                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     if (snapshot.hasData) {
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // converting into QuerySnapshot dataType
-///////////////
+///////////
                       List<bool> msgRowSelected = List.generate(
                           dataSnapshot.docs.length,
                           (index) => false); // if message  is selected or not
@@ -297,12 +304,26 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                             }
                           }
 
+                           UserModel? currentUserMess;
+                            for ( var i in widget.groupMembers){
+                              if(currentMessage.senderId==i.uId){
+                              
+                                    currentUserMess=i;
+                                
+                              }
+                            }
+
+
+
+                           
                           String date =
                               "${currentMessage.createdOn!.day}/ ${currentMessage.createdOn!.month}/ ${currentMessage.createdOn!.year}";
                           time =
                               "${currentMessage.createdOn!.hour}: ${currentMessage.createdOn!.minute}";
 
-                          return Flexible(
+
+
+                          return  Flexible(
                             fit: FlexFit.tight,
                             child: GestureDetector(
                               // for selecting
@@ -325,7 +346,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                 : false)
                                             : true,
                                         child: Container(
-                                            margin: EdgeInsets.only(
+                                            margin: const EdgeInsets.only(
                                                 top: 10, bottom: 10),
                                             alignment: Alignment.center,
                                             decoration: BoxDecoration(
@@ -358,7 +379,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                             margin: const EdgeInsets.fromLTRB(
                                                 0, 10, 0, 0),
                                             padding: const EdgeInsets.fromLTRB(
-                                                15, 10, 10, 10),
+                                                15, 5, 10, 10),
                                             decoration: BoxDecoration(
                                                 borderRadius: (currentMessage.senderId ==
                                                         widget.userModel.uId)
@@ -387,9 +408,19 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
                                                 children: [
+
+                                                  Row(
+                                                    // mainAxisSize: MainAxisSize.max,
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children:[ 
+                                                      Text((currentUserMess!=widget.userModel)? (currentUserMess!=null)? currentUserMess.name! :"(removed)"  : "you",
+                                                   style:  TextStyle(
+                                                    color:(currentUserMess!=null)? Colors.purple :Colors.red,
+                                                    fontSize:12,
+                                                     ),)],),     
                                                   (messageType == "text")
                                                       ? Text(currentMessage.text
-                                                          .toString())
+                                                          .toString(),style: const TextStyle(fontSize: 15),)
                                                       :
                                                       // subconition 1
                                                       (messageType != "text")
@@ -552,7 +583,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                       return const Text(
                           "Error Occured !! Please check our internet Connection");
                     } else {
-                      return Text("Say Hi to ${widget.targetUser.name}");
+                      return const Text("Say Hi you your group Members");
                     }
                   } else {
                     return const Center(child: CircularProgressIndicator());
@@ -645,8 +676,8 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                   true, // Set this to true to enable full screen modal
                                               builder: (BuildContext context) {
                                                 return ShareBottomModal(
-                                                  chatRoomModel:
-                                                      widget.chatRoomModel,
+                                                  groupRoomModel:
+                                                      widget.groupRoomModel,
                                                   userModel: widget.userModel,
                                                 );
                                               });
@@ -688,7 +719,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                             .instance
                                             .ref("AllSharedMedia")
                                             .child(widget
-                                                .chatRoomModel.chatRoomId
+                                                .groupRoomModel.groupRoomId
                                                 .toString())
                                             .child("sharedMedia")
                                             .child(uuid.v1())
@@ -708,9 +739,9 @@ class _ChatRoomPageState extends State<ChatRoomPage>
 
                                         // creating a messages collection inside chatroom docs and saving messages in them
                                         FirebaseFirestore.instance
-                                            .collection("chatrooms")
+                                            .collection("GroupChats")
                                             .doc(
-                                                widget.chatRoomModel.chatRoomId)
+                                                widget.groupRoomModel.groupRoomId)
                                             .collection("messages")
                                             .doc(newMessage.mediaId)
                                             .set(newMessage.toMap())
@@ -719,13 +750,15 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                         });
 
                                         // setting last message in chatroom and saving in firestore
-                                        widget.chatRoomModel.lastMessage =
+                                        widget.groupRoomModel.lastMessage =
                                             newMessage.type;
+                                            widget.groupRoomModel.lastTime =newMessage.createdOn;
+                                            widget.groupRoomModel.lastMessageBy = newMessage.senderId;
                                         FirebaseFirestore.instance
-                                            .collection("chatrooms")
+                                            .collection("GroupChats")
                                             .doc(
-                                                widget.chatRoomModel.chatRoomId)
-                                            .set(widget.chatRoomModel.toMap());
+                                                widget.groupRoomModel.groupRoomId)
+                                            .set(widget.groupRoomModel.toMap());
 
                                         /////////////////////////
                                         context.read<PlayerVisBloc>().add(
@@ -819,7 +852,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                                 Navigator.push(context, MaterialPageRoute(
                                                                         builder: (context) => SendMedia(
                                                                             mediaToSend:capturedFile!,
-                                                                            chatRoom: widget.chatRoomModel,
+                                                                            groupRoomModel: widget.groupRoomModel,
                                                                             userModel: widget.userModel,
                                                                             type: "image")));
                                                               },
@@ -832,8 +865,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                              iconSize: 40,
                                                               onPressed:
                                                                   () async {
-                                                                Navigator.pop(
-                                                                    context);
+                                                         
                                                                 await fromCamera(
                                                                     "video");
                                                                 Navigator.push(
@@ -842,8 +874,8 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                                         builder: (context) => SendMedia(
                                                                             mediaToSend:
                                                                                 capturedFile!,
-                                                                            chatRoom:
-                                                                                widget.chatRoomModel,
+                                                                            groupRoomModel:
+                                                                                widget.groupRoomModel,
                                                                             userModel: widget.userModel,
                                                                             type: "video")));
                                                               },

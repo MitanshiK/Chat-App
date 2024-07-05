@@ -29,10 +29,10 @@ class _SearchPageState extends State<SearchPage> {
   .where("participantsId.${widget.userModel.uId}" ,isEqualTo: true)
   .where("participantsId.${targetUser.uId}",isEqualTo: true).get();
 
-  if(chatroom.docs.length>0){
+  if(chatroom.docs.isNotEmpty){
     // fetch existing one 
   var docData=chatroom.docs[0].data();
-  ChatRoomModel existingChatRoomModel=ChatRoomModel.fromMap(docData as Map<String,dynamic>);
+  ChatRoomModel existingChatRoomModel=ChatRoomModel.fromMap(docData);
 
   chatRoomModel =existingChatRoomModel; // for returning
   debugPrint("chatroom already exists");
@@ -42,6 +42,7 @@ class _SearchPageState extends State<SearchPage> {
   ChatRoomModel newChatRoomModel=ChatRoomModel(
     chatRoomId: uuid.v1(),
     lastMessage: "",
+     lastTime:DateTime.now(),
     participantsId: {
      widget.userModel.uId.toString() :true,
      targetUser.uId.toString() :true
@@ -54,7 +55,7 @@ class _SearchPageState extends State<SearchPage> {
   debugPrint("new chatroom created ");
   }
   return chatRoomModel;
- }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +145,7 @@ class _SearchPageState extends State<SearchPage> {
                     } else if (snapshot.hasError) {
                       return const Text("An error has occured");
                     } else {
-                      return const Text("No result found");
+                      return const Text("");
                     }
                   } else {
                     return const CircularProgressIndicator();

@@ -42,4 +42,28 @@ class UiHelper{
       );
         }, );
   }
+
+// to choose if we want a video or picture camera to open
+  static String cameraType(BuildContext context ){
+    String CamType="";
+    showDialog(
+      context: context,
+     builder: (BuildContext context) { 
+      return AlertDialog(
+       title: Text("Camera"),
+       content: Row(children: [
+        // for picture
+        IconButton(onPressed: (){
+        CamType= "picture";
+        }, icon: Icon(Icons.image)),
+       
+        // for video
+        IconButton(onPressed: (){
+        CamType="video";
+        }, icon: Icon(Icons.video_camera_back))
+       ],)
+      );
+      });
+      return CamType;
+  }
 }

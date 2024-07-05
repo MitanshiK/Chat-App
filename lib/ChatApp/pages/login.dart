@@ -73,6 +73,8 @@ class _LoginpageState extends State<Loginpage> {
                           if (value.toString().trim() == "") {
                             return "empty field";
                           }
+                          else
+                         { return null;}
                         },
                         onSaved: (Value) {
                           setState(() {
@@ -106,6 +108,8 @@ class _LoginpageState extends State<Loginpage> {
                             if (value.toString().trim() == "") {
                               return "empty field";
                             }
+                            else
+                            {return null;}
                           },
                           onSaved: (Value) {
                             setState(() {

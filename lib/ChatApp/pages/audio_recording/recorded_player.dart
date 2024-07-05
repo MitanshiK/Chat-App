@@ -1,15 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart' as ap;
 
 class AudioPlayer extends StatefulWidget {
-  const AudioPlayer({
+  AudioPlayer({
     required this.source,
     required this.onDelete,
+    required this.inChat,
     Key? key,
   }) : super(key: key);
+  bool inChat;
 
   /// Path from where to play recorded audio
   final ap.AudioSource source;
@@ -36,6 +39,13 @@ class AudioPlayerState extends State<AudioPlayer> {
   late StreamSubscription<ap.PlayerState> _playerStateChangedSubscription;
   late StreamSubscription<Duration?> _durationChangedSubscription;
   late StreamSubscription<Duration> _positionChangedSubscription;
+    //////////////////////////
+   
+
+
+
+///////////////////////
+
 
   @override
   void initState() {
@@ -48,13 +58,21 @@ class AudioPlayerState extends State<AudioPlayer> {
     _positionChangedSubscription = _audioPlayer.positionStream.listen((Duration position) => setState(() {}));
     _durationChangedSubscription = _audioPlayer.durationStream.listen((Duration? duration) => setState(() {}));
     _init();
+    
+///////////////
+
+/////////
 
     super.initState();
   }
 
   Future<void> _init() async {
     await _audioPlayer.setAudioSource(widget.source);
+    
   }
+  
+
+
 
   @override
   void dispose() {
@@ -68,6 +86,7 @@ class AudioPlayerState extends State<AudioPlayer> {
   @override
   Widget build(BuildContext context) {
 
+
 // The LayoutBuilder widget in Flutter is a widget that builds a widget tree that can depend on the parent widget's size
 //  It is similar to the Builder widget except that the framework calls the builder function at layout time and provides the parent widget's constraints
 // This is useful when the parent constrains the child's size and doesn't depend on the child's intrinsic size
@@ -75,27 +94,47 @@ class AudioPlayerState extends State<AudioPlayer> {
 
     return LayoutBuilder(           
       builder: (BuildContext context, BoxConstraints constraints) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            _buildControl(),
-            _buildSlider(constraints.maxWidth),
-            IconButton(
-              icon: const Icon(
-                Icons.delete,
-                color: Color(0xFF73748D),
-                size: _deleteBtnSize,
-              ),
-              onPressed: () {
-                // ignore: always_specify_types
-                _audioPlayer.stop().then((value) => widget.onDelete());
-              },
+        return Column(
+          children: [
+           
+            Row(
+              // mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                _buildControl(),
+                _buildSlider(constraints.maxWidth),
+                Visibility(
+                  visible: widget.inChat ?false :true,
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Color(0xFF73748D),
+                      size: _deleteBtnSize,
+                    ),
+                    onPressed: () {
+                      // ignore: always_specify_types
+                      _audioPlayer.stop().then((value) => widget.onDelete());
+                    },
+                  ),
+                  
+                ),
+              
+              ],
             ),
+             (_audioPlayer.duration?.inMinutes.toString()==null)? Text("00:00"): 
+             Container(
+              padding: EdgeInsets.only(left: 10,bottom: widget.inChat ?0 :8),
+              alignment: Alignment.centerLeft,
+               child: Text( _audioPlayer.duration!.inSeconds > 60 ? "${_audioPlayer.duration?.inMinutes.toString()}:00"
+               :"00:${_audioPlayer.duration?.inSeconds.toString()}"),
+             ),
           ],
         );
       },
     );
   }
+
+
+
 
   Widget _buildControl() {
     Icon icon;
@@ -118,21 +157,7 @@ class AudioPlayerState extends State<AudioPlayer> {
               play();
             }
     }, icon: icon);
-    // ClipOval(
-    //   child: Material(
-    //     color: color,
-    //     child: InkWell(
-    //       child: SizedBox(width: _controlSize, height: _controlSize, child: icon),
-    //       onTap: () {
-    //         if (_audioPlayer.playerState.playing) {
-    //           pause();
-    //         } else {
-    //           play();
-    //         }
-    //       },
-    //     ),
-    //   ),
-    // );
+ 
   }
 
   Widget _buildSlider(double widgetWidth) {
@@ -144,8 +169,15 @@ class AudioPlayerState extends State<AudioPlayer> {
       canSetValue &= position.inMilliseconds < duration.inMilliseconds; //canSetValue and position.inMilliseconds are smaller than duration.inMilliseconds
     }
 
-    double width = widgetWidth - _controlSize - _deleteBtnSize;
+double width;
+    if(widget.inChat== true){
+       width = widgetWidth - _controlSize ;
+   
+    }
+    else{
+    width = widgetWidth - _controlSize - _deleteBtnSize;
     width -= _deleteBtnSize;
+    }
 
     return SizedBox(
       width: width,

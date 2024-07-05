@@ -1,36 +1,29 @@
 import 'dart:io';
-import 'dart:isolate';
-
 import 'package:audioplayers/audioplayers.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
-class AudioPlay extends StatefulWidget {
- AudioPlay({super.key ,required this.audioFile});
+class AudioPlayChat extends StatefulWidget {
+ AudioPlayChat({super.key ,required this.audioFile});
  PlatformFile? audioFile;
 
   @override
-  State<AudioPlay> createState() => _AudioPlayState();
+  State<AudioPlayChat> createState() => _AudioPlayChatState();
 }
 
-class _AudioPlayState extends State<AudioPlay> {
+class _AudioPlayChatState extends State<AudioPlayChat> {
   File? file;
   final AudioPlayer audioPlayer = AudioPlayer();
   bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
 
-  bool picked=false;
-  PlatformFile? pickedFile;
-  String name="heyy";
 
- setAudio() async{
- await audioPlayer.setSourceDeviceFile(pickedFile!.path!);
-  }
 
   @override
   void initState() {
-    super.initState();
+    super.initState(); 
+ audioPlayer.setSourceDeviceFile(widget.audioFile!.path!); // setting audio resource
 
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
@@ -49,7 +42,7 @@ class _AudioPlayState extends State<AudioPlay> {
         position=newPosition;
       });
     });
-    pickedFile=widget.audioFile;
+
   }
 
   @override
@@ -61,15 +54,14 @@ class _AudioPlayState extends State<AudioPlay> {
   @override
   Widget build(BuildContext context) {
     return  Container(
+      color: Colors.black,
           padding: EdgeInsets.all(20),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(name),
-              ElevatedButton(onPressed: (){
-                selectFile();
-              }, child: Text("pick File")),
+              Text(widget.audioFile!.name.toString(),style: TextStyle(color: Colors.white),),
+             
               Slider(
                 max: duration.inSeconds.toDouble(),
                 value: position.inSeconds.toDouble(),
@@ -83,8 +75,8 @@ class _AudioPlayState extends State<AudioPlay> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(prettyDuration(duration)),
-                  Text(prettyDuration(position)),
+                  Text(prettyDuration(duration),style: TextStyle(color: Colors.white)),
+                  Text(prettyDuration(position),style: TextStyle(color: Colors.white)),
                 ],
               ),
               Row(
@@ -116,18 +108,18 @@ class _AudioPlayState extends State<AudioPlay> {
     );
   }
   // picking Audio file from phone 
-    Future selectFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.audio
-    );
-    setState(() {
-      picked=true;
-      pickedFile = result?.files.first;
-      name=pickedFile!.name;
+    // Future selectFile() async {
+    // final result = await FilePicker.platform.pickFiles(
+    //   type: FileType.audio
+    // );
+    // setState(() {
+    //   picked=true;
+    //   pickedFile = result?.files.first;
+    //   name=pickedFile!.name;
      
-    });
-    Isolate.run(setAudio());
-    }
+    // });
+    // Isolate.run(setAudio());
+    // }
     // for time 
     String prettyDuration(Duration duration) {
   var seconds = (duration.inMilliseconds % (60 * 1000)) / 1000;

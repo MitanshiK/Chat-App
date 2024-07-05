@@ -25,7 +25,7 @@ void deleteDoc(String docId){
 void deleteDocField(String docId,String fieldName){
   firestoreRef.doc(docId)
   .update({fieldName : FieldValue.delete()}).then((value) {
-  print("field va;ue deleted successfully");
+  print("field value deleted successfully");
   });
 
 }

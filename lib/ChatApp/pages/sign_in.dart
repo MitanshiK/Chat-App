@@ -83,6 +83,8 @@ String uId="";
                                if(value.toString().trim()==""){
                                 return "Empty field";
                               }
+                              else
+                               return null;
                           
                             },
                       ),
@@ -118,6 +120,8 @@ String uId="";
                            if(value.toString()==""){
                                 return "Empty field";
                               }
+                          else
+                           return null;
                             },
                       ),
                       const SizedBox(
@@ -139,6 +143,8 @@ String uId="";
                               else if(value.toString()==""){
                                 return "Empty field";
                               }
+                              else
+                              return null;
                             
                             },
                       ),
