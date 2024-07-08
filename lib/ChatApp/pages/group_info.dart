@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
@@ -38,9 +37,9 @@ class _GroupInfoState extends State<GroupInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-          //  title:
-          //       Text(widget.targetUser.name.toString())
+      backgroundColor: Colors.white,
           ),
       body: ListView(
         children: [
@@ -291,14 +290,13 @@ class _GroupInfoState extends State<GroupInfo> {
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: const Color.fromARGB(255, 240, 217, 148)),
                                   child: const Text("Admin"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),)
                                 :Visibility(
-                                  visible: isAdmin ?true :false,
+                                  visible: (widget.userModel.uId==widget.groupRoomModel.createdBy) ?true :false,
                                   child: PopupMenuButton(
                                     itemBuilder: (BuildContext context) =>[
                                       PopupMenuItem(child:
                                        ListTile(
                                         onTap: (){
                                           removeMember( widget.groupMembers[index].uId!);
-                                         
                                         },
                                         leading: const Icon(Icons.remove),
                                        title: const Text("Remove"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),))

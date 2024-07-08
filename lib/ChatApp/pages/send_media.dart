@@ -11,7 +11,6 @@ import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/audio_player.dart';
 import 'package:proj/main.dart';
-import 'package:proj/storage/audio_player.dart';
 import 'package:video_player/video_player.dart';
 
 class SendMedia extends StatefulWidget {
@@ -22,11 +21,11 @@ class SendMedia extends StatefulWidget {
       this.groupRoomModel,
       required this.userModel,
       required this.type});
-  dynamic mediaToSend;
-  ChatRoomModel? chatRoom;
-  GroupRoomModel? groupRoomModel;
-  UserModel userModel;
-  String type;
+ final dynamic mediaToSend;
+ final ChatRoomModel? chatRoom;
+ final GroupRoomModel? groupRoomModel;
+final  UserModel userModel;
+ final String type;
 
   @override
   State<SendMedia> createState() => _SendMediaState();

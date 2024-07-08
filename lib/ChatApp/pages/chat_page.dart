@@ -5,6 +5,7 @@ import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/chat_room.dart';
+import 'package:proj/ChatApp/pages/search_page.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key , required this.firebaseUser, required this.userModel});
@@ -19,7 +20,51 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Chats"),),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,clipBehavior: Clip.none,
+        title:  GestureDetector(
+                                onTap: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> SearchPage(firebaseUser: widget.firebaseUser, userModel: widget.userModel,)));
+                                },
+            child:  Container(
+              margin: EdgeInsets.only(top: 5),
+                padding: const EdgeInsets.all(5),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        width: double.maxFinite,
+                        decoration: BoxDecoration(
+                            color:  Color.fromARGB(255, 226, 239, 246),
+                            borderRadius: BorderRadius.circular(12)),
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(right: 6),
+                              child: Icon(Icons.search)
+                              // const Image(
+                              //   image: AssetImage("assets/Search.png"),
+                              //   width: 24,
+                              //   height: 24,
+                              // ),
+                            ),
+                            const Expanded(
+                                child: Text( "Search Chats ,friends",style: TextStyle(fontSize: 15 ,fontFamily:"EuclidCircularB"),)
+                 
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                  ],
+                ),
+              ),
+            )),
       body: Container(
           child: StreamBuilder(
             stream: FirebaseFirestore.instance

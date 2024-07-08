@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
+import 'package:proj/ChatApp/pages/create_group.dart';
 import 'package:proj/ChatApp/pages/group_chats.dart';
 import 'package:proj/ChatApp/pages/groupchatroom.dart';
 
@@ -23,7 +24,19 @@ List<UserModel> groupMembers =[];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("group chats"),),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: ListTile(
+          contentPadding: EdgeInsets.zero,
+          title: const Text("Group Chats",style: TextStyle(fontFamily:"EuclidCircularB" ,fontSize: 18),)
+          ,trailing: IconButton(onPressed: (){
+               Navigator.push(context, MaterialPageRoute(
+                      builder: (context)=> 
+                      CreateGroupPage(firebaseUser: widget.firebaseUser, userModel: widget.userModel, existing: false,)));
+          }, icon: Icon(Icons.add)),)
+        // 
+        ),
       body: Container(
           child: StreamBuilder(
             stream: FirebaseFirestore.instance
@@ -55,29 +68,11 @@ List<UserModel> groupMembers =[];
                                   // getMembersModel(participantsList);   // to get list of usermodels of members
                               getMembersModel(participantsList);
 
-        //  UserModel lastMessageUser=UserModel();  
-
-        //   FirebaseFirestore.instance.collection("ChatAppUsers")
-        //  .doc(groupRoomModel.lastMessageBy).get().then((value) async{
-
-        //             lastMessageUser= await UserModel.fromMap(value.data() as Map<String,dynamic>);
-        //       });
-
-    
-
                               
                               String toShow;
                               String msgDate="${groupRoomModel.lastTime!.day}/${groupRoomModel.lastTime!.month}/${groupRoomModel.lastTime!.year}";
                               String currentDate="${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
-                               
-                            
-                              //  for(var id in groupMembers){
-                              //   if(groupRoomModel.lastMessageBy==id.uId){
-                              //       lastMessageUser=id;
-                              //    }
-                              //  }
-                               
-                              //  print("the last message was by ${lastMessageUser.name}");
+                              
                        
                                if(currentDate.compareTo(msgDate)==0){
         

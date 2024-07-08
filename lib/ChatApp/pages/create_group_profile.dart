@@ -31,6 +31,13 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
   bool picked = false;
   String name = "";
 
+@override
+  void initState() {
+   if(widget.groupRoomModel.groupName!=null || widget.groupRoomModel.groupName!=""){
+    name=widget.groupRoomModel.groupName!;
+   }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +45,9 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 240, 217, 148),
+           backgroundColor: Colors.white,
         title: const Text("Complete Profile"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-        centerTitle: true,
+        
       ),
       body: Container(
         alignment: Alignment.center,
@@ -48,29 +55,37 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
         child: Column(
           children: [
             Stack(
+              clipBehavior: Clip.none,
               children: [
                 CircleAvatar(
                     radius: 50,
                     backgroundColor: const Color.fromARGB(255, 240, 217, 148),
                     backgroundImage: (picked == true)
                         ? FileImage(profilePic!)
-                        : (null),
-                    child: (picked == false)
-                        ? const Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.black,
-                          )
-                        : null),
+                        : (widget.groupRoomModel.profilePic!=null) ?NetworkImage(widget.groupRoomModel.profilePic.toString()) : null as ImageProvider,
+                    // child: (picked == false)
+                    //     ? const Icon(
+                    //         Icons.person,
+                    //         size: 60,
+                    //         color: Colors.black,
+                    //       )
+                    //     : null
+                        ),
                 Positioned(
                     bottom: -1,
                     right: 5,
                     // change profile
-                    child: GestureDetector(
+                    child:
+                     GestureDetector(
                         onTap: () {
                           showoptions();
                         },
-                        child: const Icon(Icons.edit))),
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor:  const Color.fromARGB(255, 240, 217, 148),
+                          child: const Icon(Icons.edit)))
+                        
+                        ),
               ],
             ),
             const SizedBox(
@@ -81,6 +96,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                 child: Column(
                   children: [
                     TextFormField(
+                      initialValue: (name!="")?name :"",
                       decoration: const InputDecoration(
                           label: Text("Name"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ), border: OutlineInputBorder()),
                           validator: (value){
@@ -142,12 +158,12 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                           children:List.generate(widget.groupMembers.length, (index){
                            return ListTile(
                               leading: CircleAvatar(
-                                backgroundColor:  Color.fromARGB(255, 240, 217, 148),
+                                backgroundColor:  const Color.fromARGB(255, 240, 217, 148),
                                 backgroundImage: NetworkImage(widget.groupMembers[index].profileUrl!),
                                 radius: 30,
                                 ),
-                                title: Text(widget.groupMembers[index].name!  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                                subtitle:  Text(widget.groupMembers[index].email!  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                title: Text(widget.groupMembers[index].name!  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                                subtitle:  Text(widget.groupMembers[index].email!  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
                             );
                           }),
                         ),
@@ -211,7 +227,7 @@ void showoptions(){
 void cropImageCamera(XFile file) async {
     final croppedImage = await ImageCropper().cropImage(
       sourcePath: file.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       compressQuality: 20
     );
 

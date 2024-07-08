@@ -17,6 +17,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body:Container(
         width: MediaQuery.sizeOf(context).width,
         child:

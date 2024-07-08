@@ -60,31 +60,92 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 239, 125, 116),
-        title: const Text("Search" ,style: TextStyle(fontFamily:"EuclidCircularB")),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(backgroundColor: Colors.white,),
       body: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
         child: Column(
           children: [
-            ListTile(
-              title: TextField(
-                style: TextStyle(fontFamily:"EuclidCircularB"),
-                controller: searchFieldController,
-                decoration: const InputDecoration(
-                  hintText: "Search",
+             Container(
+            padding: const EdgeInsets.all(3),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Container(
+                    width: double.maxFinite,
+                    decoration: BoxDecoration(
+                        color:  Color.fromARGB(255, 226, 239, 246),
+                        borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.all(5),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            setState(() {});
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(right: 6,left: 6),
+                            child: Icon(Icons.search)
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                           autofocus: true,
+                           controller: searchFieldController,
+                            decoration: InputDecoration(
+                                contentPadding: EdgeInsets.zero,
+                                border: InputBorder.none,
+                                hintText: "Search chats ,Friends and emails",
+                                suffix: GestureDetector(
+                                  onTap: (){
+                                    searchFieldController.clear();
+                                  },
+                                  child: Container(
+                                    margin: const EdgeInsets.only(right: 6),
+                                    child: const Visibility(
+                                      visible: true,
+                                      child:Icon(Icons.close)
+                                    ),
+                                  ),
+                                ),
+                                
+                                ),
+                              
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              // Button
-              trailing: IconButton(
-                onPressed: () {
-                  setState(() {}); // to refresh
-                },
-                icon: const Icon(Icons.search),
-              ),
+                
+                  TextButton(onPressed: (){
+                    Navigator.pop(context);
+                  }, child: 
+                   const Text("cancel", ),
+                )
+              ],
             ),
+          ),
+            // ListTile(
+            //   title: TextField(
+            //     style: TextStyle(fontFamily:"EuclidCircularB"),
+            //     controller: searchFieldController,
+            //     decoration: const InputDecoration(
+            //       hintText: "Search",
+            //     ),
+            //   ),
+            //   // Button
+            //   trailing: IconButton(
+            //     onPressed: () {
+            //       setState(() {}); // to refresh
+            //     },
+            //     icon: const Icon(Icons.search),
+            //   ),
+            // ),
+
+
             const SizedBox(
               height: 20,
             ),

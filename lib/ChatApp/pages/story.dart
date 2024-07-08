@@ -178,7 +178,9 @@ class _StoriesState extends State<Stories> {
         return AlertDialog(
           title: const Text("Camera" ,style: TextStyle(fontFamily:"EuclidCircularB")),
           content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+                 
               // for picture
               IconButton(
                 onPressed: () async {
@@ -196,7 +198,7 @@ class _StoriesState extends State<Stories> {
                     );
                   }
                 },
-                icon: const Icon(Icons.image),
+                icon: const Icon(Icons.image ,size: 40,),
               ),
 
               // for video
@@ -216,13 +218,14 @@ class _StoriesState extends State<Stories> {
                         ));
                   }
                 },
-                icon: const Icon(Icons.video_camera_back),
+                icon: const Icon(Icons.video_camera_back ,size: 40,),
               ),
             ],
           ),
         );
       },
     );
+  
   }
 
   void usersWithStories(){

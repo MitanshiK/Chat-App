@@ -8,7 +8,7 @@ import 'package:proj/ChatApp/pages/login.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({super.key ,required this.destination ,this.firebaseUser ,this.userModel});
-  String destination;  
+ final String destination;  
   final User? firebaseUser;
   final UserModel? userModel;
 

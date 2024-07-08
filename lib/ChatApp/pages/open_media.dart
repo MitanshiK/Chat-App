@@ -10,17 +10,16 @@ class OpenMedia extends StatefulWidget {
   OpenMedia(
       {super.key,
       required this.mediamodel,
-      // required this.mediaUrl,
       required this.userModel,
       required this.senderUid,
       required this.type,
       required this.date});
-      var mediamodel;
-  // String mediaUrl;
+     final mediamodel;
+
   final UserModel userModel;
   final String senderUid;
-  String type;
-  DateTime date;
+  final String type;
+  final DateTime date;
 
   @override
   State<OpenMedia> createState() => _OpenMediaState();

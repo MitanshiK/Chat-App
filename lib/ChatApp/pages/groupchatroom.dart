@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cubit_form/cubit_form.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -17,11 +18,9 @@ import 'package:image_cropper/image_cropper.dart';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:proj/ChatApp/models/Blocs/emoji_bloc.dart';
 import 'package:proj/ChatApp/models/Blocs/player_bloc.dart';
-
-import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/contacts_model.dart';
-import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/Blocs/message_bloc.dart';
@@ -33,7 +32,6 @@ import 'package:proj/ChatApp/pages/group_info.dart';
 import 'package:proj/ChatApp/pages/open_media.dart';
 import 'package:proj/ChatApp/pages/send_media.dart';
 import 'package:proj/ChatApp/pages/share_bottom_modal.dart';
-import 'package:proj/ChatApp/pages/user_profile.dart';
 import 'package:proj/main.dart';
 import 'package:video_player/video_player.dart';
 import 'package:just_audio/just_audio.dart' as ap;
@@ -141,6 +139,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
     }
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         actions: [
           PopupMenuButton(
@@ -608,200 +607,238 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                     // bloc provider for audio player visibility
                     create: (_) => PlayerVisBloc(false),
                   ),
+                   //3 
+                    BlocProvider<EmojiVisBloc>(
+                    // bloc provider for emoji keyboard visibility
+                    create: (_) => EmojiVisBloc(false),
+                  ),
                 ],
                 child: BlocBuilder<MessageBloc, bool>(// bloc builder
                     builder: (BuildContext context, state) {
-                  return Container(
-                    child: ListTile(
-                      minLeadingWidth: 0,
-                      dense: true,
-                      contentPadding: EdgeInsets.zero,
-                      title: Container(
-                          padding: const EdgeInsets.fromLTRB(10, 5, 5, 0),
-                          margin: const EdgeInsets.fromLTRB(10, 10, 0, 10),
-                          decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 230, 229, 229),
-                              borderRadius: BorderRadius.circular(20)),
-                          child: context.watch<PlayerVisBloc>().state
-                              ? // Audio Player
-                              Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 25),
-                                  child: AudioPlayer(
-                                    source: audioSource!,
-                                    onDelete: () {
-                                      context
-                                          .read<PlayerVisBloc>()
-                                          .add(PlayerVisibility());
-                                      context.read<MessageBloc>().add(NoText());
-                                    },
-                                    inChat: false,
-                                  ),
-                                )
-                              : Row(
-                                  children: [
-                                    // for emoji
-                                    IconButton(
-                                        onPressed: () async {},
-                                        icon: const Icon(Icons.emoji_emotions)),
-
-                                    // message Field
-                                    Expanded(
-                                      child: TextFormField(
-                                         style: TextStyle(fontFamily:"EuclidCircularB") , 
-                                        maxLines: null,
-                                        controller: messageController,
-                                        decoration: const InputDecoration(
-                                            hintText: "message",
-                                            border: InputBorder.none),
-                                        onChanged: (value) {
-                                          if (value == "") {
-                                            context
-                                                .read<MessageBloc>()
-                                                .add(NoText());
-                                          } else {
-                                            context
-                                                .read<MessageBloc>()
-                                                .add(HasText());
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                    // for media
-
-                                    // modal sheet for media
-                                    IconButton(
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              context: context,
-                                              isScrollControlled:
-                                                  true, // Set this to true to enable full screen modal
-                                              builder: (BuildContext context) {
-                                                return ShareBottomModal(
-                                                  groupRoomModel:
-                                                      widget.groupRoomModel,
-                                                  userModel: widget.userModel,
-                                                );
-                                              });
-                                        },
-                                        icon: const Icon(Icons.attach_file)),
-                                    // camera
-                                    Visibility(
-                                      visible:
-                                          context.watch<MessageBloc>().state
-                                              ? false
-                                              : true,
-                                      child: IconButton(
-                                          onPressed: () async {
-                                           await chooseDialog();
-                                            
-                                          },
-                                          icon: const Icon(
-                                              Icons.camera_alt_outlined)),
-                                    ),
-                                  ],
-                                )),
-                      trailing: Container(
-                        width: 60,
-                        height: 60,
-                        margin: const EdgeInsets.only(right: 5),
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Color.fromARGB(255, 230, 229, 229)),
-                        child: context.watch<MessageBloc>().state
-                            ? context.watch<PlayerVisBloc>().state
-                                ?
-                                // audio message
-                                IconButton(
-                                    onPressed: () async {
-                                      try {
-                                        
-                                        // saving aufio in storage
-                                        final result = await FirebaseStorage
-                                            .instance
-                                            .ref("AllSharedMedia")
-                                            .child(widget
-                                                .groupRoomModel.groupRoomId
-                                                .toString())
-                                            .child("sharedMedia")
-                                            .child(uuid.v1())
-                                            .putFile(File(audioFilePath!));
-
-                                        // getting download url
-                                        String? mediaUrl =
-                                            await result.ref.getDownloadURL();
-
-                                        final newMessage = MediaModel(
-                                            // creating message
-                                            mediaId: uuid.v1(),
-                                            senderId: widget.userModel.uId,
-                                            fileUrl: mediaUrl,
-                                            createdOn: DateTime.now(),
-                                            type: "audio");
-
-                                        // creating a messages collection inside chatroom docs and saving messages in them
-                                        FirebaseFirestore.instance
-                                            .collection("GroupChats")
-                                            .doc(
-                                                widget.groupRoomModel.groupRoomId)
-                                            .collection("messages")
-                                            .doc(newMessage.mediaId)
-                                            .set(newMessage.toMap())
-                                            .then((value) {
-                                          debugPrint("message sent");
-                                        });
-
-                                        // setting last message in chatroom and saving in firestore
-                                        widget.groupRoomModel.lastMessage =
-                                            newMessage.type;
-                                            widget.groupRoomModel.lastTime =newMessage.createdOn;
-                                            widget.groupRoomModel.lastMessageBy = newMessage.senderId;
-                                        FirebaseFirestore.instance
-                                            .collection("GroupChats")
-                                            .doc(
-                                                widget.groupRoomModel.groupRoomId)
-                                            .set(widget.groupRoomModel.toMap());
-
-                                        /////////////////////////
-                                        context.read<PlayerVisBloc>().add(
-                                            PlayerVisibility()); // make audio player visible
+                  return Column(
+                    children: [
+                      ListTile(
+                        minLeadingWidth: 0,
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                        title: Container(
+                            padding: const EdgeInsets.fromLTRB(10, 5, 5, 0),
+                            margin: const EdgeInsets.fromLTRB(10, 10, 0, 10),
+                            decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 230, 229, 229),
+                                borderRadius: BorderRadius.circular(20)),
+                            child: context.watch<PlayerVisBloc>().state
+                                ? // Audio Player
+                                Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 25),
+                                    child: AudioPlayer(
+                                      source: audioSource!,
+                                      onDelete: () {
                                         context
-                                            .read<MessageBloc>()
-                                            .add(NoText());
-
-                                        print(
-                                            "${File(audioFilePath!)} is path $audioFilePath ");
-                                      } catch (e) {
-                                        print("error in sending audio is $e");
-                                      }
-                                    },
-                                    icon: const Icon(Icons.send_outlined))
-                                :
-                                // text message
-                                IconButton(
-                                    onPressed: () {
-                                      sendMessage();
-                                      context.read<MessageBloc>().add(NoText());
-                                    },
-                                    icon: const Icon(Icons.send))
-                            : MicWidget(
-                                onStop: (String path) {
-                                  // setState(() {
-                                  audioFilePath = path;
-                                  audioSource = ap.AudioSource.uri(
-                                      Uri.parse(path)); // set the source
-                                  // });
-                                  context.read<PlayerVisBloc>().add(
-                                      PlayerVisibility()); // make audio player visible
-                                  context
-                                      .read<MessageBloc>()
-                                      .add(HasText()); // showing send arrow
-                                },
-                              ),
+                                            .read<PlayerVisBloc>()
+                                            .add(PlayerVisibility());
+                                        context.read<MessageBloc>().add(NoText());
+                                      },
+                                      inChat: false,
+                                    ),
+                                  )
+                                : Row(
+                                    children: [
+                                      // for emoji
+                                      IconButton(
+                                          onPressed: () async {
+                                      context.read<EmojiVisBloc>().add(emojiVisiblety());
+                                          },
+                                          icon: const Icon(Icons.emoji_emotions)),
+                      
+                                      // message Field
+                                      Expanded(
+                                        child: TextFormField(
+                                           style: TextStyle(fontFamily:"EuclidCircularB") , 
+                                          maxLines: null,
+                                              onTapOutside: (event) {
+                                              //  context.read<EmojiVisBloc>().add(emojiHide());
+                                                   FocusManager.instance.primaryFocus?.unfocus();
+                                                   },
+                                          controller: messageController,
+                                          decoration: const InputDecoration(
+                                              hintText: "message",
+                                              border: InputBorder.none),
+                                          onChanged: (value) {
+                                            if (value == "") {
+                                              context
+                                                  .read<MessageBloc>()
+                                                  .add(NoText());
+                                            } else {
+                                              context
+                                                  .read<MessageBloc>()
+                                                  .add(HasText());
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      // for media
+                      
+                                      // modal sheet for media
+                                      IconButton(
+                                          onPressed: () {
+                                            showModalBottomSheet(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                context: context,
+                                                isScrollControlled:
+                                                    true, // Set this to true to enable full screen modal
+                                                builder: (BuildContext context) {
+                                                  return ShareBottomModal(
+                                                    groupRoomModel:
+                                                        widget.groupRoomModel,
+                                                    userModel: widget.userModel,
+                                                  );
+                                                });
+                                          },
+                                          icon: const Icon(Icons.attach_file)),
+                                      // camera
+                                      Visibility(
+                                        visible:
+                                            context.watch<MessageBloc>().state
+                                                ? false
+                                                : true,
+                                        child: IconButton(
+                                            onPressed: () async {
+                                             await chooseDialog();
+                                              
+                                            },
+                                            icon: const Icon(
+                                                Icons.camera_alt_outlined)),
+                                      ),
+                                    ],
+                                  )),
+                        trailing: Container(
+                          width: 60,
+                          height: 60,
+                          margin: const EdgeInsets.only(right: 5),
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromARGB(255, 230, 229, 229)),
+                          child: context.watch<MessageBloc>().state
+                              ? context.watch<PlayerVisBloc>().state
+                                  ?
+                                  // audio message
+                                  IconButton(
+                                      onPressed: () async {
+                                        try {
+                                          
+                                          // saving aufio in storage
+                                          final result = await FirebaseStorage
+                                              .instance
+                                              .ref("AllSharedMedia")
+                                              .child(widget
+                                                  .groupRoomModel.groupRoomId
+                                                  .toString())
+                                              .child("sharedMedia")
+                                              .child(uuid.v1())
+                                              .putFile(File(audioFilePath!));
+                      
+                                          // getting download url
+                                          String? mediaUrl =
+                                              await result.ref.getDownloadURL();
+                      
+                                          final newMessage = MediaModel(
+                                              // creating message
+                                              mediaId: uuid.v1(),
+                                              senderId: widget.userModel.uId,
+                                              fileUrl: mediaUrl,
+                                              createdOn: DateTime.now(),
+                                              type: "audio");
+                      
+                                          // creating a messages collection inside chatroom docs and saving messages in them
+                                          FirebaseFirestore.instance
+                                              .collection("GroupChats")
+                                              .doc(
+                                                  widget.groupRoomModel.groupRoomId)
+                                              .collection("messages")
+                                              .doc(newMessage.mediaId)
+                                              .set(newMessage.toMap())
+                                              .then((value) {
+                                            debugPrint("message sent");
+                                          });
+                      
+                                          // setting last message in chatroom and saving in firestore
+                                          widget.groupRoomModel.lastMessage =
+                                              newMessage.type;
+                                              widget.groupRoomModel.lastTime =newMessage.createdOn;
+                                              widget.groupRoomModel.lastMessageBy = newMessage.senderId;
+                                          FirebaseFirestore.instance
+                                              .collection("GroupChats")
+                                              .doc(
+                                                  widget.groupRoomModel.groupRoomId)
+                                              .set(widget.groupRoomModel.toMap());
+                      
+                                          /////////////////////////
+                                          context.read<PlayerVisBloc>().add(
+                                              PlayerVisibility()); // make audio player visible
+                                          context
+                                              .read<MessageBloc>()
+                                              .add(NoText());
+                      
+                                          print(
+                                              "${File(audioFilePath!)} is path $audioFilePath ");
+                                        } catch (e) {
+                                          print("error in sending audio is $e");
+                                        }
+                                      },
+                                      icon: const Icon(Icons.send_outlined))
+                                  :
+                                  // text message
+                                  IconButton(
+                                      onPressed: () {
+                                        sendMessage();
+                                        context.read<MessageBloc>().add(NoText());
+                                      },
+                                      icon: const Icon(Icons.send))
+                              : MicWidget(
+                                  onStop: (String path) {
+                                    // setState(() {
+                                    audioFilePath = path;
+                                    audioSource = ap.AudioSource.uri(
+                                        Uri.parse(path)); // set the source
+                                    // });
+                                    context.read<PlayerVisBloc>().add(
+                                        PlayerVisibility()); // make audio player visible
+                                    context
+                                        .read<MessageBloc>()
+                                        .add(HasText()); // showing send arrow
+                                  },
+                                ),
+                        ),
                       ),
+                      // emoji keyboard 
+                        Visibility(
+                  visible: context.watch<EmojiVisBloc>().state,
+                  child: EmojiPicker(
+                    onEmojiSelected: (category, emoji) => {
+                   context.read<MessageBloc>().add(HasText())
+                    },
+                    onBackspacePressed: (){
+                      if(messageController.text==""){
+                        context.read<MessageBloc>().add(NoText());
+                      }
+                    },
+                    textEditingController: messageController,
+                    config: const Config(
+                      height: 256,
+                      checkPlatformCompatibility: true,
+                      swapCategoryAndBottomBar: false,
+                      skinToneConfig: SkinToneConfig(),
+                      categoryViewConfig: CategoryViewConfig(),
+                      bottomActionBarConfig: BottomActionBarConfig(),
+                      searchViewConfig: SearchViewConfig(),
                     ),
+                    ),
+                   ),
+
+                    ],
                   ); //
                 }) //
                 ) //

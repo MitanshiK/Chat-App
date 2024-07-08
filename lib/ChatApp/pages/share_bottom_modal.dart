@@ -12,9 +12,9 @@ import 'package:proj/ChatApp/pages/send_media.dart';
 
 class ShareBottomModal extends StatefulWidget {
   ShareBottomModal({super.key , this.chatRoomModel ,required this.userModel ,this.groupRoomModel});
-GroupRoomModel? groupRoomModel;
- UserModel userModel;
- ChatRoomModel?   chatRoomModel;
+ final GroupRoomModel? groupRoomModel;
+ final UserModel userModel;
+ final ChatRoomModel?   chatRoomModel;
 
   @override
   State<ShareBottomModal> createState() => _ShareBottomModalState();

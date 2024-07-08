@@ -18,6 +18,7 @@ import 'package:proj/ChatApp/pages/home_page.dart';
 import 'package:proj/ChatApp/pages/login.dart';
 import 'package:proj/ChatApp/pages/splash_screen.dart';
 import 'package:proj/add_contact.dart';
+import 'package:proj/emoji_keyboard.dart';
 import 'package:proj/facebook/face_auth.dart';
 import 'package:proj/firestore/add_data.dart';
 import 'package:proj/firestore/listening_changes.dart';

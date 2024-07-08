@@ -5,6 +5,7 @@ sealed class HideOrShow{}
 final class HasText extends HideOrShow{}
 final class NoText extends HideOrShow{}
 
+
 // Observing change in state using onChange and onTransition method 
 
 class MessageBloc extends Bloc<HideOrShow,bool>{

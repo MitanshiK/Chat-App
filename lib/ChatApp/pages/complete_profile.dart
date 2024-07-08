@@ -33,6 +33,14 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
   File? profilePic;
   bool picked = false;
   String name = "";
+@override
+  void initState() {
+   if(widget.userModel.name!=null || widget.userModel.name!=""){
+    name=widget.userModel.name!;
+   }
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +49,9 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 240, 217, 148),
+         backgroundColor: Colors.white,
         title: const Text("Complete Profile"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-        centerTitle: true,
+       
       ),
       body: Container(
         alignment: Alignment.center,
@@ -51,29 +59,37 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
         child: Column(
           children: [
             Stack(
+              clipBehavior: Clip.none,
               children: [
                 CircleAvatar(
                     radius: 50,
                     backgroundColor: const Color.fromARGB(255, 240, 217, 148),
                     backgroundImage: (picked == true)
                         ? FileImage(profilePic!)
-                        : null,
-                    child: (picked == false)
-                        ? const Icon(
-                            Icons.person,
-                            size: 60,
-                            color: Colors.black,
-                          )
-                        : null),
-                Positioned(
+                        : ((widget.userModel.profileUrl!=null) ? NetworkImage(widget.userModel.profileUrl.toString()): AssetImage("assets/woman.png") as ImageProvider),
+                    // child: (picked == false)
+                    //     ? const Icon(
+                    //         Icons.person,
+                    //         size: 60,
+                    //         color: Colors.black,
+                    //       )
+                    //     : null
+                        ),
+                   Positioned(
                     bottom: -1,
                     right: 5,
                     // change profile
-                    child: GestureDetector(
+                    child:
+                     GestureDetector(
                         onTap: () {
                           showoptions();
                         },
-                        child: const Icon(Icons.edit))),
+                        child: CircleAvatar(
+                          radius: 15,
+                          backgroundColor:  const Color.fromARGB(255, 240, 217, 148),
+                          child: const Icon(Icons.edit)))
+                        
+                        ),
               ],
             ),
             const SizedBox(
@@ -84,6 +100,7 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                 child: Column(
                   children: [
                     TextFormField(
+                      initialValue: (name!="") ? name :"",
                        style: TextStyle(fontFamily:"EuclidCircularB")  ,
                       decoration: const InputDecoration(
                           label: Text("Name"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ), border: OutlineInputBorder()),

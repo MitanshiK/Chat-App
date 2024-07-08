@@ -16,9 +16,9 @@ class StoryFileUpload extends StatefulWidget {
       required this.status,
       required this.userModel,
       required this.type});
-  dynamic status;
-  UserModel userModel;
-  String type;
+ final dynamic status;
+ final UserModel userModel;
+ final String type;
 
   @override
   State<StoryFileUpload> createState() => _StoryFileUploadState();
