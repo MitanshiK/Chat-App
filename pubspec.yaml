@@ -118,7 +118,20 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
+  fonts:
+    - family: EuclidCircularB
+      fonts:
+        - asset: fonts/Euclid Circular B Bold.ttf
+        - asset: fonts/Euclid Circular B Italic.ttf
+        - asset: fonts/Euclid Circular B Light Italic.ttf
+        - asset: fonts/Euclid Circular B Light.ttf
+        - asset: fonts/Euclid Circular B Medium Italic.ttf
+        - asset: fonts/Euclid Circular B Medium.ttf
+        - asset: fonts/Euclid Circular B Regular.ttf
+        - asset: fonts/Euclid Circular B Regular.ttf
+        - asset: fonts/Euclid Circular B SemiBold.ttf
+          weight: 800
+  
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

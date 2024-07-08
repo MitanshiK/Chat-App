@@ -63,11 +63,11 @@ class _UserProfileState extends State<UserProfile> {
               children: [
                 Text(
                   widget.targetUser.name!,
-                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold ,fontFamily:"EuclidCircularB"),
                 ),
                 Text(
                   widget.targetUser.email!,
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey ,fontFamily:"EuclidCircularB"),
                 )
               ],
             ),
@@ -85,7 +85,7 @@ class _UserProfileState extends State<UserProfile> {
             child: Row(children: [
               Text(
                 "Shared videos and images",
-                style: TextStyle(fontSize: 15, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 15, color: Colors.grey[600] ,fontFamily:"EuclidCircularB"),
               ),
               const Spacer(),
               Icon(
@@ -118,7 +118,7 @@ class _UserProfileState extends State<UserProfile> {
                           maxHeight:  300,
                           maxWidth: MediaQuery.sizeOf(context).width/2,
                           ),
-                        child: (dataSnapshot.docs.isNotEmpty) ? ListView.builder(
+                        child: (dataSnapshot.docs==[]) ? ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: dataSnapshot.docs.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -211,13 +211,15 @@ class _UserProfileState extends State<UserProfile> {
                             );
                           },
                         ):
-                        Center(child: Text("no shared Media"),),
+                        Padding(
+                          padding: EdgeInsets.all(5),
+                          child:  Text("no shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"),),),
                       );
                     } else if (snapshot.hasError) {
                       return const Text(
                           "Error Occured !! Please check our internet Connection");
                     } else {
-                      return Text("Say Hi");
+                      return Text("Say Hi", style: TextStyle(fontFamily:"EuclidCircularB"),);
                     }
                   } else {
                     return const Center(child: CircularProgressIndicator());

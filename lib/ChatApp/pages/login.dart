@@ -45,6 +45,7 @@ class _LoginpageState extends State<Loginpage> {
               const Text(
                 "Chat App",
                 style: TextStyle(
+                  fontFamily:"EuclidCircularB",
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Color.fromARGB(255, 239, 125, 116)),
@@ -55,7 +56,7 @@ class _LoginpageState extends State<Loginpage> {
               ),
               const Text(
                 "Login to your Chat App Account ",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600    ,fontFamily:"EuclidCircularB"),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(
@@ -66,8 +67,9 @@ class _LoginpageState extends State<Loginpage> {
                   child: Column(
                     children: [
                       TextFormField(
+                        style: TextStyle(fontFamily:"EuclidCircularB"),
                         decoration: const InputDecoration(
-                            label: Text("Email Id"),
+                            label: Text("Email Id",style: TextStyle(fontFamily:"EuclidCircularB")),
                             border: OutlineInputBorder()),
                         validator: (value) {
                           if (value.toString().trim() == "") {
@@ -86,6 +88,7 @@ class _LoginpageState extends State<Loginpage> {
                         height: 10,
                       ),
                       TextFormField(
+                        style: TextStyle(fontFamily:"EuclidCircularB"),
                           obscureText: obscure,
                           decoration: InputDecoration(
                               suffix: GestureDetector(
@@ -102,7 +105,7 @@ class _LoginpageState extends State<Loginpage> {
                                   height: 20,
                                 ),
                               ),
-                              label: Text("Password"),
+                              label: Text("Password" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                               border: OutlineInputBorder()),
                           validator: (value) {
                             if (value.toString().trim() == "") {
@@ -142,6 +145,7 @@ class _LoginpageState extends State<Loginpage> {
                               "Log In ",
                               style: TextStyle(
                                   fontSize: 18,
+                                  fontFamily:"EuclidCircularB",
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black),
                             )),
@@ -155,6 +159,7 @@ class _LoginpageState extends State<Loginpage> {
                   const Text(
                     "Don't have an account ?",
                     style: TextStyle(
+                      fontFamily:"EuclidCircularB",
                         fontSize: 15,
                         fontWeight: FontWeight.w400,
                         color: Colors.black),
@@ -172,6 +177,7 @@ class _LoginpageState extends State<Loginpage> {
                     child: const Text(
                       "Sign Up",
                       style: TextStyle(
+                        fontFamily:"EuclidCircularB",
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
                           color: Color.fromARGB(255, 239, 144, 138)),
@@ -194,7 +200,7 @@ class _LoginpageState extends State<Loginpage> {
           .signInWithEmailAndPassword(email: email, password: password);
     } on auth.FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Could Not Login :$e")));
+          .showSnackBar(SnackBar(content: Text("Could Not Login :$e" ,style: TextStyle(fontFamily:"EuclidCircularB"))));
 
       print("login exception $e");
     }

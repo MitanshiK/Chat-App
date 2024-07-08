@@ -83,7 +83,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                           backgroundColor: Color.fromARGB(255, 236, 113, 154),
                           child: Icon(Icons.image ,color: Colors.white,),
                          ),
-                         Text("Image")
+                         Text("Image" ,style: TextStyle(fontFamily:"EuclidCircularB"))
                        ],
                      ),
                    ),
@@ -125,7 +125,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                           backgroundColor: Colors.amber,
                           child: Icon(Icons.video_camera_back ,color: Colors.white,),
                          ),
-                         Text("Video")
+                         Text("Video" ,style: TextStyle(fontFamily:"EuclidCircularB"))
                        ],
                      ),
                    ),
@@ -142,7 +142,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                           backgroundColor: Color.fromARGB(255, 81, 131, 157),
                           child: Icon(Icons.camera_alt,color: Colors.white,),
                          ),
-                         Text("Camera")
+                         Text("Camera",style: TextStyle(fontFamily:"EuclidCircularB"))
                        ],
                      ),
                    )
@@ -194,7 +194,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                           backgroundColor: Colors.purple,
                           child: Icon(Icons.audio_file ,color: Colors.white,),
                          ),
-                         Text("Audio")
+                         Text("Audio",style: TextStyle(fontFamily:"EuclidCircularB"))
                        ],
                      ),
                    ),
@@ -211,7 +211,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                           backgroundColor: Colors.green,
                           child: Icon(Icons.location_pin ,color: Colors.white,),
                          ),
-                         Text("Location")
+                         Text("Location",style: TextStyle(fontFamily:"EuclidCircularB"))
                        ],
                      ),
                    ),
@@ -247,7 +247,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                           backgroundColor: Colors.orange,
                           child: Icon(Icons.contacts,color: Colors.white,),
                          ),
-                         Text("Contacts")
+                         Text("Contacts",style: TextStyle(fontFamily:"EuclidCircularB"))
                        ],
                      ),
                    )
@@ -272,7 +272,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                      title: const Text("Camera"),
+                                                      title: const Text("Camera" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                                                       content: Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                         children: [

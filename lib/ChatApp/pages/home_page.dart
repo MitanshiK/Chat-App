@@ -51,7 +51,7 @@ currentScreenBoth= ChatPage(firebaseUser: widget.firebaseUser, userModel: widget
               //1
               PopupMenuItem(
                 child: const ListTile(
-                  title: Text("Log Out"),
+                  title: Text("Log Out" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                   leading: Icon(
                     Icons.logout,
                     color: Colors.black,
@@ -73,7 +73,7 @@ currentScreenBoth= ChatPage(firebaseUser: widget.firebaseUser, userModel: widget
               // 2
               PopupMenuItem(
                   child: const ListTile(
-                title: Text("View profile"),
+                title: Text("View profile" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                 leading: Icon(Icons.person),
               ),
               onTap: (){
@@ -83,7 +83,7 @@ currentScreenBoth= ChatPage(firebaseUser: widget.firebaseUser, userModel: widget
               //3
                PopupMenuItem(
                   child: const ListTile(
-                title: Text("create a group"),
+                title: Text("create a group" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                 leading: Icon(Icons.group_add),
               ),
               onTap: (){
@@ -96,7 +96,9 @@ currentScreenBoth= ChatPage(firebaseUser: widget.firebaseUser, userModel: widget
         backgroundColor: const Color.fromARGB(255, 158, 219, 241),
         automaticallyImplyLeading: false,
         centerTitle: true,
-        title: const Text("Home Page"),
+        title: const Text("Home Page" 
+        ,style: TextStyle(fontFamily:"EuclidCircularB")
+        ),
       ),
       body:   currentScreenBoth,
        floatingActionButton: FloatingActionButton(

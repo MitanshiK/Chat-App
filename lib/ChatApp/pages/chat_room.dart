@@ -185,7 +185,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
               const SizedBox(
                 width: 20,
               ),
-              Text(widget.targetUser.name.toString())
+              Text(widget.targetUser.name.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  )
             ],
           ),
         ),
@@ -389,7 +389,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                 children: [
                                                   (messageType == "text")
                                                       ? Text(currentMessage.text
-                                                          .toString())
+                                                          .toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  )
                                                       :
                                                       // subconition 1
                                                       (messageType != "text")
@@ -485,8 +485,8 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                                                             color: Colors.white,
                                                                                           ),
                                                                                         ),
-                                                                                        title: Text(currentMessage.name.toString()),
-                                                                                        subtitle: Text(currentMessage.phone.toString()),
+                                                                                        title: Text(currentMessage.name.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                                                                        subtitle: Text(currentMessage.phone.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                                                                       ),
                                                                                       ListTile(
                                                                                         contentPadding: EdgeInsets.zero,
@@ -520,7 +520,9 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                                                           },
                                                                                           child: const Text(
                                                                                             "Add to Contacts",
-                                                                                            style: TextStyle(color: Colors.blue),
+                                                                                            style: TextStyle(
+                                                                                              fontFamily:"EuclidCircularB", 
+                                                                                              color: Colors.blue),
                                                                                           ),
                                                                                         ),
                                                                                       )
@@ -552,7 +554,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                       return const Text(
                           "Error Occured !! Please check our internet Connection");
                     } else {
-                      return Text("Say Hi to ${widget.targetUser.name}");
+                      return Text("Say Hi to ${widget.targetUser.name}"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
                     }
                   } else {
                     return const Center(child: CircularProgressIndicator());
@@ -614,6 +616,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                     // message Field
                                     Expanded(
                                       child: TextFormField(
+                                         style: TextStyle(fontFamily:"EuclidCircularB"),
                                         maxLines: null,
                                         controller: messageController,
                                         decoration: const InputDecoration(
@@ -806,7 +809,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                      title: const Text("Camera"),
+                                                      title: const Text("Camera"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                                       content: Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                         children: [

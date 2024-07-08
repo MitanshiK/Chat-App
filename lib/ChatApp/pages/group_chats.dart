@@ -41,7 +41,9 @@ class _GroupChatPageState extends State<GroupChatPage> {
                   },
                   child: const Text(
                     "Create a GroupChat",
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                       fontFamily:"EuclidCircularB",  
+                      color: Colors.black),
 
                   ))
             ],

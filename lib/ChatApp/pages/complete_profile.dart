@@ -42,7 +42,7 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 240, 217, 148),
-        title: const Text("Complete Profile"),
+        title: const Text("Complete Profile"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
         centerTitle: true,
       ),
       body: Container(
@@ -84,8 +84,9 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                 child: Column(
                   children: [
                     TextFormField(
+                       style: TextStyle(fontFamily:"EuclidCircularB")  ,
                       decoration: const InputDecoration(
-                          label: Text("Name"), border: OutlineInputBorder()),
+                          label: Text("Name"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ), border: OutlineInputBorder()),
                           validator: (value){
                            if(value!.trim()==""){
                               return "empty name field";
@@ -123,7 +124,7 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                                   Color.fromARGB(255, 240, 217, 148))),
                           child: const Text(
                             "Save",
-                            style: TextStyle(
+                            style: TextStyle(fontFamily:"EuclidCircularB" ,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
@@ -143,7 +144,7 @@ void showoptions(){
  showDialog(context: context,
   builder: ( context) { 
    return AlertDialog(
-    title: const Text("Upload Profile from"),
+    title: const Text("Upload Profile from"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -153,7 +154,7 @@ void showoptions(){
           Navigator.pop(context);
         },
         leading: const Icon(Icons.camera),
-      title: const Text("Open Camera"),),
+      title: const Text("Open Camera"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),),
 
       ListTile(
           onTap: (){
@@ -161,7 +162,7 @@ void showoptions(){
           Navigator.pop(context);
           },
           leading: const Icon(Icons.image),
-               title: const Text("Upload from Gallary"),),
+               title: const Text("Upload from Gallary"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),),
     ],),
    );
    });

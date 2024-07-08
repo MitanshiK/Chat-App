@@ -5,7 +5,6 @@ import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/all_group_page.dart';
 import 'package:proj/ChatApp/pages/create_group_profile.dart';
-import 'package:proj/ChatApp/pages/group_chats.dart';
 import 'package:proj/main.dart';
 
 class CreateGroupPage extends StatefulWidget {
@@ -151,13 +150,14 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Search people to add "),
+        title: const Text("Search people to add "  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
         backgroundColor: const Color.fromARGB(255, 239, 125, 116),
       ),
       body: Column(
         children: [
           ListTile(
             title: TextField(
+              style: TextStyle(fontFamily:"EuclidCircularB") ,
               controller: searchFieldController,
               decoration: const InputDecoration(
                 hintText: "Search",
@@ -221,8 +221,8 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                             //             )));
                             //             }
                           },
-                          title: Text(searchData.name.toString()),
-                          subtitle: Text(searchData.email.toString()),
+                          title: Text(searchData.name.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                          subtitle: Text(searchData.email.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                           leading: CircleAvatar(
                               backgroundImage: (searchData.profileUrl != null)
                                   ? NetworkImage(
@@ -238,12 +238,12 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                                   : null),
                         );
                       } else {
-                        return const Text("No result Found");
+                        return const Text("No result Found"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
                       }
                     } else if (snapshot.hasError) {
-                      return const Text("An error has occured");
+                      return const Text("An error has occured" ,style: TextStyle(fontFamily:"EuclidCircularB")  );
                     } else {
-                      return const Text("No result found");
+                      return const Text("No result found"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
                     }
                   } else {
                     return const CircularProgressIndicator();
@@ -287,7 +287,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Text(GroupMembers[index].name!)
+                                Text(GroupMembers[index].name!  ,style: TextStyle(fontFamily:"EuclidCircularB")  )
                               ],
                             ),
                           ),

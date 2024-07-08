@@ -19,7 +19,7 @@ class CreateGroupProfile extends StatefulWidget {
   final  UserModel userModel;
   final  User firebaseUser;  
   final GroupRoomModel  groupRoomModel;
-  List<UserModel> groupMembers;
+ final List<UserModel> groupMembers;
 
   @override
   State<CreateGroupProfile> createState() => _CreateGroupProfileState();
@@ -39,7 +39,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 240, 217, 148),
-        title: const Text("Complete Profile"),
+        title: const Text("Complete Profile"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
         centerTitle: true,
       ),
       body: Container(
@@ -54,7 +54,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                     backgroundColor: const Color.fromARGB(255, 240, 217, 148),
                     backgroundImage: (picked == true)
                         ? FileImage(profilePic!)
-                        : null,
+                        : (null),
                     child: (picked == false)
                         ? const Icon(
                             Icons.person,
@@ -75,14 +75,14 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
             ),
             const SizedBox(
               height: 30,
-            ),
+             ),
             Form(
                 key: groupProfileKey,
                 child: Column(
                   children: [
                     TextFormField(
                       decoration: const InputDecoration(
-                          label: Text("Name"), border: OutlineInputBorder()),
+                          label: Text("Name"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ), border: OutlineInputBorder()),
                           validator: (value){
                            if(value!.trim()==""){
                               return "empty name field";
@@ -105,9 +105,9 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                           onPressed: () {
 
                              groupProfileKey.currentState!.save();
-                             if( groupProfileKey.currentState!.validate()){
+                             if( groupProfileKey.currentState!.validate())
+                             {
                              uploadData();
-                             
                              }
                           },
                           style: ButtonStyle(
@@ -123,6 +123,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                           child: const Text(
                             "Save",
                             style: TextStyle(
+                             fontFamily:"EuclidCircularB",  
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black),
@@ -145,8 +146,8 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                                 backgroundImage: NetworkImage(widget.groupMembers[index].profileUrl!),
                                 radius: 30,
                                 ),
-                                title: Text(widget.groupMembers[index].name!),
-                                subtitle:  Text(widget.groupMembers[index].email!),
+                                title: Text(widget.groupMembers[index].name!  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                subtitle:  Text(widget.groupMembers[index].email!  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                             );
                           }),
                         ),
@@ -165,7 +166,7 @@ void showoptions(){
  showDialog(context: context,
   builder: ( context) { 
    return AlertDialog(
-    title: const Text("Upload Profile from"),
+    title: const Text("Upload Profile from"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
     content: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -175,7 +176,7 @@ void showoptions(){
           Navigator.pop(context);
         },
         leading: const Icon(Icons.camera),
-      title: const Text("Open Camera"),),
+      title: const Text("Open Camera"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),),
 
       ListTile(
           onTap: (){
@@ -183,7 +184,7 @@ void showoptions(){
           Navigator.pop(context);
           },
           leading: const Icon(Icons.image),
-               title: const Text("Upload from Gallary"),),
+               title: const Text("Upload from Gallary"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),),
     ],),
    );
    });

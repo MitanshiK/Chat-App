@@ -80,8 +80,8 @@ class _StoriesState extends State<Stories> {
                   ),
                 ],
               ),
-              title: const Text("My Status"),
-              subtitle: const Text("Tap to add status update"),
+              title: const Text("My Status" ,style: TextStyle(fontFamily:"EuclidCircularB"),),
+              subtitle: const Text("Tap to add status update" ,style: TextStyle(fontFamily:"EuclidCircularB")),
             ),
             const Divider(),
             Container(
@@ -90,7 +90,7 @@ class _StoriesState extends State<Stories> {
                 child: const Text(
                   "Recent Updates",
                   style: TextStyle(
-                      color: Colors.grey, fontWeight: FontWeight.bold),
+                      color: Colors.grey, fontWeight: FontWeight.bold ,fontFamily:"EuclidCircularB"),
                 )),
             // friends
           
@@ -129,7 +129,7 @@ class _StoriesState extends State<Stories> {
                                                           userModel:
                                                               userData)));
                                         },
-                                        title: Text(userData.name.toString()),
+                                        title: Text(userData.name.toString(),style: TextStyle(fontFamily:"EuclidCircularB")),
                                         leading: CircleAvatar(
                                           radius: 30,
                                           backgroundColor: const Color.fromARGB(
@@ -176,7 +176,7 @@ class _StoriesState extends State<Stories> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Camera"),
+          title: const Text("Camera" ,style: TextStyle(fontFamily:"EuclidCircularB")),
           content: Row(
             children: [
               // for picture

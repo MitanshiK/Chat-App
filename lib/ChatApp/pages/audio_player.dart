@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class AudioPlayChat extends StatefulWidget {
  AudioPlayChat({super.key ,required this.audioFile});
- PlatformFile? audioFile;
+ final PlatformFile? audioFile;
 
   @override
   State<AudioPlayChat> createState() => _AudioPlayChatState();
@@ -60,7 +60,9 @@ class _AudioPlayChatState extends State<AudioPlayChat> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.audioFile!.name.toString(),style: TextStyle(color: Colors.white),),
+              Text(widget.audioFile!.name.toString(),style: TextStyle(
+                fontFamily:"EuclidCircularB", 
+                color: Colors.white),),
              
               Slider(
                 max: duration.inSeconds.toDouble(),
@@ -75,8 +77,8 @@ class _AudioPlayChatState extends State<AudioPlayChat> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(prettyDuration(duration),style: TextStyle(color: Colors.white)),
-                  Text(prettyDuration(position),style: TextStyle(color: Colors.white)),
+                  Text(prettyDuration(duration),style: TextStyle(color: Colors.white  , fontFamily:"EuclidCircularB" )),
+                  Text(prettyDuration(position),style: TextStyle(color: Colors.white , fontFamily:"EuclidCircularB" )),
                 ],
               ),
               Row(

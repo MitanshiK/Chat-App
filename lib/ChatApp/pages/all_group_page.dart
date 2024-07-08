@@ -127,7 +127,7 @@ List<UserModel> groupMembers =[];
                                                    groupMembers:groupMembers,
                                                 )));
                                   },
-                                  title: Text(groupRoomModel.groupName.toString()),
+                                  title: Text(groupRoomModel.groupName.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                   leading: CircleAvatar(
                                      radius: 25,
                                     backgroundColor:
@@ -137,12 +137,13 @@ List<UserModel> groupMembers =[];
                                   ),
                                   subtitle: (groupRoomModel.lastMessage.toString() !=
                                           "")
-                                      ? Text((lastMessageUser.uId==widget.userModel.uId)
+                                      ? Text((lastMessageUser.uId==widget.userModel.uId )
                                           ? "You : ${groupRoomModel.lastMessage.toString()}"
                                           :  "${lastMessageUser.name} : ${groupRoomModel.lastMessage.toString()}"
+                                          
                                           )
-                                      : const Text("Say Hello"),
-                                      trailing: Text(toShow),
+                                      : const Text("Say Hello"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                      trailing: Text(toShow  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                 );
                              } else{
                               return ListTile(
@@ -161,7 +162,7 @@ List<UserModel> groupMembers =[];
                                                    groupMembers:groupMembers,
                                                 )));
                                   },
-                                  title: Text(groupRoomModel.groupName.toString()),
+                                  title: Text(groupRoomModel.groupName.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                   leading: CircleAvatar(
                                     radius: 25,
                                     backgroundColor:
@@ -171,15 +172,15 @@ List<UserModel> groupMembers =[];
                                   ),
                                   subtitle: (groupRoomModel.lastMessage.toString() !=
                                           "")
-                                      ? const Text(("say hello")
-                                          
+                                      ? const Text("say hello" 
+                                           ,style: TextStyle(fontFamily:"EuclidCircularB")  
                                           )
-                                      : const Text("Say Hello"),
+                                      : const Text("Say Hello"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                       trailing: Text(toShow),
                                 );
                              }
                                 }else{
-                                  return const Text("no data");
+                                  return const Text("no data"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
                                 }
                                 
                                 }

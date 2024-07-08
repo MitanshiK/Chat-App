@@ -89,7 +89,7 @@ class _ChatPageState extends State<ChatPage> {
                                                 chatRoomModel: chatRoomModel,
                                               )));
                                 },
-                                title: Text(userData.name.toString()),
+                                title: Text(userData.name.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                 leading: CircleAvatar(
                                   radius: 25,
                                   backgroundColor:
@@ -99,9 +99,9 @@ class _ChatPageState extends State<ChatPage> {
                                 ),
                                 subtitle: (chatRoomModel.lastMessage.toString() !=
                                         "")
-                                    ? Text(chatRoomModel.lastMessage.toString())
-                                    : const Text("Say Hello"),
-                                    trailing: Text(toShow),
+                                    ? Text(chatRoomModel.lastMessage.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  )
+                                    : const Text("Say Hello"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                    trailing: Text(toShow  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                               );
                             } else {
                               return Container();
@@ -116,9 +116,9 @@ class _ChatPageState extends State<ChatPage> {
       
                   /////
                 } else if (snapshot.hasError) {
-                  return const Center(child: Text(" Please check your network"));
+                  return const Center(child: Text(" Please check your network"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ));
                 } else {
-                  return const Center(child: Text(" no chats"));
+                  return const Center(child: Text(" no chats"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ));
                 }
               } else {
                 return const Center(

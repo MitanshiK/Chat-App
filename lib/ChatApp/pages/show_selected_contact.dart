@@ -34,7 +34,7 @@ class _ShowSelectedContactsState extends State<ShowSelectedContacts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Share Contacts"),
+      appBar: AppBar(title: const Text("Share Contacts" ,style: TextStyle(fontFamily:"EuclidCircularB")),
       centerTitle: true,),
       body: Container(
         padding: EdgeInsets.all(15),
@@ -52,14 +52,14 @@ class _ShowSelectedContactsState extends State<ShowSelectedContacts> {
                                 : CircleAvatar(radius: 30, backgroundImage: MemoryImage(SelectedContactImage!),),
                        
                  SizedBox(width: 20,),
-                 Text(widget.shareContactList[index].displayName)
+                 Text(widget.shareContactList[index].displayName ,style: TextStyle(fontFamily:"EuclidCircularB"))
                 ],),
                
                 ListTile(
                   contentPadding: EdgeInsets.only(left: 15),
                   leading: Icon(Icons.phone ,color: Colors.blue,),
-                  title: Text(widget.shareContactList[index].phones.first.number),
-                  subtitle: Text("Phone"),
+                  title: Text(widget.shareContactList[index].phones.first.number ,style: TextStyle(fontFamily:"EuclidCircularB")),
+                  subtitle: Text("Phone" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                   trailing: IconButton(onPressed: (){
                     setState(() {
                        widget.shareContactList.removeAt(index); 

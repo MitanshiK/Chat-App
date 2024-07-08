@@ -43,7 +43,7 @@ void getPhoneData() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Share Contacts"),
+      appBar: AppBar(title: const Text("Share Contacts" ,style: TextStyle(fontFamily:"EuclidCircularB")),
       actions: [
         // Done Button
             TextButton(
@@ -71,7 +71,7 @@ void getPhoneData() async {
                               )));
                   }
                 },
-                child: const Text("Done"))
+                child: const Text("Done" ,style: TextStyle(fontFamily:"EuclidCircularB")))
           ],
           backgroundColor: const Color.fromARGB(255, 113, 210, 246),
       centerTitle: true,),
@@ -103,8 +103,8 @@ void getPhoneData() async {
                       leading: (contactsList[index].photo==null) 
                               ? const CircleAvatar(backgroundColor: Colors.blue ,child: Icon(Icons.person ,color: Colors.white,),)
                               :CircleAvatar(backgroundImage: MemoryImage(ContactImage!),),
-                              title: Text(contactsList[index].name.first),
-                      subtitle: Text(contactsList[index].phones.first.number), 
+                              title: Text(contactsList[index].name.first ,style: TextStyle(fontFamily:"EuclidCircularB")),
+                      subtitle: Text(contactsList[index].phones.first.number ,style: TextStyle(fontFamily:"EuclidCircularB")), 
                     );
                    },),
               ),
@@ -140,7 +140,7 @@ void getPhoneData() async {
                                 ? const CircleAvatar(backgroundColor: Colors.blue ,child: Icon(Icons.person ,color: Colors.white,),)
                                 : CircleAvatar(backgroundImage: MemoryImage(SelectedContactImage!),),
                                 const SizedBox(height: 5,),
-                               Text(shareContactList[index].name.first)
+                               Text(shareContactList[index].name.first ,style: TextStyle(fontFamily:"EuclidCircularB"))
                       ],),
                     ),
                      Positioned(right: 0,

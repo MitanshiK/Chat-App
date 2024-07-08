@@ -90,12 +90,13 @@ class _GroupInfoState extends State<GroupInfo> {
             child: Column(
               children: [
                 Text(
-                  widget.groupRoomModel.groupName!,
-                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  widget.groupRoomModel.groupName!, 
+                  style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold,
+                  fontFamily:"EuclidCircularB"),
                 ),
                 Text(
                   "${widget.groupMembers.length} Members",
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey ,fontFamily:"EuclidCircularB"),
                 )
               ],
             ),
@@ -146,7 +147,7 @@ class _GroupInfoState extends State<GroupInfo> {
                           maxHeight:  220,
                           maxWidth: MediaQuery.sizeOf(context).width/2,
                           ),
-                        child:  (dataSnapshot.docs.isNotEmpty) ? ListView.builder(
+                        child:  (dataSnapshot.docs==[]) ? ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: dataSnapshot.docs.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -240,16 +241,19 @@ class _GroupInfoState extends State<GroupInfo> {
                                                   ]),
                             );
                           },
-                        ): const Text("No Shared Media"),
+                        ): const Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Text("No Shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB")),
+                        ),
                       );
                    } else if (snapshot.hasError) {
                       return const Text(
                           "Error Occured !! Please check our internet Connection");
                     } else if (snapshot.hasData==false) {
-                      return const Text("No shared Media");
+                      return const Text("No shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"));
                     }
                     else{
-                      return const Text("No shared Media");
+                      return const Text("No shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"));
                     }
                    } else {
                     return const Center(child: CircularProgressIndicator());
@@ -258,7 +262,9 @@ class _GroupInfoState extends State<GroupInfo> {
               ),
                Container(
                 padding: const EdgeInsets.all(10),
-                child: const Text("Group Members",style: TextStyle(color:Color.fromARGB(255, 240, 217, 148),fontWeight: FontWeight.bold, fontSize: 20),))
+                child: const Text("Group Members",style: TextStyle(color:Color.fromARGB(255, 240, 217, 148),fontWeight: FontWeight.bold, fontSize: 20  
+                ,fontFamily:"EuclidCircularB"
+                ),))
               ,ConstrainedBox(
                   constraints: BoxConstraints(
                     minHeight: 350,
@@ -277,24 +283,27 @@ class _GroupInfoState extends State<GroupInfo> {
                                 backgroundImage: NetworkImage(widget.groupMembers[index].profileUrl!),
                                 radius: 30,
                                 ),
-                                title: Text(widget.groupMembers[index].name!),
-                                subtitle:  Text(widget.groupMembers[index].email!),
+                                title: Text(widget.groupMembers[index].name!  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                                subtitle:  Text(widget.groupMembers[index].email!  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
                                 trailing: isAdmin 
                                 ? Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: const Color.fromARGB(255, 240, 217, 148)),
-                                  child: const Text("Admin"),)
-                                :PopupMenuButton(
-                                  itemBuilder: (BuildContext context) =>[
-                                    PopupMenuItem(child:
-                                     ListTile(
-                                      onTap: (){
-                                        removeMember( widget.groupMembers[index].uId!);
-                                       
-                                      },
-                                      leading: Icon(Icons.remove),
-                                     title: Text("Remove"),))
-                                  ],),
+                                  child: const Text("Admin"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),)
+                                :Visibility(
+                                  visible: isAdmin ?true :false,
+                                  child: PopupMenuButton(
+                                    itemBuilder: (BuildContext context) =>[
+                                      PopupMenuItem(child:
+                                       ListTile(
+                                        onTap: (){
+                                          removeMember( widget.groupMembers[index].uId!);
+                                         
+                                        },
+                                        leading: const Icon(Icons.remove),
+                                       title: const Text("Remove"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),))
+                                    ],),
+                                ),
                             );
                 }),),
                 
@@ -309,7 +318,7 @@ class _GroupInfoState extends State<GroupInfo> {
                     onTap: (){
                       Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateGroupPage(firebaseUser: widget.firebaseUser, userModel: widget.userModel, existing: true,exisitingGroupRoom: widget.groupRoomModel,)));
                     },
-                    title: const Text("add a member"),
+                    title: const Text("add a member"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                     trailing: const Icon(Icons.add),
                   ),
                 )

@@ -62,7 +62,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 239, 125, 116),
-        title: const Text("Search "),
+        title: const Text("Search" ,style: TextStyle(fontFamily:"EuclidCircularB")),
         centerTitle: true,
       ),
       body: Padding(
@@ -71,6 +71,7 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             ListTile(
               title: TextField(
+                style: TextStyle(fontFamily:"EuclidCircularB"),
                 controller: searchFieldController,
                 decoration: const InputDecoration(
                   hintText: "Search",
@@ -123,8 +124,9 @@ class _SearchPageState extends State<SearchPage> {
                                         )));
                                         }
                           },
-                          title: Text(searchData.name.toString()),
-                          subtitle: Text(searchData.email.toString()),
+                          
+                          title: Text(searchData.name.toString(),style: TextStyle(fontFamily:"EuclidCircularB")),
+                          subtitle: Text(searchData.email.toString(),style: TextStyle(fontFamily:"EuclidCircularB")),
                           leading: CircleAvatar(
                               backgroundImage: (searchData.profileUrl != null)
                                   ? NetworkImage(
@@ -140,10 +142,10 @@ class _SearchPageState extends State<SearchPage> {
                                   : null),
                         );
                       } else {
-                        return const Text("No result Found");
+                        return const Text("No result Found",style: TextStyle(fontFamily:"EuclidCircularB"));
                       }
                     } else if (snapshot.hasError) {
-                      return const Text("An error has occured");
+                      return const Text("An error has occured",style: TextStyle(fontFamily:"EuclidCircularB"));
                     } else {
                       return const Text("");
                     }

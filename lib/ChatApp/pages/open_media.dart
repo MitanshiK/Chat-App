@@ -49,11 +49,11 @@ class _OpenMediaState extends State<OpenMedia> {
       appBar: AppBar(
         title: ListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text(
-              (widget.senderUid == widget.userModel.uId) ? "You" : "Friend"),
-          titleTextStyle: const TextStyle(color: Colors.white),
+          title: Text( 
+              (widget.senderUid == widget.userModel.uId) ? "You" : "Friend" ),
+          titleTextStyle: const TextStyle(color: Colors.white ,fontFamily:"EuclidCircularB"),
           subtitle: Text("${widget.date}"),
-          subtitleTextStyle: const TextStyle(color: Colors.white,fontSize: 10),
+          subtitleTextStyle: const TextStyle(color: Colors.white,fontSize: 10 ,fontFamily:"EuclidCircularB"),
         ),
         backgroundColor: Colors.black,
         actions: [
@@ -92,7 +92,7 @@ class _OpenMediaState extends State<OpenMedia> {
                                                       //you can build progressbar feature too
                                                   }
                                                 });
-                                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Downloaded"))) ; 
+                                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Downloaded" ,style: TextStyle(fontFamily:"EuclidCircularB")))) ; 
                                      } catch (e) {
                                        print(e);
                                      }
@@ -102,7 +102,7 @@ class _OpenMediaState extends State<OpenMedia> {
                             }
 
                          },
-                         title: const Text("Download "),
+                         title: const Text("Download" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                       ))
             ],
           )

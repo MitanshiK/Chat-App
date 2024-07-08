@@ -36,7 +36,7 @@ class _ShowStoryState extends State<ShowStory> {
               ),
               title: Text(
                 widget.userModel.name!,
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white  ,fontFamily:"EuclidCircularB"),
               ),
             ),
 
@@ -176,7 +176,7 @@ class _ShowStoryState extends State<ShowStory> {
                       return const Text(
                           "Error Occured !! Please check our internet Connection");
                     } else {
-                      return const Text("Say Hi to ");
+                      return const Text("Say Hi to " ,style: TextStyle(fontFamily:"EuclidCircularB"));
                     }
                   } else {
                     return const Center(child: CircularProgressIndicator());

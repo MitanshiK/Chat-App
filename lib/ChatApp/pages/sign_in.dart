@@ -51,6 +51,7 @@ String uId="";
                   const Text(
                     "Chat App",
                     style: TextStyle(
+                      fontFamily:"EuclidCircularB",
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Color.fromARGB(255, 239, 125, 116)),
@@ -61,7 +62,7 @@ String uId="";
                   ),
                   const Text(
                     "Sign Up to Chat App ",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600   ,fontFamily:"EuclidCircularB"),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(
@@ -73,7 +74,7 @@ String uId="";
                     children: [
                       TextFormField(
                         decoration: const InputDecoration(
-                            label: Text("Email Id"), border: OutlineInputBorder()),
+                            label: Text("Email Id" ,style: TextStyle(fontFamily:"EuclidCircularB")), border: OutlineInputBorder()),
                              onSaved: (value){
                              setState(() {
                                  email=value!;
@@ -109,7 +110,7 @@ String uId="";
                                 height: 20,
                               ),
                             ),
-                            label: Text("Password"),
+                            label: Text("Password" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                             border: OutlineInputBorder()),
                             onSaved: (value){
                              setState(() {
@@ -129,7 +130,7 @@ String uId="";
                       ),
                       TextFormField(
                         decoration: const InputDecoration(
-                            label: Text("Confirm Password"),
+                            label: Text("Confirm Password" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                             border: OutlineInputBorder()),
                              onSaved: (value){
                              setState(() {
@@ -177,6 +178,7 @@ String uId="";
                               child: const Text(
                                 "Sign Up ",
                                 style: TextStyle(
+                                  fontFamily:"EuclidCircularB",
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black),
@@ -192,6 +194,7 @@ String uId="";
                       const Text(
                         "Already have an account ?",
                         style: TextStyle(
+                         fontFamily:"EuclidCircularB",
                             fontSize: 15,
                             fontWeight: FontWeight.w400,
                             color: Colors.black),
@@ -209,6 +212,7 @@ String uId="";
                         child: const Text(
                           "Log In",
                           style: TextStyle(
+                            fontFamily:"EuclidCircularB",
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
                               color: Color.fromARGB(255, 239, 144, 138)),

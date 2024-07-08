@@ -415,12 +415,13 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                     children:[ 
                                                       Text((currentUserMess!=widget.userModel)? (currentUserMess!=null)? currentUserMess.name! :"(removed)"  : "you",
                                                    style:  TextStyle(
+                                                   fontFamily:"EuclidCircularB",
                                                     color:(currentUserMess!=null)? Colors.purple :Colors.red,
                                                     fontSize:12,
-                                                     ),)],),     
+                                                     ),)],),  
                                                   (messageType == "text")
                                                       ? Text(currentMessage.text
-                                                          .toString(),style: const TextStyle(fontSize: 15),)
+                                                          .toString(),style: const TextStyle(fontSize: 15 ,fontFamily:"EuclidCircularB"),)
                                                       :
                                                       // subconition 1
                                                       (messageType != "text")
@@ -516,12 +517,13 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                                                             color: Colors.white,
                                                                                           ),
                                                                                         ),
-                                                                                        title: Text(currentMessage.name.toString()),
-                                                                                        subtitle: Text(currentMessage.phone.toString()),
+                                                                                        title: Text(currentMessage.name.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                                                                        subtitle: Text(currentMessage.phone.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                                                                       ),
                                                                                       ListTile(
                                                                                         contentPadding: EdgeInsets.zero,
                                                                                         title: TextButton(
+                                                                                          
                                                                                           style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
                                                                                           onPressed: () async {
                                                                                             /////
@@ -551,7 +553,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                                                           },
                                                                                           child: const Text(
                                                                                             "Add to Contacts",
-                                                                                            style: TextStyle(color: Colors.blue),
+                                                                                            style: TextStyle(color: Colors.blue   ,fontFamily:"EuclidCircularB" ),
                                                                                           ),
                                                                                         ),
                                                                                       )
@@ -567,6 +569,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                     // time stamp
                                                     time!,
                                                     style: const TextStyle(
+                                                      fontFamily:"EuclidCircularB",  
                                                         fontSize: 10),
                                                   )
                                                 ]),
@@ -583,7 +586,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                       return const Text(
                           "Error Occured !! Please check our internet Connection");
                     } else {
-                      return const Text("Say Hi you your group Members");
+                      return const Text("Say Hi you your group Members" ,style: TextStyle(fontFamily:"EuclidCircularB")  );
                     }
                   } else {
                     return const Center(child: CircularProgressIndicator());
@@ -645,6 +648,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                     // message Field
                                     Expanded(
                                       child: TextFormField(
+                                         style: TextStyle(fontFamily:"EuclidCircularB") , 
                                         maxLines: null,
                                         controller: messageController,
                                         decoration: const InputDecoration(
@@ -839,7 +843,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                      title: const Text("Camera"),
+                                                      title: const Text("Camera"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                                       content: Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                                                         children: [
