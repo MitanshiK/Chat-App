@@ -18,7 +18,9 @@ import 'package:flutter_contacts/properties/phone.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:proj/ChatApp/models/Blocs/chat_selected_bloc.dart';
 import 'package:proj/ChatApp/models/Blocs/emoji_bloc.dart';
+import 'package:proj/ChatApp/models/Blocs/long_press_bloc.dart';
 import 'package:proj/ChatApp/models/Blocs/player_bloc.dart';
 
 import 'package:proj/ChatApp/models/chat_room_model.dart';
@@ -308,247 +310,256 @@ class _ChatRoomPageState extends State<ChatRoomPage>
 
                           return Flexible(
                             fit: FlexFit.tight,
-                            child: GestureDetector(
-                              // for selecting
-                              onLongPress: () {
-                                setState(() {
-                                  msgRowSelected[index] = true;
-                                });
-                              },
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                            //
+                            child: BlocProvider<LongPressBloc>(
+                              create: (_) => LongPressBloc(false),
+                              child: BlocBuilder<LongPressBloc,bool>(
+                                builder: (BuildContext context, state) { 
+                               return GestureDetector(
+                                  // for selecting
+                                  onLongPress: () {
+                                    context.read<LongPressBloc>().add(MsgSelect());
+                                    // setState(() {
+                                    //   msgRowSelected[index] = true;
+                                    // });
+                                  },
+                                  child: Column(
                                     children: [
-                                      Visibility(
-                                        visible: (index != 0)
-                                            ? ((showdate(
-                                                    currentMessage.createdOn,
-                                                    prevMessage.createdOn))
-                                                ? true
-                                                : false)
-                                            : true,
-                                        child: Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 10, bottom: 10),
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                                color: Colors.grey[300]),
-                                            height: 25,
-                                            width: MediaQuery.sizeOf(context)
-                                                    .width /
-                                                3,
-                                            child: Text("$date")),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Visibility(
+                                            visible: (index != 0)
+                                                ? ((showdate(
+                                                        currentMessage.createdOn,
+                                                        prevMessage.createdOn))
+                                                    ? true
+                                                    : false)
+                                                : true,
+                                            child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    top: 10, bottom: 10),
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(5),
+                                                    color: Colors.grey[300]),
+                                                height: 25,
+                                                width: MediaQuery.sizeOf(context)
+                                                        .width /
+                                                    3,
+                                                child: Text("$date")),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        color: ( context.watch<LongPressBloc>().state == true)
+                                            ? Colors.lightBlue
+                                            : Colors.transparent,
+                                        child: Row(
+                                            // one single message row
+                                
+                                            // wraped in row so that width of message box is occourdung to content
+                                            mainAxisAlignment:
+                                                (currentMessage.senderId ==
+                                                        widget.userModel.uId)
+                                                    ? MainAxisAlignment.end
+                                                    : MainAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: const EdgeInsets.fromLTRB(
+                                                    0, 10, 0, 0),
+                                                padding: const EdgeInsets.fromLTRB(
+                                                    15, 10, 10, 10),
+                                                decoration: BoxDecoration(
+                                                    borderRadius: (currentMessage.senderId ==
+                                                            widget.userModel.uId)
+                                                        ? const BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(20),
+                                                            topRight:
+                                                                Radius.circular(20),
+                                                            bottomLeft:
+                                                                Radius.circular(20))
+                                                        : const BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(20),
+                                                            topRight:
+                                                                Radius.circular(20),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    20)),
+                                                    color: (currentMessage.senderId ==
+                                                            widget.userModel.uId)
+                                                        ? const Color.fromARGB(
+                                                            255, 240, 217, 148)
+                                                        : const Color.fromARGB(
+                                                            255, 251, 162, 156)),
+                                                child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
+                                                    children: [
+                                                      (messageType == "text")
+                                                          ? Text(currentMessage.text
+                                                              .toString()  ,style: const TextStyle(fontFamily:"EuclidCircularB")  )
+                                                          :
+                                                          // subconition 1
+                                                          (messageType != "text")
+                                                              ? GestureDetector(
+                                                                  onTap: (messageType ==
+                                                                          "contact") // if its contact then first option otherwise other
+                                                                      ? () {}
+                                                                      : () {
+                                                                          // viewing image
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(
+                                                                                  builder: (context) => OpenMedia(
+                                                                                        mediamodel: currentMessage,
+                                                                                        userModel: widget.userModel,
+                                                                                        senderUid: currentMessage.senderId,
+                                                                                        date: currentMessage.createdOn,
+                                                                                        type: currentMessage.type,
+                                                                                      )));
+                                                                        },
+                                                                  child: (messageType ==
+                                                                          "image")
+                                                                      ? ConstrainedBox(
+                                                                          constraints: const BoxConstraints(
+                                                                              maxHeight:
+                                                                                  200,
+                                                                              maxWidth:
+                                                                                  200),
+                                                                          child: Image
+                                                                              .network(
+                                                                            currentMessage
+                                                                                .fileUrl
+                                                                                .toString(),
+                                                                          ),
+                                                                        )
+                                                                      : (messageType ==
+                                                                              "video")
+                                                                          ? // image
+                                                                          FutureBuilder(
+                                                                              future:
+                                                                                  _initializeVideoPlayerFuture,
+                                                                              builder:
+                                                                                  (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                                                                                return Stack(
+                                                                                  children: [
+                                                                                    ConstrainedBox(
+                                                                                      constraints: const BoxConstraints(maxHeight: 200, maxWidth: 200),
+                                                                                      child: AspectRatio(
+                                                                                        aspectRatio: videoController!.value.aspectRatio,
+                                                                                        child: VideoPlayer(videoController!),
+                                                                                      ),
+                                                                                    ),
+                                                                                    const Positioned(
+                                                                                        bottom: 10,
+                                                                                        left: 10,
+                                                                                        child: Icon(
+                                                                                          Icons.play_arrow,
+                                                                                          color: Colors.white,
+                                                                                          size: 25,
+                                                                                        )),
+                                                                                  ],
+                                                                                );
+                                                                              },
+                                                                            ) //video
+                                                                          : (messageType ==
+                                                                                  "audio")
+                                                                              ? ConstrainedBox(
+                                                                                  constraints: const BoxConstraints(maxWidth: 200),
+                                                                                  child: Container(
+                                                                                    child: AudioPlayer(
+                                                                                      source: ap.AudioSource.uri(Uri.parse(currentMessage.fileUrl.toString())),
+                                                                                      onDelete: () {
+                                                                                        context.read<PlayerVisBloc>().add(PlayerVisibility());
+                                                                                        context.read<MessageBloc>().add(NoText());
+                                                                                      },
+                                                                                      inChat: true,
+                                                                                    ),
+                                                                                  ),
+                                                                                )
+                                                                              : (messageType == "contact") // audio
+                                                                                  ? ConstrainedBox(
+                                                                                      constraints: const BoxConstraints(
+                                                                                        maxWidth: 200,
+                                                                                      ),
+                                                                                      child: Column(
+                                                                                        children: [
+                                                                                          ListTile(
+                                                                                            contentPadding: EdgeInsets.zero,
+                                                                                            leading: const CircleAvatar(
+                                                                                              backgroundColor: Colors.blue,
+                                                                                              child: Icon(
+                                                                                                Icons.person,
+                                                                                                color: Colors.white,
+                                                                                              ),
+                                                                                            ),
+                                                                                            title: Text(currentMessage.name.toString()  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                                                                                            subtitle: Text(currentMessage.phone.toString() ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                                                                                          ),
+                                                                                          ListTile(
+                                                                                            contentPadding: EdgeInsets.zero,
+                                                                                            title: TextButton(
+                                                                                              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
+                                                                                              onPressed: () async {
+                                                                                                /////
+                                                                                                await _requestContactsPermission();
+                                
+                                                                                                if (await Permission.contacts.isGranted) {
+                                                                                                  // Create a new contact
+                                                                                                  Contact newContact = Contact(
+                                                                                                    name: Name(first: currentMessage.name),
+                                                                                                    phones: [
+                                                                                                      Phone(currentMessage.phone, label: PhoneLabel.mobile)
+                                                                                                    ],
+                                                                                                  );
+                                
+                                                                                                  try {
+                                                                                                    // Add the contact to the device's contact list
+                                                                                                    await FlutterContacts.insertContact(newContact);
+                                                                                                    print('Contact added successfully');
+                                                                                                  } catch (e) {
+                                                                                                    print('Failed to add contact: $e');
+                                                                                                  }
+                                                                                                } else {
+                                                                                                  print('Contact permission not granted');
+                                                                                                }
+                                
+                                                                                                /////
+                                                                                              },
+                                                                                              child: const Text(
+                                                                                                "Add to Contacts",
+                                                                                                style: TextStyle(
+                                                                                                  fontFamily:"EuclidCircularB", 
+                                                                                                  color: Colors.blue),
+                                                                                              ),
+                                                                                            ),
+                                                                                          )
+                                                                                        ],
+                                                                                      ))
+                                                                                  : const Placeholder(),
+                                                                ) // contact
+                                                              : const Placeholder(), //text
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        // time stamp
+                                                        time!,
+                                                        style: const TextStyle(
+                                                            fontSize: 10),
+                                                      )
+                                                    ]),
+                                              )
+                                            ]),
                                       ),
                                     ],
                                   ),
-                                  Container(
-                                    color: (msgRowSelected[index] == true)
-                                        ? Colors.lightBlue
-                                        : Colors.transparent,
-                                    child: Row(
-                                        // one single message row
-
-                                        // wraped in row so that width of message box is occourdung to content
-                                        mainAxisAlignment:
-                                            (currentMessage.senderId ==
-                                                    widget.userModel.uId)
-                                                ? MainAxisAlignment.end
-                                                : MainAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.fromLTRB(
-                                                0, 10, 0, 0),
-                                            padding: const EdgeInsets.fromLTRB(
-                                                15, 10, 10, 10),
-                                            decoration: BoxDecoration(
-                                                borderRadius: (currentMessage.senderId ==
-                                                        widget.userModel.uId)
-                                                    ? const BorderRadius.only(
-                                                        topLeft:
-                                                            Radius.circular(20),
-                                                        topRight:
-                                                            Radius.circular(20),
-                                                        bottomLeft:
-                                                            Radius.circular(20))
-                                                    : const BorderRadius.only(
-                                                        topLeft:
-                                                            Radius.circular(20),
-                                                        topRight:
-                                                            Radius.circular(20),
-                                                        bottomRight:
-                                                            Radius.circular(
-                                                                20)),
-                                                color: (currentMessage.senderId ==
-                                                        widget.userModel.uId)
-                                                    ? const Color.fromARGB(
-                                                        255, 240, 217, 148)
-                                                    : const Color.fromARGB(
-                                                        255, 251, 162, 156)),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  (messageType == "text")
-                                                      ? Text(currentMessage.text
-                                                          .toString()  ,style: const TextStyle(fontFamily:"EuclidCircularB")  )
-                                                      :
-                                                      // subconition 1
-                                                      (messageType != "text")
-                                                          ? GestureDetector(
-                                                              onTap: (messageType ==
-                                                                      "contact") // if its contact then first option otherwise other
-                                                                  ? () {}
-                                                                  : () {
-                                                                      // viewing image
-                                                                      Navigator.push(
-                                                                          context,
-                                                                          MaterialPageRoute(
-                                                                              builder: (context) => OpenMedia(
-                                                                                    mediamodel: currentMessage,
-                                                                                    userModel: widget.userModel,
-                                                                                    senderUid: currentMessage.senderId,
-                                                                                    date: currentMessage.createdOn,
-                                                                                    type: currentMessage.type,
-                                                                                  )));
-                                                                    },
-                                                              child: (messageType ==
-                                                                      "image")
-                                                                  ? ConstrainedBox(
-                                                                      constraints: const BoxConstraints(
-                                                                          maxHeight:
-                                                                              200,
-                                                                          maxWidth:
-                                                                              200),
-                                                                      child: Image
-                                                                          .network(
-                                                                        currentMessage
-                                                                            .fileUrl
-                                                                            .toString(),
-                                                                      ),
-                                                                    )
-                                                                  : (messageType ==
-                                                                          "video")
-                                                                      ? // image
-                                                                      FutureBuilder(
-                                                                          future:
-                                                                              _initializeVideoPlayerFuture,
-                                                                          builder:
-                                                                              (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                                                                            return Stack(
-                                                                              children: [
-                                                                                ConstrainedBox(
-                                                                                  constraints: const BoxConstraints(maxHeight: 200, maxWidth: 200),
-                                                                                  child: AspectRatio(
-                                                                                    aspectRatio: videoController!.value.aspectRatio,
-                                                                                    child: VideoPlayer(videoController!),
-                                                                                  ),
-                                                                                ),
-                                                                                const Positioned(
-                                                                                    bottom: 10,
-                                                                                    left: 10,
-                                                                                    child: Icon(
-                                                                                      Icons.play_arrow,
-                                                                                      color: Colors.white,
-                                                                                      size: 25,
-                                                                                    )),
-                                                                              ],
-                                                                            );
-                                                                          },
-                                                                        ) //video
-                                                                      : (messageType ==
-                                                                              "audio")
-                                                                          ? ConstrainedBox(
-                                                                              constraints: const BoxConstraints(maxWidth: 200),
-                                                                              child: Container(
-                                                                                child: AudioPlayer(
-                                                                                  source: ap.AudioSource.uri(Uri.parse(currentMessage.fileUrl.toString())),
-                                                                                  onDelete: () {
-                                                                                    context.read<PlayerVisBloc>().add(PlayerVisibility());
-                                                                                    context.read<MessageBloc>().add(NoText());
-                                                                                  },
-                                                                                  inChat: true,
-                                                                                ),
-                                                                              ),
-                                                                            )
-                                                                          : (messageType == "contact") // audio
-                                                                              ? ConstrainedBox(
-                                                                                  constraints: const BoxConstraints(
-                                                                                    maxWidth: 200,
-                                                                                  ),
-                                                                                  child: Column(
-                                                                                    children: [
-                                                                                      ListTile(
-                                                                                        contentPadding: EdgeInsets.zero,
-                                                                                        leading: const CircleAvatar(
-                                                                                          backgroundColor: Colors.blue,
-                                                                                          child: Icon(
-                                                                                            Icons.person,
-                                                                                            color: Colors.white,
-                                                                                          ),
-                                                                                        ),
-                                                                                        title: Text(currentMessage.name.toString()  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
-                                                                                        subtitle: Text(currentMessage.phone.toString() ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
-                                                                                      ),
-                                                                                      ListTile(
-                                                                                        contentPadding: EdgeInsets.zero,
-                                                                                        title: TextButton(
-                                                                                          style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.white)),
-                                                                                          onPressed: () async {
-                                                                                            /////
-                                                                                            await _requestContactsPermission();
-
-                                                                                            if (await Permission.contacts.isGranted) {
-                                                                                              // Create a new contact
-                                                                                              Contact newContact = Contact(
-                                                                                                name: Name(first: currentMessage.name),
-                                                                                                phones: [
-                                                                                                  Phone(currentMessage.phone, label: PhoneLabel.mobile)
-                                                                                                ],
-                                                                                              );
-
-                                                                                              try {
-                                                                                                // Add the contact to the device's contact list
-                                                                                                await FlutterContacts.insertContact(newContact);
-                                                                                                print('Contact added successfully');
-                                                                                              } catch (e) {
-                                                                                                print('Failed to add contact: $e');
-                                                                                              }
-                                                                                            } else {
-                                                                                              print('Contact permission not granted');
-                                                                                            }
-
-                                                                                            /////
-                                                                                          },
-                                                                                          child: const Text(
-                                                                                            "Add to Contacts",
-                                                                                            style: TextStyle(
-                                                                                              fontFamily:"EuclidCircularB", 
-                                                                                              color: Colors.blue),
-                                                                                          ),
-                                                                                        ),
-                                                                                      )
-                                                                                    ],
-                                                                                  ))
-                                                                              : const Placeholder(),
-                                                            ) // contact
-                                                          : const Placeholder(), //text
-                                                  const SizedBox(
-                                                    height: 5,
-                                                  ),
-                                                  Text(
-                                                    // time stamp
-                                                    time!,
-                                                    style: const TextStyle(
-                                                        fontSize: 10),
-                                                  )
-                                                ]),
-                                          )
-                                        ]),
-                                  ),
-                                ],
+                                );
+                                 },
                               ),
                             ),
                           );
@@ -646,7 +657,7 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                 context
                                                     .read<MessageBloc>()
                                                     .add(NoText());
-                                              } else if(value.runtimeType==Emoji) {
+                                              } else if(value!="") {
                                                 context
                                                     .read<MessageBloc>()
                                                     .add(HasText());
@@ -917,7 +928,6 @@ class _ChatRoomPageState extends State<ChatRoomPage>
     String date1 = "${current.day}/ ${current.month}/ ${current.year}";
     String date2 = "${previous.day}/ ${previous.month}/ ${previous.year}";
 
-    print("$date1 and $date2");
     if (date1 != date2) {
       return true;
     } else {

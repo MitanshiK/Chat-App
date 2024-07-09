@@ -11,6 +11,7 @@ import 'package:proj/ChatApp/pages/group_chats.dart';
 import 'package:proj/ChatApp/pages/login.dart';
 import 'package:proj/ChatApp/pages/send_media.dart';
 import 'package:proj/ChatApp/pages/story.dart';
+import 'package:proj/ChatApp/pages/view_media.dart';
 
 class HomePage extends StatefulWidget {
   final UserModel userModel;
@@ -59,14 +60,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               onPressed: () async {
                 await fromCamera("picture");
 
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => SendMedia(
-                //             mediaToSend: capturedFile!,
-                //             chatRoom: widget.chatRoomModel,
-                //             userModel: widget.userModel,
-                //             type: "image")));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ViewMedia(
+                            mediaToSend: capturedFile!,
+                            usermodel: widget.userModel,
+                            type: "image", 
+                            firebaseUser: widget.firebaseUser,)));
               },
               icon: Icon(Icons.camera_alt_outlined)),
           PopupMenuButton(
@@ -132,23 +133,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
 
               //4
-                  //3
-              PopupMenuItem(
-                child: const ListTile(
-                  title: Text("All ChatRooms",
-                      style: TextStyle(fontFamily: "EuclidCircularB")),
-                  leading: Icon(Icons.group_add),
-                ),
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AllChatRooms(
-                                userModel: widget.userModel,
-                                firebaseUser: widget.firebaseUser,
-                              )));
-                },
-              ),
+            
+              // PopupMenuItem(
+              //   child: const ListTile(
+              //     title: Text("All ChatRooms",
+              //         style: TextStyle(fontFamily: "EuclidCircularB")),
+              //     leading: Icon(Icons.group_add),
+              //   ),
+              //   onTap: () {
+              //     Navigator.push(
+              //         context,
+              //         MaterialPageRoute(
+              //             builder: (context) => AllChatRooms(
+              //                   userModel: widget.userModel,
+              //                   firebaseUser: widget.firebaseUser,
+              //                 )));
+              //   },
+              // ),
             ],
           )
         ],
