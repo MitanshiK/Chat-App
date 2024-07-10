@@ -232,9 +232,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // converting into QuerySnapshot dataType
 ///////////
-                      List<bool> msgRowSelected = List.generate(
-                          dataSnapshot.docs.length,
-                          (index) => false); // if message  is selected or not
+                     
 
 //////////////
                       return ListView.builder(
@@ -326,11 +324,6 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                             fit: FlexFit.tight,
                             child: GestureDetector(
                               // for selecting
-                              onLongPress: () {
-                                setState(() {
-                                  msgRowSelected[index] = true;
-                                });
-                              },
                               child: Column(
                                 children: [
                                   Row(
@@ -360,11 +353,8 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                       ),
                                     ],
                                   ),
-                                  Container(
-                                    color: (msgRowSelected[index] == true)
-                                        ? Colors.lightBlue
-                                        : Colors.transparent,
-                                    child: Row(
+                                
+                                     Row(
                                         // one single message row
 
                                         // wraped in row so that width of message box is occourdung to content
@@ -574,7 +564,6 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                 ]),
                                           )
                                         ]),
-                                  ),
                                 ],
                               ),
                             ),

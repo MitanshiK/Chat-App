@@ -232,9 +232,9 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // converting into QuerySnapshot dataType
 ///////////////
-                      List<bool> msgRowSelected = List.generate(
-                          dataSnapshot.docs.length,
-                          (index) => false); // if message  is selected or not
+                      // List<bool> msgRowSelected = List.generate(
+                      //     dataSnapshot.docs.length,
+                      //     (index) => false); // if message  is selected or not
 
 //////////////
                       return ListView.builder(
@@ -311,18 +311,14 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                           return Flexible(
                             fit: FlexFit.tight,
                             //
-                            child: BlocProvider<LongPressBloc>(
-                              create: (_) => LongPressBloc(false),
-                              child: BlocBuilder<LongPressBloc,bool>(
-                                builder: (BuildContext context, state) { 
-                               return GestureDetector(
+                            child:  GestureDetector(
                                   // for selecting
-                                  onLongPress: () {
-                                    context.read<LongPressBloc>().add(MsgSelect());
+                                 // onLongPress: () {
+                                   // context.read<LongPressBloc>().add(MsgSelect());
                                     // setState(() {
                                     //   msgRowSelected[index] = true;
                                     // });
-                                  },
+                                 // },
                                   child: Column(
                                     children: [
                                       Row(
@@ -352,11 +348,12 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                        color: ( context.watch<LongPressBloc>().state == true)
-                                            ? Colors.lightBlue
-                                            : Colors.transparent,
-                                        child: Row(
+                                      // Container(
+                                      //   color: ( context.watch<LongPressBloc>().state == true)
+                                      //       ? Colors.lightBlue
+                                      //       : Colors.transparent,
+                                      //   child:
+                                         Row(
                                             // one single message row
                                 
                                             // wraped in row so that width of message box is occourdung to content
@@ -555,13 +552,13 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                     ]),
                                               )
                                             ]),
-                                      ),
+                                      // ), selection container
                                     ],
                                   ),
-                                );
-                                 },
-                              ),
-                            ),
+                                )
+                              
+                               
+                            
                           );
                         },
                       );
