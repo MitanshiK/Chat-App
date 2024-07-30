@@ -18,9 +18,8 @@ import 'package:flutter_contacts/properties/phone.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:proj/ChatApp/models/Blocs/chat_selected_bloc.dart';
 import 'package:proj/ChatApp/models/Blocs/emoji_bloc.dart';
-import 'package:proj/ChatApp/models/Blocs/long_press_bloc.dart';
+
 import 'package:proj/ChatApp/models/Blocs/player_bloc.dart';
 
 import 'package:proj/ChatApp/models/chat_room_model.dart';

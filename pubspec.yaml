@@ -63,7 +63,7 @@ dependencies:
   flutter_sound_record: ^3.3.2
   just_audio: ^0.9.38
   device_info_plus: ^10.1.0
-  cubit_form: ^2.0.2 
+  cubit_form: ^2.0.2            # blocs and cubits
   flutter_contacts: ^1.1.8   # read contacts
   url_launcher: ^6.3.0      # read contacts and redirect to make calls 
  
@@ -71,6 +71,14 @@ dependencies:
   carousel_slider: ^4.2.1
   bubble_tab_indicator: "^0.1.5"
   rxdart: ^0.27.7
+
+  #shopping cart
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+  riverpod: ^2.5.1
+  riverpod_generator: ^2.4.0
+  build_runner: ^2.4.11
+
   
 
 

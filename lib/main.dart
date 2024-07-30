@@ -33,13 +33,17 @@ import 'package:proj/ChatApp/pages/read_contacts.dart';
 import 'package:proj/realtime_db/save.dart';
 import 'package:proj/register.dart';
 import 'package:proj/screen.dart';
+
+import 'package:proj/ssssss/screens/Shopping_home_screen.dart';
 import 'package:proj/storage/audioRecording/aaa.dart';
 import 'package:proj/storage/audio_player.dart';
 import 'package:proj/storage/download_from_storage.dart';
 import 'package:proj/storage/strorage.dart';
+import 'package:proj/upload_to_firestore/screens/screen1.dart';
 import 'package:proj/video_picker.dart';
 import 'package:proj/video_player.dart';
 import 'package:uuid/uuid.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // final navigatorKey=GlobalKey<NavigatorState>();  // Navigator key to navigate
 
@@ -90,6 +94,10 @@ import 'package:uuid/uuid.dart';
 // }
 
 //////////////////////////////////////chat app
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
+
+Uuid uuid =Uuid(); 
+/*
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
 
 Uuid uuid =Uuid();  // creates unique id 
@@ -345,6 +353,8 @@ class MyAppLoggedIn extends StatelessWidget {
 
 
 }
+*/
+//////////////////////////////////////chat app
 //    Future notifStream()async{
 
 
@@ -360,3 +370,29 @@ class MyAppLoggedIn extends StatelessWidget {
 //                      Notif.showBigTextNotification(title: "hello", body: "body", fn: flutterLocalNotificationsPlugin); ///
 //                     });
 // }
+////////////////////////////////
+
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+runApp(const ProviderScope(child: MyApp()));
+} 
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+
+    return  MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Shopping Cart',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const Screen1(),
+    );
+  }
+}
