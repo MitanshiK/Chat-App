@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/complete_profile.dart';
+import 'package:proj/ChatApp/pages/profiles/complete_profile.dart';
 
 
 class SignInPage extends StatefulWidget {

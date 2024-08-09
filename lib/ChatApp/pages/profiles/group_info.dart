@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/create_group.dart';
-import 'package:proj/ChatApp/pages/create_group_profile.dart';
-import 'package:proj/ChatApp/pages/open_media.dart';
+import 'package:proj/ChatApp/pages/adding_people/create_group.dart';
+import 'package:proj/ChatApp/pages/profiles/create_group_profile.dart';
+import 'package:proj/ChatApp/pages/for_media/open_media.dart';
 import 'package:video_player/video_player.dart';
 
 class GroupInfo extends StatefulWidget {
@@ -134,19 +134,27 @@ class _GroupInfoState extends State<GroupInfo> {
                     .snapshots(), // to convert into streams
 
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    if (snapshot.hasData) {
+                      // if (snapshot.connectionState == ConnectionState.active) {
+                  //   if (snapshot.hasData) {
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // converting into QuerySnapshot dataType
 
-                           late MediaModel currentMedia=MediaModel();
+                           late MediaModel currentMedia;
+                              if( snapshot.data==null){
+                                   return Center(child: CircularProgressIndicator(),);
+                              }else if(snapshot.hasError){
+                                 return Center(child: CircularProgressIndicator(),);
+                              }
 
                       return ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxHeight:  220,
+                          maxHeight:  300,
                           maxWidth: MediaQuery.sizeOf(context).width/2,
                           ),
-                        child:  (dataSnapshot.docs==[]) ? ListView.builder(
+                        child: 
+                        // (snapshot.data==[]) 
+                        // ? 
+                        ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: dataSnapshot.docs.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -154,7 +162,7 @@ class _GroupInfoState extends State<GroupInfo> {
                         
                          if (dt.containsValue("image") == true || dt.containsValue("video") == true) {
                               currentMedia = MediaModel.fromMap(
-                                  dataSnapshot.docs[index].data()
+                                 dataSnapshot.docs[index].data()
                                       as Map<String, dynamic>);
                                       
                               if (dt.containsValue("image") == true) {
@@ -167,7 +175,7 @@ class _GroupInfoState extends State<GroupInfo> {
                             }
                         
                             return   Container(
-                              padding: const EdgeInsets.all(3),
+                              padding: EdgeInsets.all(3),
                                               child: Column(
                                                   crossAxisAlignment:
                                                       CrossAxisAlignment.end,
@@ -193,7 +201,7 @@ class _GroupInfoState extends State<GroupInfo> {
                                                                             maxHeight:
                                                                                 200,
                                                                             maxWidth:
-                                                                                150),
+                                                                                200),
                                                                         child: Image
                                                                             .network(
                                                                           currentMedia
@@ -230,33 +238,32 @@ class _GroupInfoState extends State<GroupInfo> {
                                                                               );
                                                                             },
                                                                           ) 
-                                                                           : Container(
-                                                                            color: Colors.amber,
-                                                                           )),
+                                                                           : SizedBox()),
                                                                           //text
-                                                     Container(
-                                                                            color: Colors.amber,
-                                                                           ),
+                                                    const SizedBox(
+                                                      height: 5,
+                                                    ),
                                                   ]),
                             );
                           },
-                        ): const Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Text("No Shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB")),
-                        ),
+                        )
+                        // :
+                        // Padding(
+                        //   padding: EdgeInsets.all(5),
+                        //   child:  Text("no shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"),),),
                       );
-                   } else if (snapshot.hasError) {
-                      return const Text(
-                          "Error Occured !! Please check our internet Connection");
-                    } else if (snapshot.hasData==false) {
-                      return const Text("No shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"));
-                    }
-                    else{
-                      return const Text("No shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"));
-                    }
-                   } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+                  //  } else if (snapshot.hasError) {
+                  //     return const Text(
+                  //         "Error Occured !! Please check our internet Connection");
+                  //   } else if (snapshot.hasData==false) {
+                  //     return const Text("No shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"));
+                  //   }
+                  //   else{
+                  //     return const Text("No shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"));
+                  //   }
+                  //  } else {
+                  //   return const Center(child: CircularProgressIndicator());
+                  // } //connection
                 },
               ),
                Container(

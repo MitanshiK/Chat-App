@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/create_group.dart';
+import 'package:proj/ChatApp/pages/adding_people/create_group.dart';
 
 class GroupChatPage extends StatefulWidget {
   const GroupChatPage({super.key , required this.firebaseUser, required this.userModel});

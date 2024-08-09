@@ -15,6 +15,7 @@ import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/main.dart';
 import 'package:rxdart/rxdart.dart';
 
+// in progress [not completed]
 class AllChatRooms extends StatefulWidget {
   const AllChatRooms(
   { super.key,

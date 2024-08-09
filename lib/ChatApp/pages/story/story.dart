@@ -8,8 +8,8 @@ import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/show_story.dart';
-import 'package:proj/ChatApp/pages/story_file_upload.dart';
+import 'package:proj/ChatApp/pages/story/show_story.dart';
+import 'package:proj/ChatApp/pages/story/story_file_upload.dart';
 
 class Stories extends StatefulWidget {
   Stories({super.key, required this.firebaseUser, required this.userModel});

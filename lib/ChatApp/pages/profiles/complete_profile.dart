@@ -66,7 +66,7 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                     backgroundColor: const Color.fromARGB(255, 240, 217, 148),
                     backgroundImage: (picked == true)
                         ? FileImage(profilePic!)
-                        : ((widget.userModel.profileUrl!=null) ? NetworkImage(widget.userModel.profileUrl.toString()): AssetImage("assets/woman.png") as ImageProvider),
+                        : ((widget.userModel.profileUrl!=null) ? NetworkImage(widget.userModel.profileUrl.toString()): const AssetImage("assets/woman.png") as ImageProvider),
                     // child: (picked == false)
                     //     ? const Icon(
                     //         Icons.person,
@@ -84,10 +84,10 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                         onTap: () {
                           showoptions();
                         },
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 15,
-                          backgroundColor:  const Color.fromARGB(255, 240, 217, 148),
-                          child: const Icon(Icons.edit)))
+                          backgroundColor:  Color.fromARGB(255, 240, 217, 148),
+                          child: Icon(Icons.edit)))
                         
                         ),
               ],
@@ -101,7 +101,7 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                   children: [
                     TextFormField(
                       initialValue: (name!="") ? name :"",
-                       style: TextStyle(fontFamily:"EuclidCircularB")  ,
+                       style: const TextStyle(fontFamily:"EuclidCircularB")  ,
                       decoration: const InputDecoration(
                           label: Text("Name"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ), border: OutlineInputBorder()),
                           validator: (value){
@@ -206,7 +206,7 @@ void showoptions(){
 void cropImageCamera(XFile file) async {
     final croppedImage = await ImageCropper().cropImage(
       sourcePath: file.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       compressQuality: 20
     );
 

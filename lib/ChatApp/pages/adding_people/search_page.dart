@@ -5,7 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/chat_room.dart';
+import 'package:proj/ChatApp/pages/chatrooms/chat_room.dart';
+import 'package:proj/ChatApp/pages/invite.dart';
 import 'package:proj/main.dart';
 
 class SearchPage extends StatefulWidget {
@@ -19,6 +20,9 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchFieldController = TextEditingController();
+  ///////////////
+      TextEditingController inviteController = TextEditingController();
+    String inviteType = "email";
  
  // this function will get the chatroom data with the target user if we have already had a chat
  // otherwise it creates a new chatroom with the target user
@@ -37,6 +41,7 @@ class _SearchPageState extends State<SearchPage> {
   chatRoomModel =existingChatRoomModel; // for returning
   debugPrint("chatroom already exists");
   }
+
   else{
     // create new one 
   ChatRoomModel newChatRoomModel=ChatRoomModel(
@@ -75,7 +80,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: Container(
                     width: double.maxFinite,
                     decoration: BoxDecoration(
-                        color:  Color.fromARGB(255, 226, 239, 246),
+                        color:  const Color.fromARGB(255, 226, 239, 246),
                         borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.all(5),
                     child: Row(
@@ -87,7 +92,7 @@ class _SearchPageState extends State<SearchPage> {
                           },
                           child: Container(
                             margin: const EdgeInsets.only(right: 6,left: 6),
-                            child: Icon(Icons.search)
+                            child: const Icon(Icons.search)
                           ),
                         ),
                         Expanded(
@@ -128,24 +133,6 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
           ),
-            // ListTile(
-            //   title: TextField(
-            //     style: TextStyle(fontFamily:"EuclidCircularB"),
-            //     controller: searchFieldController,
-            //     decoration: const InputDecoration(
-            //       hintText: "Search",
-            //     ),
-            //   ),
-            //   // Button
-            //   trailing: IconButton(
-            //     onPressed: () {
-            //       setState(() {}); // to refresh
-            //     },
-            //     icon: const Icon(Icons.search),
-            //   ),
-            // ),
-
-
             const SizedBox(
               height: 20,
             ),
@@ -186,8 +173,8 @@ class _SearchPageState extends State<SearchPage> {
                                         }
                           },
                           
-                          title: Text(searchData.name.toString(),style: TextStyle(fontFamily:"EuclidCircularB")),
-                          subtitle: Text(searchData.email.toString(),style: TextStyle(fontFamily:"EuclidCircularB")),
+                          title: Text(searchData.name.toString(),style: const TextStyle(fontFamily:"EuclidCircularB")),
+                          subtitle: Text(searchData.email.toString(),style: const TextStyle(fontFamily:"EuclidCircularB")),
                           leading: CircleAvatar(
                               backgroundImage: (searchData.profileUrl != null)
                                   ? NetworkImage(
@@ -203,7 +190,27 @@ class _SearchPageState extends State<SearchPage> {
                                   : null),
                         );
                       } else {
-                        return const Text("No result Found",style: TextStyle(fontFamily:"EuclidCircularB"));
+                        return Column(
+                          children: [
+                            const Text("No result Found",style: TextStyle(fontFamily:"EuclidCircularB")),
+                            const SizedBox(height: 50,),
+                            ElevatedButton(
+                                style: ButtonStyle(
+                                padding: const WidgetStatePropertyAll(
+                                    EdgeInsets.all(15)),
+                                shape: WidgetStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                )),
+                                backgroundColor: const WidgetStatePropertyAll(
+                                    Color.fromARGB(255, 226, 239, 246))),
+                              onPressed: (){
+                              // InviteDialog(); 
+                           Navigator.push(context, MaterialPageRoute(builder: (context)=>Invites(userModel: widget.userModel,)));
+                            }, child: const Text("Invite Friends", style: TextStyle(color: Colors.black),))
+                          ],
+                        );
                       }
                     } else if (snapshot.hasError) {
                       return const Text("An error has occured",style: TextStyle(fontFamily:"EuclidCircularB"));
@@ -219,6 +226,5 @@ class _SearchPageState extends State<SearchPage> {
       ),
     );
   }
+
 }
-
-

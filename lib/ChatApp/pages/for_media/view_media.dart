@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/all_chatrooms.dart';
+import 'package:proj/ChatApp/pages/in_progress/all_chatrooms.dart';
 import 'package:video_player/video_player.dart';
 
 class ViewMedia extends StatefulWidget {

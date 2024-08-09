@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:video_player/video_player.dart';
-
+// opening shared media
 class OpenMedia extends StatefulWidget {
   OpenMedia(
       {super.key,

@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/all_chatrooms.dart';
-import 'package:proj/ChatApp/pages/all_group_page.dart';
-import 'package:proj/ChatApp/pages/chat_page.dart';
-import 'package:proj/ChatApp/pages/complete_profile.dart';
-import 'package:proj/ChatApp/pages/group_chats.dart';
-import 'package:proj/ChatApp/pages/login.dart';
-import 'package:proj/ChatApp/pages/send_media.dart';
-import 'package:proj/ChatApp/pages/story.dart';
-import 'package:proj/ChatApp/pages/view_media.dart';
+import 'package:proj/ChatApp/pages/in_progress/all_chatrooms.dart';
+import 'package:proj/ChatApp/pages/chatrooms/all_group_page.dart';
+import 'package:proj/ChatApp/pages/chatrooms/chat_page.dart';
+import 'package:proj/ChatApp/pages/profiles/complete_profile.dart';
+import 'package:proj/ChatApp/pages/adding_people/group_chats.dart';
+import 'package:proj/ChatApp/pages/authenticate/login.dart';
+import 'package:proj/ChatApp/pages/for_media/send_media.dart';
+import 'package:proj/ChatApp/pages/screenTime.dart';
+import 'package:proj/ChatApp/pages/story/story.dart';
+import 'package:proj/ChatApp/pages/for_media/view_media.dart';
 
+// viewing media before sending
 class HomePage extends StatefulWidget {
   final UserModel userModel;
   final User firebaseUser; // firebase auth user
@@ -132,24 +134,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 },
               ),
 
-              //4
+            //  4
             
-              // PopupMenuItem(
-              //   child: const ListTile(
-              //     title: Text("All ChatRooms",
-              //         style: TextStyle(fontFamily: "EuclidCircularB")),
-              //     leading: Icon(Icons.group_add),
-              //   ),
-              //   onTap: () {
-              //     Navigator.push(
-              //         context,
-              //         MaterialPageRoute(
-              //             builder: (context) => AllChatRooms(
-              //                   userModel: widget.userModel,
-              //                   firebaseUser: widget.firebaseUser,
-              //                 )));
-              //   },
-              // ),
+              PopupMenuItem(
+                child: const ListTile(
+                  title: Text("Activity",
+                      style: TextStyle(fontFamily: "EuclidCircularB")),
+                  leading: Icon(Icons.timeline),
+                ),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Screentime(
+                                userModel: widget.userModel,
+                                firebaseUser: widget.firebaseUser,
+                              )));
+                },
+              ),
             ],
           )
         ],

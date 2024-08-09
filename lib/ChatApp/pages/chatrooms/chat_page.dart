@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/chat_room.dart';
-import 'package:proj/ChatApp/pages/search_page.dart';
+import 'package:proj/ChatApp/pages/chatrooms/chat_room.dart';
+import 'package:proj/ChatApp/pages/adding_people/search_page.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key , required this.firebaseUser, required this.userModel});

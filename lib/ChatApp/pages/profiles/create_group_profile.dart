@@ -11,7 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/models/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
-import 'package:proj/ChatApp/pages/groupchatroom.dart';
+import 'package:proj/ChatApp/pages/chatrooms/groupchatroom.dart';
 
 
 class CreateGroupProfile extends StatefulWidget {

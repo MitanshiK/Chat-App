@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:proj/ChatApp/models/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/home_page.dart';
-import 'package:proj/ChatApp/pages/sign_in.dart';
+import 'package:proj/ChatApp/pages/authenticate/sign_in.dart';
 
 class Loginpage extends StatefulWidget {
   const Loginpage({super.key});

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:keyboard_emoji_picker/keyboard_emoji_picker.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
@@ -14,36 +12,12 @@ import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/message_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/home_page.dart';
-import 'package:proj/ChatApp/pages/login.dart';
 import 'package:proj/ChatApp/pages/splash_screen.dart';
-import 'package:proj/add_contact.dart';
-import 'package:proj/emoji_keyboard.dart';
-import 'package:proj/facebook/face_auth.dart';
-import 'package:proj/firestore/add_data.dart';
-import 'package:proj/firestore/listening_changes.dart';
-import 'package:proj/firestore/show_data.dart';
-import 'package:proj/github/github_auth.dart';
-import 'package:proj/local_notifications/local_notif.dart';
-import 'package:proj/local_notifications/notif.dart';
-import 'package:proj/location_map.dart';
-import 'package:proj/phone/phone_auth.dart';
-import 'package:proj/phone/phone_auth2.dart';
-import 'package:proj/ChatApp/pages/read_contacts.dart';
-import 'package:proj/realtime_db/save.dart';
-import 'package:proj/register.dart';
-import 'package:proj/screen.dart';
 
-import 'package:proj/ssssss/screens/Shopping_home_screen.dart';
-import 'package:proj/storage/audioRecording/aaa.dart';
-import 'package:proj/storage/audio_player.dart';
-import 'package:proj/storage/download_from_storage.dart';
-import 'package:proj/storage/strorage.dart';
-import 'package:proj/upload_to_firestore/screens/screen1.dart';
-import 'package:proj/video_picker.dart';
-import 'package:proj/video_player.dart';
+import 'package:proj/local_notifications/notif.dart';
+
 import 'package:uuid/uuid.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 
 // final navigatorKey=GlobalKey<NavigatorState>();  // Navigator key to navigate
 
@@ -94,10 +68,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // }
 
 //////////////////////////////////////chat app
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
 
-Uuid uuid =Uuid(); 
-/*
+// Uuid uuid =Uuid(); 
+// /*
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
 
 Uuid uuid =Uuid();  // creates unique id 
@@ -250,7 +224,7 @@ void  main() async {
                        UserModel? sender = await FirebaseHelper.getUserModelById(message.senderId);
                  
                        // if current user is not the user who sent the message , 
-                     // the message is sent in the same minute as now time 
+                      // the message is sent in the same minute as now time 
                      // both user are in part of same chatroom then send the notification       
                         if(userModel.uId != message.senderId && message.createdOn!.minute ==DateTime.now().minute){
                               print("name of sender is ${sender!.name}");
@@ -311,10 +285,14 @@ void  main() async {
 }
 
 // if no user is  logged in
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
    MyApp({super.key });
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -328,13 +306,109 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
+
+
+
+
+
 // if user already logged in
-class MyAppLoggedIn extends StatelessWidget {
+class MyAppLoggedIn extends StatefulWidget {
   final UserModel userModel;
   final User firebaseUser;
 
   const MyAppLoggedIn(
       {super.key, required this.firebaseUser, required this.userModel});
+
+  @override
+  State<MyAppLoggedIn> createState() => _MyAppLoggedInState();
+}
+
+class _MyAppLoggedInState extends State<MyAppLoggedIn> with WidgetsBindingObserver {
+  ///////////////////////////
+  DateTime? _startTime;
+  DateTime? _endTime;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+    @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _startTime = DateTime.now();
+    } else if (state == AppLifecycleState.paused ||
+               state == AppLifecycleState.detached) {
+      _endTime = DateTime.now();
+      _calculateTimeOpen();
+    }
+  }
+
+  void _calculateTimeOpen() {
+    if (_startTime != null && _endTime != null) {
+      final duration = _endTime!.difference(_startTime!);
+      print('App was open for: ${duration.inSeconds} seconds');
+      savetimeData(duration);
+    }
+  }
+
+//// saving screen time to firebase
+  void savetimeData(Duration totDuration) async{
+  print(" inside saveTime fun");
+ String curDate="${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
+
+DocumentSnapshot<Map<String, dynamic>>? result;
+Map<String, dynamic>? todaytime;
+int prevDuration=0;
+
+ ////getting
+ try{
+   result= await FirebaseFirestore.instance.collection("ChatAppUsers")
+               .doc(widget.userModel.uId).collection("screenTime").doc(curDate).get();
+              //  .where("${curDate}" ,isGreaterThan: 0).get();
+   todaytime = await result.data();
+     print("result1 is ${result.data()} , todaytime ");
+   // print("result1 is ${result.data()!.keys.first} , todaytime ${result.data()![curDate]}");
+    }catch(e){
+      print("the error in getting result is $e");
+    }
+ print("outside try");
+
+  if(result!.data()!=null){
+    //  print("result2 is ${todaytime![curDate]}");
+//  final docData=todaytime[curDate];
+     prevDuration=result.data()![curDate];
+     int newDuration=totDuration.inSeconds+ prevDuration;
+     print("value of prevDuration is $prevDuration , new duration is $newDuration" );
+
+
+   Map<String,int> newScreenTime={
+    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}" : newDuration
+   };
+       await FirebaseFirestore.instance.collection("ChatAppUsers")
+  .doc(widget.userModel.uId).collection("screenTime").doc(curDate).update(newScreenTime);
+    //  final docData=result.docs[0].data()[curDate];
+  }
+
+ if(result.data()==null){
+   print("inside if null");
+    ///creating
+   Map<String,int> screenTime={
+    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}" : totDuration.inSeconds
+   };
+try{
+  await FirebaseFirestore.instance.collection("ChatAppUsers")
+  .doc(widget.userModel.uId).collection("screenTime").doc(curDate).set(screenTime);
+  }catch(e){
+    print("could not create screentime $e");
+  }
+  // chatRoomModel=newChatRoomModel;  // for returning
+}
+
+  // result.docs.first.data();
+  }
+  //////////////////////////
 
   @override
   Widget build(BuildContext context) {
@@ -346,14 +420,12 @@ class MyAppLoggedIn extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home:SplashScreen(destination: 'home', firebaseUser: firebaseUser, userModel: userModel,),
+        home:SplashScreen(destination: 'home', firebaseUser: widget.firebaseUser, userModel: widget.userModel,),
       ),
     );
   }
-
-
 }
-*/
+// */
 //////////////////////////////////////chat app
 //    Future notifStream()async{
 
@@ -372,27 +444,27 @@ class MyAppLoggedIn extends StatelessWidget {
 // }
 ////////////////////////////////
 
-void main() async {
-    WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-runApp(const ProviderScope(child: MyApp()));
-} 
+// void main() async {
+//     WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+// runApp(const ProviderScope(child: MyApp()));
+// } 
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
 
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Shopping Cart',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const Screen1(),
-    );
-  }
-}
+//     return  MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       title: 'Shopping Cart',
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: const Screen1(),
+//     );
+//   }
+// }

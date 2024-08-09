@@ -7,7 +7,7 @@ import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/show_selected_contact.dart';
+import 'package:proj/ChatApp/pages/contacts/show_selected_contact.dart';
 
 class ReadContacts extends StatefulWidget {
  ReadContacts({super.key , this.chatRoomModel ,required this.userModel ,this.groupRoomModel});

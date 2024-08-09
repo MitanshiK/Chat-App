@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/create_group.dart';
-import 'package:proj/ChatApp/pages/group_chats.dart';
-import 'package:proj/ChatApp/pages/groupchatroom.dart';
+import 'package:proj/ChatApp/pages/adding_people/create_group.dart';
+import 'package:proj/ChatApp/pages/adding_people/group_chats.dart';
+import 'package:proj/ChatApp/pages/chatrooms/groupchatroom.dart';
 
 class AllGroupChatPage extends StatefulWidget {
    AllGroupChatPage({super.key , required this.firebaseUser, required this.userModel });

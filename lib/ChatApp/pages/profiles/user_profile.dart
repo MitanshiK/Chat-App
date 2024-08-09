@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/open_media.dart';
+import 'package:proj/ChatApp/pages/for_media/open_media.dart';
 import 'package:video_player/video_player.dart';
 
 class UserProfile extends StatefulWidget {
@@ -96,29 +97,39 @@ class _UserProfileState extends State<UserProfile> {
           ),
 ////////////////////////////////////////
           StreamBuilder(
-                stream: FirebaseFirestore.instance
+                stream: 
+                FirebaseFirestore.instance
                     .collection("chatrooms")
                     .doc(widget.chatRoomModel.chatRoomId)
                     .collection("messages")
                     .orderBy("createdOn",
                         descending:
-                            false) // so that messages appear from newer to older
-                    .snapshots(), // to convert into streams
+                            false).snapshots() // so that messages appear from newer to older
+                // getItems()
+                     // to convert into streams
 
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    if (snapshot.hasData) {
+                ,builder: ( context, snapshot) {
+                  // if (snapshot.connectionState == ConnectionState.active) {
+                  //   if (snapshot.hasData) {
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // converting into QuerySnapshot dataType
 
                            late MediaModel currentMedia;
+                              if( snapshot.data==null){
+                                   return Center(child: CircularProgressIndicator(),);
+                              }else if(snapshot.hasError){
+                                 return Center(child: CircularProgressIndicator(),);
+                              }
 
                       return ConstrainedBox(
                         constraints: BoxConstraints(
                           maxHeight:  300,
                           maxWidth: MediaQuery.sizeOf(context).width/2,
                           ),
-                        child: (dataSnapshot.docs==[]) ? ListView.builder(
+                        child: 
+                        // (snapshot.data==[]) 
+                        // ? 
+                        ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: dataSnapshot.docs.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -126,7 +137,7 @@ class _UserProfileState extends State<UserProfile> {
                         
                          if (dt.containsValue("image") == true || dt.containsValue("video") == true) {
                               currentMedia = MediaModel.fromMap(
-                                  dataSnapshot.docs[index].data()
+                                 dataSnapshot.docs[index].data()
                                       as Map<String, dynamic>);
                                       
                               if (dt.containsValue("image") == true) {
@@ -210,20 +221,20 @@ class _UserProfileState extends State<UserProfile> {
                                                   ]),
                             );
                           },
-                        ):
-                        Padding(
-                          padding: EdgeInsets.all(5),
-                          child:  Text("no shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"),),),
+                        )
+                        // :
+                        // Padding(
+                        //   padding: EdgeInsets.all(5),
+                        //   child:  Text("no shared Media" ,style: TextStyle(fontFamily:"EuclidCircularB"),),),
                       );
-                    } else if (snapshot.hasError) {
-                      return const Text(
-                          "Error Occured !! Please check our internet Connection");
-                    } else {
-                      return Text("Say Hi", style: TextStyle(fontFamily:"EuclidCircularB"),);
-                    }
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+                    // } else 
+                    // if (snapshot.hasError) {
+                    //   return const Text(
+                    //       "Error Occured !! Please check our internet Connection");
+                    // } else {
+                    //   return Text("Say Hi", style: TextStyle(fontFamily:"EuclidCircularB"),);
+                    // }
+                  // } 
                 },
               ),
           // ListView.builder(
@@ -235,4 +246,21 @@ class _UserProfileState extends State<UserProfile> {
       ),
     );
   }
+
+
+
+  Future<List<String>> getItems() async{
+     final storageRef = FirebaseStorage.instance.ref();
+  List<String> imageList=[];
+       final a=  await storageRef.child('AllSharedMedia/${widget.chatRoomModel.chatRoomId}/sharedMedia').listAll();
+          final b = await a.items.first.getDownloadURL();
+          print(" list of all the images are ${b}");
+
+          for(var  i in a.items){
+             final b = await i.getDownloadURL();
+             imageList.add(b);
+             print(b);
+          }  
+ return imageList;
+}
 }

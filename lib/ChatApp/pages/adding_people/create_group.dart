@@ -3,8 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/all_group_page.dart';
-import 'package:proj/ChatApp/pages/create_group_profile.dart';
+import 'package:proj/ChatApp/pages/chatrooms/all_group_page.dart';
+import 'package:proj/ChatApp/pages/profiles/create_group_profile.dart';
 import 'package:proj/main.dart';
 
 class CreateGroupPage extends StatefulWidget {
