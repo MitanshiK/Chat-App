@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:keyboard_emoji_picker/keyboard_emoji_picker.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
@@ -325,12 +326,18 @@ class MyAppLoggedIn extends StatefulWidget {
 }
 
 class _MyAppLoggedInState extends State<MyAppLoggedIn> with WidgetsBindingObserver {
+  
   ///////////////////////////
   DateTime? _startTime;
   DateTime? _endTime;
 
   @override
   void initState() {
+    ///
+    showBaselines();
+    highlightRepaints();
+    showOversizedImages();
+   ///
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
@@ -424,6 +431,16 @@ try{
       ),
     );
   }
+}
+
+void showBaselines() {
+  debugPaintBaselinesEnabled = true;
+}
+void highlightRepaints() {
+  debugRepaintRainbowEnabled = true;
+}
+void showOversizedImages() {
+  debugInvertOversizedImages = true;
 }
 // */
 //////////////////////////////////////chat app

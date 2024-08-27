@@ -30,8 +30,7 @@ void _addContact() async {
     Contact newContact = Contact(
       name: Name(first: 'John', last: 'Doe'),
       phones: [Phone('1234567890', label: PhoneLabel.mobile)],
-     
-      
+       
     );
 
     try {

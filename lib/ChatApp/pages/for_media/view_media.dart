@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/in_progress/all_chatrooms.dart';
 import 'package:video_player/video_player.dart';
-
+// viewing media before sending
 class ViewMedia extends StatefulWidget {
   const ViewMedia({super.key ,required this.type ,required this.mediaToSend ,required this.firebaseUser, required this.usermodel});
   final User firebaseUser;
@@ -42,7 +42,7 @@ class _ViewMediaState extends State<ViewMedia> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             (widget.type == "image")
-                ? Expanded(child: Image.file(File(widget.mediaToSend)))
+                ? Expanded(child: Image.file(File(widget.mediaToSend) ,cacheWidth: 300,))
                 : // 1st
                 (widget.type == "video")
                     ? FutureBuilder(

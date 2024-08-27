@@ -34,13 +34,14 @@ class _ScreentimeState extends State<Screentime> {
         child: 
         // Column(
         //   children: [
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
+            FutureBuilder(
+              future: FirebaseFirestore.instance
         .collection("ChatAppUsers")
         .doc(widget.userModel.uId)
-          .collection("screenTime").snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot){  
-             if(snapshot.connectionState==ConnectionState.active){ 
+          .collection("screenTime").get(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot)
+            {  
+            //  if(snapshot.connectionState==ConnectionState.active){ 
               
               if(snapshot.hasData){
                 print(" snapshot data is ${snapshot.data!.docs.first.data()}");
@@ -70,6 +71,7 @@ class _ScreentimeState extends State<Screentime> {
                     yValueMapper: (ScreenTimeModel screenTime,_) => (screenTime.screenTime!/60/60).round() , // values along y axis
                     // xAxisName: "Months",
                     // yAxisName: "victim",
+                    
               
                      dataLabelSettings: const DataLabelSettings(isVisible: true), //shows the values on map
                     //  markerSettings: const MarkerSettings(isVisible: true),// shows dots on value on graph
@@ -83,9 +85,9 @@ class _ScreentimeState extends State<Screentime> {
                 else{
                 return const Center(child: Text("No screen Time"));
                }
-              } else{
-                return const Center(child:  Text("Connection Error"));
-              }
+              // } else{
+              //   return const Center(child:  Text("Connection Error"));
+              // }
               }
             )
         //   ],

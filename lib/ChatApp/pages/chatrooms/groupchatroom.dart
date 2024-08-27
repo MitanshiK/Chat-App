@@ -444,6 +444,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                                         currentMessage
                                                                             .fileUrl
                                                                             .toString(),
+                                                                            cacheWidth: 230,
                                                                       ),
                                                                     )
                                                                   : (messageType ==

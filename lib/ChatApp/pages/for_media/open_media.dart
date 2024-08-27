@@ -119,7 +119,7 @@ class _OpenMediaState extends State<OpenMedia> {
                   maxHeight: MediaQuery.sizeOf(context).height-50,
               maxWidth: MediaQuery.sizeOf(context).width-50),
               child:
-              (widget.type=="image")? Image.network(widget.mediamodel.fileUrl):
+              (widget.type=="image")? Image.network(widget.mediamodel.fileUrl ,cacheWidth: 700,):
                (widget.type=="video")?   
                FutureBuilder(
                         future: _initializeVideoPlayerFuture,

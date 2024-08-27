@@ -428,9 +428,10 @@ class _ChatRoomPageState extends State<ChatRoomPage>
                                                                                   200),
                                                                           child: Image
                                                                               .network(
-                                                                            currentMessage
-                                                                                .fileUrl
-                                                                                .toString(),
+                                                                            currentMessage.fileUrl.toString(),
+                                                                                  
+                                                                                 cacheWidth:250 ,
+                                                                                 fit: BoxFit.scaleDown,
                                                                           ),
                                                                         )
                                                                       : (messageType ==

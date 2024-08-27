@@ -124,11 +124,13 @@ List<UserModel> groupMembers =[];
                                   },
                                   title: Text(groupRoomModel.groupName.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
                                   leading: CircleAvatar(
+                                    
                                      radius: 25,
                                     backgroundColor:
                                         const Color.fromARGB(255, 158, 219, 241),
                                     backgroundImage: NetworkImage(
-                                       groupRoomModel.profilePic.toString()),
+                                       groupRoomModel.profilePic.toString(),
+                                       ),
                                   ),
                                   subtitle: (groupRoomModel.lastMessage.toString() !=
                                           "")
