@@ -1,16 +1,31 @@
 # proj
 
-A new Flutter project.
+chatApp
+>sending text messages, audio messages , image ,video ,contacts
+>email authentication
+>adding new friends by their emails
+>playing audio & video shared and downloading them
+>adding profile images and name visible to friends
+>adding images and videos in story that dissapper after 24 hrs
+>shows last sent message and time stamps
+>recording videos and clicking images to share
+>added emoji keyboard 
+>new message notifications
+>create groups , adding and deleting of group members by admin of the group
+>inviting new friends who are not on chatapp using sms and email
+>getting screen time of the app and showing it on  a line graph
 
-## Getting Started
+firebase
+>firebase firestore
+>facebook auth
+>github auth
+>google auth
+>email auth
+>phone auth
+>push notifications
+>realtime db
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+other
+>local notifications
+>emoji keyboard
+>riverpod cart with firestore
