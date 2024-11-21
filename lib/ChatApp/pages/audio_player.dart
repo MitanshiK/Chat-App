@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class AudioPlayChat extends StatefulWidget {
- AudioPlayChat({super.key ,required this.audioFile});
+ const AudioPlayChat({super.key ,required this.audioFile});
  final PlatformFile? audioFile;
 
   @override
@@ -55,12 +55,12 @@ class _AudioPlayChatState extends State<AudioPlayChat> {
   Widget build(BuildContext context) {
     return  Container(
       color: Colors.black,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(widget.audioFile!.name.toString(),style: TextStyle(
+              Text(widget.audioFile!.name.toString(),style: const TextStyle(
                 fontFamily:"EuclidCircularB", 
                 color: Colors.white),),
              
@@ -77,8 +77,8 @@ class _AudioPlayChatState extends State<AudioPlayChat> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(prettyDuration(duration),style: TextStyle(color: Colors.white  , fontFamily:"EuclidCircularB" )),
-                  Text(prettyDuration(position),style: TextStyle(color: Colors.white , fontFamily:"EuclidCircularB" )),
+                  Text(prettyDuration(duration),style: const TextStyle(color: Colors.white  , fontFamily:"EuclidCircularB" )),
+                  Text(prettyDuration(position),style: const TextStyle(color: Colors.white , fontFamily:"EuclidCircularB" )),
                 ],
               ),
               Row(
@@ -109,7 +109,7 @@ class _AudioPlayChatState extends State<AudioPlayChat> {
       
     );
   }
-  // picking Audio file from phone 
+ // picking Audio file from phone 
     // Future selectFile() async {
     // final result = await FilePicker.platform.pickFiles(
     //   type: FileType.audio

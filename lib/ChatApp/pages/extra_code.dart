@@ -524,8 +524,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/read_contacts.dart';
-import 'package:proj/ChatApp/pages/send_media.dart';
+import 'package:proj/ChatApp/pages/contacts/read_contacts.dart';
+import 'package:proj/ChatApp/pages/for_media/send_media.dart';
 
 class ShareBottomModal extends StatefulWidget {
   ShareBottomModal({super.key , this.chatRoomModel ,required this.userModel ,this.groupRoomModel});

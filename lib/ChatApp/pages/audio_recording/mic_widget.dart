@@ -8,7 +8,7 @@ import 'package:flutter_sound_record/flutter_sound_record.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MicWidget extends StatefulWidget {
-  MicWidget({super.key, required this.onStop});
+  const MicWidget({super.key, required this.onStop});
 
     final void Function(String path) onStop; // when recording is stopped the path of recorded audio is recieved
 

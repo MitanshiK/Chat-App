@@ -4,10 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/home_page.dart';
-import 'package:proj/ChatApp/pages/login.dart';
+import 'package:proj/ChatApp/pages/authenticate/login.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key ,required this.destination ,this.firebaseUser ,this.userModel});
+  const SplashScreen({super.key ,required this.destination ,this.firebaseUser ,this.userModel});
  final String destination;  
   final User? firebaseUser;
   final UserModel? userModel;
@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         )));
           } else if(widget.destination=="login"){
             Navigator.pop(context);
-             Navigator.push(context, MaterialPageRoute(builder: (context)=> Loginpage()));
+             Navigator.push(context, MaterialPageRoute(builder: (context)=> const Loginpage()));
           }
         } );
     
@@ -41,7 +41,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      backgroundColor: Colors.white,
+      body: SizedBox(
        width: MediaQuery.sizeOf(context).width,
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
