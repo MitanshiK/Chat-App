@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart' as ap;
@@ -120,7 +118,7 @@ class AudioPlayerState extends State<AudioPlayer> {
               
               ],
             ),
-             (_audioPlayer.duration?.inMinutes.toString()==null)? Text("00:00"): 
+             (_audioPlayer.duration?.inMinutes.toString()==null)? const Text("00:00"): 
              Container(
               padding: EdgeInsets.only(left: 10,bottom: widget.inChat ?0 :8),
               alignment: Alignment.centerLeft,

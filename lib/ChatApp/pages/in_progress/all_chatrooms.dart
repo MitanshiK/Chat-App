@@ -34,7 +34,7 @@ class AllChatRooms extends StatefulWidget {
 
 class _AllChatRoomsState extends State<AllChatRooms> {
  List<String> chatRoomIds = [];
- List<dynamic> RoomModelList=[];
+ List<dynamic> roomModelList=[];
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _AllChatRoomsState extends State<AllChatRooms> {
           backgroundColor: Colors.white,
           clipBehavior: Clip.none,
           title:
-              Text("Share", style: TextStyle(fontFamily: "EuclidCircularB"))),
+              const Text("Share", style: const TextStyle(fontFamily: "EuclidCircularB"))),
       body: Column(
         children: [
           /// all groups
@@ -132,7 +132,7 @@ class _AllChatRoomsState extends State<AllChatRooms> {
                   AsyncSnapshot<List<QuerySnapshot<Map<String, dynamic>>>>
                       snapshot) {
                 if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
+                  return const CircularProgressIndicator();
                 }
 
                 // Access your data from the snapshot
@@ -149,7 +149,7 @@ class _AllChatRoomsState extends State<AllChatRooms> {
                    List<bool> selected=List.filled(allDocuments.length, false);
                 // Display your combined data
                 return ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: 400),
+                  constraints: const BoxConstraints(maxHeight: 400),
                   child: ListView.builder(
                     itemCount: allDocuments.length,
                     itemBuilder: (context, index) {
@@ -188,10 +188,10 @@ class _AllChatRoomsState extends State<AllChatRooms> {
                                            chatRoomIds
                                             .remove(doc["groupRoomId"].toString());
                                       }
-                                     print("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
+                                     debugPrint("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
                                   },
                                   contentPadding:
-                                      EdgeInsets.fromLTRB(15, 15, 15, 5),
+                                      const EdgeInsets.fromLTRB(15, 15, 15, 5),
                                   leading: CircleAvatar(
                                     radius: 25,
                                     backgroundColor:
@@ -226,7 +226,7 @@ class _AllChatRoomsState extends State<AllChatRooms> {
                                builder: (BuildContext context, state) {  
                                return ListTile(
                                         contentPadding:
-                                            EdgeInsets.fromLTRB(15, 15, 15, 0),
+                                            const EdgeInsets.fromLTRB(15, 15, 15, 0),
                                         onTap: () async{
                                          context.read<ChatSelectedBloc>().add(Chatselection());    
                                             selected[index] = !selected[index];
@@ -240,10 +240,10 @@ class _AllChatRoomsState extends State<AllChatRooms> {
                                       }
 
 
-                                 print("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
+                                 debugPrint("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
                                         },
                                         title: Text(userData.name.toString(),
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily: "EuclidCircularB")),
                                         leading: CircleAvatar(
                                           radius: 25,
@@ -280,9 +280,9 @@ class _AllChatRoomsState extends State<AllChatRooms> {
             Navigator.pop(context);
              UiHelper.loadingDialogFun(context, "sending Message......");
              ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Sending Messages" ,style: TextStyle(fontFamily:"EuclidCircularB"))));
+          .showSnackBar(const SnackBar(content: Text("Sending Messages" ,style: TextStyle(fontFamily:"EuclidCircularB"))));
             
-            print("chatrooms are ${chatRoomIds}");
+            debugPrint("chatrooms are $chatRoomIds");
           },
           icon: const Icon(
             Icons.send,
@@ -296,14 +296,14 @@ class _AllChatRoomsState extends State<AllChatRooms> {
     List<String> participantsList = participants.keys.toList();
     // getting participants keys and saving in list
     participantsList.remove(widget.userModel.uId);
-    print("participant in combined list is ${participantsList[0]} ");
+    debugPrint("participant in combined list is ${participantsList[0]} ");
 
     return participantsList;
   }
 
 
 Future checkRoomIds() async {
-  Set<String> processedRoomIds = Set(); // To keep track of processed room ids
+  Set<String> processedRoomIds = {}; // To keep track of processed room ids
 
   FirebaseFirestore.instance
       .collection("GroupChats")
@@ -313,7 +313,7 @@ Future checkRoomIds() async {
       for (var j in chatRoomIds) {
         if (!processedRoomIds.contains(j)) {
           if (i["groupRoomId"] == j) {
-            print("$j is a group");
+            debugPrint("$j is a group");
 
             FirebaseFirestore.instance
                 .collection("GroupChats")
@@ -327,7 +327,7 @@ Future checkRoomIds() async {
             });
 
           } else {
-            print("$j is not a group");
+            debugPrint("$j is not a group");
 
             FirebaseFirestore.instance
                 .collection("chatrooms")

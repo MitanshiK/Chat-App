@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cubit_form/cubit_form.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:proj/ChatApp/models/Blocs/video_arrow_bloc.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
@@ -14,18 +14,18 @@ import 'package:proj/main.dart';
 import 'package:video_player/video_player.dart';
 
 class SendMedia extends StatefulWidget {
-  SendMedia(
+  const SendMedia(
       {super.key,
       required this.mediaToSend,
-       this.chatRoom,
+      this.chatRoom,
       this.groupRoomModel,
       required this.userModel,
       required this.type});
- final dynamic mediaToSend;
- final ChatRoomModel? chatRoom;
- final GroupRoomModel? groupRoomModel;
-final  UserModel userModel;
- final String type;
+  final dynamic mediaToSend;
+  final ChatRoomModel? chatRoom;
+  final GroupRoomModel? groupRoomModel;
+  final UserModel userModel;
+  final String type;
 
   @override
   State<SendMedia> createState() => _SendMediaState();
@@ -41,6 +41,9 @@ class _SendMediaState extends State<SendMedia> {
       videoController =
           VideoPlayerController.file(File(widget.mediaToSend));
       _initializeVideoPlayerFuture = videoController!.initialize();
+    }
+    if(widget.mediaToSend==null || widget.mediaToSend==""){
+      Navigator.pop(context);
     }
     super.initState();
   }
@@ -64,42 +67,54 @@ class _SendMediaState extends State<SendMedia> {
                         future: _initializeVideoPlayerFuture,
                         builder: (BuildContext context,
                             AsyncSnapshot<dynamic> snapshot) {
-                          return Stack(
-                            children: [
-                              AspectRatio(
-                                aspectRatio: videoController!.value.aspectRatio,
-                                child: VideoPlayer(videoController!),
-                              ),
-                              Positioned(
-                                top: MediaQuery.sizeOf(context).height / 3,
-                                child: Container(
-                                  width: MediaQuery.sizeOf(context).width,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          if (videoController!
-                                              .value.isPlaying) {
-                                            videoController!.pause();
-                                          } else {
-                                            videoController!.play();
-                                          }
-                                        },
-                                        icon: Icon(
-                                          videoController!.value.isPlaying
-                                              ? Icons.pause
-                                              : Icons.play_circle,
-                                          size: 80,
-                                          color: Colors.white,
+                          return BlocProvider<VideoStateBloc>(
+                            create: (_)=> VideoStateBloc(false),
+                            child: BlocBuilder<VideoStateBloc,bool>(
+                              builder: (BuildContext context, state) {  
+                            return Stack(
+                              children: [
+                                AspectRatio(
+                                  aspectRatio: videoController!.value.aspectRatio,
+                                  child: VideoPlayer(videoController!),
+                                ),
+                                Positioned(
+                                  top: MediaQuery.sizeOf(context).height / 3,
+                                  child: SizedBox(
+                                    width: MediaQuery.sizeOf(context).width,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            if (videoController!
+                                                .value.isPlaying) {
+                                              videoController!.pause();
+                                                  context.read<VideoStateBloc>().add(VideoPause()); 
+
+                                            } else {
+                                              videoController!.play();
+                                                  context.read<VideoStateBloc>().add(VideoPlay()); 
+
+                                            }
+                                          },
+                                          icon: Icon(
+                                                ( context.watch<VideoStateBloc>().state==false)
+                                                ? Icons.play_circle
+                                                : Icons.pause ,
+                                            size: 80,
+                                            color: Colors.white,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            );
+                              }
+                            )
+                          
                           );
                         },
                       ) :
@@ -113,7 +128,7 @@ class _SendMediaState extends State<SendMedia> {
                           
                         ],
                       ))
-                    : Placeholder(), 
+                    : const Placeholder(), 
           ],
         ),
       ),

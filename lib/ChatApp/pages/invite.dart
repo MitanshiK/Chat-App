@@ -1,8 +1,5 @@
-import 'package:cubit_form/cubit_form.dart';
 import 'package:flutter/material.dart';
-import 'package:proj/ChatApp/models/Blocs/invite_type_bloc.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // class InviteFriends {
@@ -88,7 +85,7 @@ import 'package:url_launcher/url_launcher.dart';
 //                           if (await canLaunchUrl(Uri.parse(url))) {
 //                             await launchUrl(Uri.parse(url));
 //                           } else {
-//                             print("could not launch the url[mail]");
+//                             debugPrint("could not launch the url[mail]");
 //                           }
 //                         }
 //                         // phone
@@ -104,7 +101,7 @@ import 'package:url_launcher/url_launcher.dart';
 //                           if (await canLaunchUrl(Uri.parse(url))) {
 //                             await launchUrl(Uri.parse(url));
 //                           } else {
-//                             print("could not launch the url[phone]");
+//                             debugPrint("could not launch the url[phone]");
 //                           }
 //                         }
 //
@@ -134,7 +131,7 @@ import 'package:url_launcher/url_launcher.dart';
 //     if (await canLaunchUrl(Uri.parse(url))) {
 //       await launchUrl(Uri.parse(url));
 //     } else {
-//       print("could not launch the url[mail]");
+//       debugPrint("could not launch the url[mail]");
 //     }
 //   }
 //
@@ -151,7 +148,7 @@ import 'package:url_launcher/url_launcher.dart';
 //     if (await canLaunchUrl(Uri.parse(url))) {
 //       await launchUrl(Uri.parse(url));
 //     } else {
-//       print("could not launch the url[phone]");
+//       debugPrint("could not launch the url[phone]");
 //     }
 //   }
 // }
@@ -174,19 +171,19 @@ class _InvitesState extends State<Invites> {
       // backgroundColor: Color.fromARGB(255, 253, 241, 207),
       // ),
       body: Container(
-        decoration: BoxDecoration(image: DecorationImage(image: AssetImage("assets/chatBg.jpg"), fit: BoxFit.cover,
+        decoration: BoxDecoration(image: DecorationImage(image: const AssetImage("assets/chatBg.jpg"), fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
-                   Color.fromARGB(255, 253, 241, 207).withOpacity(0.2), BlendMode.screen),)),
+                   const Color.fromARGB(255, 253, 241, 207).withOpacity(0.2), BlendMode.screen),)),
         child: Center(
           child: SizedBox(
              height: MediaQuery.sizeOf(context).height/2.5,
         width: MediaQuery.sizeOf(context).width/1.5,
             child: Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(color: Color.fromARGB(255, 253, 241, 207) ,borderRadius: BorderRadius.circular(30)),
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(color: const Color.fromARGB(255, 253, 241, 207) ,borderRadius: BorderRadius.circular(30)),
               child: Column(
                           children: [
-                           ListTile(
+                           const ListTile(
                             leading: Icon(Icons.group_add),
                             title: Text("Invite Friends"),
                           ),
@@ -201,8 +198,8 @@ class _InvitesState extends State<Invites> {
                                       });
                                      
                                     },
-                                    child: Text("Phone No")),
-                                SizedBox(
+                                    child: const Text("Phone No")),
+                                const SizedBox(
                                   width: 40,
                                 ),
                                 TextButton(
@@ -213,7 +210,7 @@ class _InvitesState extends State<Invites> {
                                     
                                       // context.read<InviteTypeBloc>().add(EmailSelected());
                                     },
-                                    child: Text("Email"))
+                                    child: const Text("Email"))
                               ]),
                               Center(
                                 child: Column(
@@ -221,7 +218,7 @@ class _InvitesState extends State<Invites> {
                                     TextField(
                                       controller: inviteController,
                                       decoration: InputDecoration(
-                                        labelStyle: TextStyle(color: Colors.grey),
+                                        labelStyle: const TextStyle(color: Colors.grey),
                                         label: Text(
                                             (inviteType ==
                                                     "email")
@@ -232,7 +229,7 @@ class _InvitesState extends State<Invites> {
                                                     "email")
                                                 ? "abc@gmail.com"
                                                 : "1234567898",
-                                        hintStyle: TextStyle(color: Colors.grey),
+                                        hintStyle: const TextStyle(color: Colors.grey),
                                       ),
                                     )
                                   ],
@@ -240,7 +237,7 @@ class _InvitesState extends State<Invites> {
                               )
                             ],
                           ),
-                          SizedBox(height: 20,),
+                          const SizedBox(height: 20,),
                             TextButton(
                                 onPressed: () async {
                                   // Provider.of<InviteTypeBloc>(context, listen: false);
@@ -261,7 +258,7 @@ class _InvitesState extends State<Invites> {
                                     if (await canLaunchUrl(Uri.parse(url))) {
                                       await launchUrl(Uri.parse(url));
                                     } else {
-                                      print("could not launch the url[mail]");
+                                      debugPrint("could not launch the url[mail]");
                                     }
                                   }
                                   // phone
@@ -277,14 +274,14 @@ class _InvitesState extends State<Invites> {
                                     if (await canLaunchUrl(Uri.parse(url))) {
                                       await launchUrl(Uri.parse(url));
                                     } else {
-                                      print("could not launch the url[phone]");
+                                      debugPrint("could not launch the url[phone]");
                                     }
                                   }
               
                                   // Navigator.pop(context);
                                 },
-                                style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.black)),
-                                child: Text("Send Invite" ,style: TextStyle(color: Colors.white),))
+                                style: const ButtonStyle(backgroundColor: WidgetStatePropertyAll(Colors.black)),
+                                child: const Text("Send Invite" ,style: TextStyle(color: Colors.white),))
                           ],
                   
                         )

@@ -5,11 +5,11 @@ import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/adding_people/create_group.dart';
-import 'package:proj/ChatApp/pages/adding_people/group_chats.dart';
+import 'package:proj/ChatApp/no_data_pages/no_group_chats.dart';
 import 'package:proj/ChatApp/pages/chatrooms/groupchatroom.dart';
 
 class AllGroupChatPage extends StatefulWidget {
-   AllGroupChatPage({super.key , required this.firebaseUser, required this.userModel });
+   const AllGroupChatPage({super.key , required this.firebaseUser, required this.userModel });
    final UserModel userModel;
   final User firebaseUser; // firebase auth user
 
@@ -34,172 +34,175 @@ List<UserModel> groupMembers =[];
                Navigator.push(context, MaterialPageRoute(
                       builder: (context)=> 
                       CreateGroupPage(firebaseUser: widget.firebaseUser, userModel: widget.userModel, existing: false,)));
-          }, icon: Icon(Icons.add)),)
+          }, icon: const Icon(Icons.add)),)
         // 
         ),
-      body: Container(
-          child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection("GroupChats")
-                .where("participantsId.${widget.userModel.uId}", isEqualTo: true)
-                .snapshots(), // get the chatroom that contain current User
-            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.hasData) {
-                  QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("GroupChats")
+            .where("participantsId.${widget.userModel.uId}", isEqualTo: true)
+            .snapshots(), // get the chatroom that contain current User
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.hasData) {
+              QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
+            
+              return (dataSnapshot.docs.isNotEmpty) 
+              ? ListView.builder(
+                itemCount: dataSnapshot.docs.length,
+                itemBuilder: (BuildContext context, int index) {
+                  GroupRoomModel groupRoomModel = GroupRoomModel.fromMap(
+                      dataSnapshot.docs[index].data()
+                          as Map<String, dynamic>);
       
-                  return (dataSnapshot.docs.isNotEmpty) 
-                  ? ListView.builder(
-                    itemCount: dataSnapshot.docs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      GroupRoomModel groupRoomModel = GroupRoomModel.fromMap(
-                          dataSnapshot.docs[index].data()
-                              as Map<String, dynamic>);
-
-
-                     // to get targetUsers Id
-                      Map<String, dynamic> participants =
-                          groupRoomModel.participantsId!; // getting participants
-                      List<String> participantsList = participants.keys
-                          .toList(); // getting participants keys and saving in list
-                      participantsList.remove(widget.userModel
-                          .uId);  // removing currentUser key so that we are left with targetuser id
-             
-                                  // getMembersModel(participantsList);   // to get list of usermodels of members
-                              getMembersModel(participantsList);
-
-                              
-                              String toShow;
-                              String msgDate="${groupRoomModel.lastTime!.day}/${groupRoomModel.lastTime!.month}/${groupRoomModel.lastTime!.year}";
-                              String currentDate="${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
-                              
-                       
-                               if(currentDate.compareTo(msgDate)==0){
-        
-                                String msgTime="${groupRoomModel.lastTime!.hour}:${groupRoomModel.lastTime!.minute}";
-                                String curTime="${DateTime.now().hour}:${DateTime.now().minute}";
       
-                                // inner if start
-                                if(msgTime==curTime){
-                                  toShow="now";
-                                }
-                                else{
-                                  toShow=msgTime;
-                                }// inner if close
+                 // to get targetUsers Id
+                  Map<String, dynamic> participants =
+                      groupRoomModel.participantsId!; // getting participants
+                  List<String> participantsList = participants.keys
+                      .toList(); // getting participants keys and saving in list
+                  participantsList.remove(widget.userModel
+                      .uId);  // removing currentUser key so that we are left with targetuser id
+         
+                              // getMembersModel(participantsList);   // to get list of usermodels of members
+                          getMembersModel(participantsList);
       
-                               }else{
-                                toShow = msgDate;
-                               }
-                              return StreamBuilder(
-                                stream:  FirebaseFirestore.instance
-                                          .collection("ChatAppUsers")
-                                          .where("uId", isEqualTo: groupRoomModel.lastMessageBy)
-                                           .snapshots(),
-                                builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                                
-                                   if (snapshot.hasData){   
-                                       QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
-                                if(dataSnapshot.docs.length>0){
-                                UserModel lastMessageUser = UserModel.fromMap(
-                                               dataSnapshot.docs[0].data()
-                                            as Map<String, dynamic>);
-
-                                 // UserModel lastMessageUser=  UserModel.fromMap(dataSnapshot.docs[0].data() as Map<String,dynamic>);
-
-                                  return  ListTile(
-                                  onTap: () async{
-                                   await    getMembersModel(participantsList); 
-                                     // to get list of usermodels of members
-                                      print("members are ${groupMembers.toString()}");
-                                
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => GroupRoomPage(
-                                                  firebaseUser: widget.firebaseUser,
-                                                  userModel: widget.userModel,
-                                                  groupRoomModel: groupRoomModel,
-                                                   groupMembers:groupMembers,
-                                                )));
-                                  },
-                                  title: Text(groupRoomModel.groupName.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                                  leading: CircleAvatar(
-                                    
-                                     radius: 25,
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 158, 219, 241),
-                                    backgroundImage: NetworkImage(
-                                       groupRoomModel.profilePic.toString(),
-                                       ),
-                                  ),
-                                  subtitle: (groupRoomModel.lastMessage.toString() !=
-                                          "")
-                                      ? Text((lastMessageUser.uId==widget.userModel.uId )
-                                          ? "You : ${groupRoomModel.lastMessage.toString()}"
-                                          :  "${lastMessageUser.name} : ${groupRoomModel.lastMessage.toString()}"
-                                          
-                                          )
-                                      : const Text("Say Hello"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                                      trailing: Text(toShow  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                                );
-                             } else{
-                              return ListTile(
-                                  onTap: () async{
-                                   await    getMembersModel(participantsList); 
-                                     // to get list of usermodels of members
-                                      print("members are ${groupMembers.toString()}");
-                                
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => GroupRoomPage(
-                                                  firebaseUser: widget.firebaseUser,
-                                                  userModel: widget.userModel,
-                                                  groupRoomModel: groupRoomModel,
-                                                   groupMembers:groupMembers,
-                                                )));
-                                  },
-                                  title: Text(groupRoomModel.groupName.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                                  leading: CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 158, 219, 241),
-                                    backgroundImage: NetworkImage(
-                                       groupRoomModel.profilePic.toString()),
-                                  ),
-                                  subtitle: (groupRoomModel.lastMessage.toString() !=
-                                          "")
-                                      ? const Text("say hello" 
-                                           ,style: TextStyle(fontFamily:"EuclidCircularB")  
-                                          )
-                                      : const Text("Say Hello"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                                      trailing: Text(toShow),
-                                );
-                             }
-                                }else{
-                                  return const Text("no data"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
-                                }
-                                
-                                }
-                              );
-                    },
-                  )
-                  :GroupChatPage(userModel: widget.userModel, firebaseUser: widget.firebaseUser,);
+                          
+                          String toShow;
+                          String msgDate="${groupRoomModel.lastTime!.day}/${groupRoomModel.lastTime!.month}/${groupRoomModel.lastTime!.year}";
+                          String currentDate="${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}";
+                          
+                   
+                           if(currentDate.compareTo(msgDate)==0){
+              
+                            String msgTime="${groupRoomModel.lastTime!.hour}:${groupRoomModel.lastTime!.minute}";
+                            String curTime="${DateTime.now().hour}:${DateTime.now().minute}";
+            
+                            // inner if start
+                            if(msgTime==curTime){
+                              toShow="now";
+                            }
+                            else{
+                              toShow=msgTime;
+                            }// inner if close
+            
+                           }else{
+                            toShow = msgDate;
+                           }
+                          return StreamBuilder(
+                            stream:  FirebaseFirestore.instance
+                                      .collection("ChatAppUsers")
+                                      .where("uId", isEqualTo: groupRoomModel.lastMessageBy)
+                                       .snapshots(),
+                            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                            
+                               if (snapshot.hasData){   
+                                   QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
+                            if(dataSnapshot.docs.isNotEmpty){
+                            UserModel lastMessageUser = UserModel.fromMap(
+                                           dataSnapshot.docs[0].data()
+                                        as Map<String, dynamic>);
       
-                  /////
-                } else if (snapshot.hasError) {
-                  return GroupChatPage(userModel: widget.userModel, firebaseUser: widget.firebaseUser,);
-                } else {
-                  return  GroupChatPage(userModel: widget.userModel, firebaseUser: widget.firebaseUser,);
-                }
-              } else {
-                return const Center(
-                   child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
-         ),
+                             // UserModel lastMessageUser=  UserModel.fromMap(dataSnapshot.docs[0].data() as Map<String,dynamic>);
+      
+                              return  ListTile(
+                              onTap: () async{
+                               await    getMembersModel(participantsList); 
+                                 // to get list of usermodels of members
+                                  debugPrint("members are ${groupMembers.toString()}");
+                            
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GroupRoomPage(
+                                              firebaseUser: widget.firebaseUser,
+                                              userModel: widget.userModel,
+                                              groupRoomModel: groupRoomModel,
+                                               groupMembers:groupMembers,
+                                            )));
+                              },
+                              title: Text(groupRoomModel.groupName.toString() ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                              leading: CircleAvatar(
+                                 radius: 25,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 158, 219, 241),
+                                backgroundImage: (groupRoomModel.profilePic!= null && groupRoomModel.profilePic!="")
+                                         ?  NetworkImage(groupRoomModel.profilePic.toString())
+                                         : AssetImage("assets/multiple-users-silhouette.png") as ImageProvider
+                                // (groupRoomModel.profilePic!=null && groupRoomModel.profilePic!="") 
+                                // ? NetworkImage(
+                                //    groupRoomModel.profilePic.toString(),
+                                //    )
+                                //    : AssetImage("assets/multiple-users-silhouette.png") as ImageProvider
+                                   ,
+                              ),
+                              subtitle: (groupRoomModel.lastMessage.toString() !=
+                                      "")
+                                  ? Text((lastMessageUser.uId==widget.userModel.uId )
+                                      ? "You : ${groupRoomModel.lastMessage.toString()}"
+                                      :  "${lastMessageUser.name} : ${groupRoomModel.lastMessage.toString()}"
+                                      
+                                      )
+                                  : const Text("Say Hello"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                  trailing: Text(toShow  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                            );
+                         } else{
+                          return ListTile(
+                              onTap: () async{
+                               await    getMembersModel(participantsList); 
+                                 // to get list of usermodels of members
+                                  debugPrint("members are ${groupMembers.toString()}");
+                            
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => GroupRoomPage(
+                                              firebaseUser: widget.firebaseUser,
+                                              userModel: widget.userModel,
+                                              groupRoomModel: groupRoomModel,
+                                               groupMembers:groupMembers,
+                                            )));
+                              },
+                              title: Text(groupRoomModel.groupName.toString()  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                              leading: CircleAvatar(
+                                radius: 25,
+                                backgroundColor:
+                                    const Color.fromARGB(255, 158, 219, 241),
+                                backgroundImage: NetworkImage(
+                                   groupRoomModel.profilePic.toString()),
+                              ),
+                              subtitle: (groupRoomModel.lastMessage.toString() !=
+                                      "")
+                                  ? const Text("say hello" 
+                                       ,style: TextStyle(fontFamily:"EuclidCircularB")  
+                                      )
+                                  : const Text("Say Hello"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                                  trailing: Text(toShow),
+                            );
+                         }
+                            }else{
+                              return const Text("no data"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
+                            }
+                            
+                            }
+                          );
+                },
+              )
+              : NoGroupChatPage(userModel: widget.userModel, firebaseUser: widget.firebaseUser,);
+            
+              /////
+            } else if (snapshot.hasError) {
+              return NoGroupChatPage(userModel: widget.userModel, firebaseUser: widget.firebaseUser,);
+            } else {
+              return  NoGroupChatPage(userModel: widget.userModel, firebaseUser: widget.firebaseUser,);
+            }
+          } else {
+            return const Center(
+               child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
 
   }

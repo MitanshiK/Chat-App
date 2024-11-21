@@ -1,13 +1,14 @@
+import 'package:cubit_form/cubit_form.dart';
 import 'package:dio/dio.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:proj/ChatApp/models/Blocs/video_arrow_bloc.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:video_player/video_player.dart';
 // opening shared media
 class OpenMedia extends StatefulWidget {
-  OpenMedia(
+  const OpenMedia(
       {super.key,
       required this.mediamodel,
       required this.userModel,
@@ -35,7 +36,7 @@ class _OpenMediaState extends State<OpenMedia> {
       videoController =
           VideoPlayerController.networkUrl(Uri.parse(widget.mediamodel.fileUrl));
       _initializeVideoPlayerFuture = videoController!.initialize();
-   }
+    }
     super.initState();
   }
 
@@ -79,7 +80,7 @@ class _OpenMediaState extends State<OpenMedia> {
                                    }
                                      
                                       String savePath = "${dir.path}/$savename";
-                                      print(savePath);
+                                      debugPrint(savePath);
                                       //output:  /storage/emulated/0/Download/banner.png
                                       try {
                                           await Dio().download(
@@ -87,17 +88,17 @@ class _OpenMediaState extends State<OpenMedia> {
                                               savePath,
                                               onReceiveProgress: (received, total) {
                                                   if (total != -1) {
-                                                      print((received / total * 100).toStringAsFixed(0) + "%");
+                                                      debugPrint("${(received / total * 100).toStringAsFixed(0)}%");
                                                       //you can build progressbar feature too
                                                   }
                                                 });
                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Downloaded" ,style: TextStyle(fontFamily:"EuclidCircularB")))) ; 
                                      } catch (e) {
-                                       print(e);
+                                      print(e);
                                      }
                                 }
                             }else{
-                               print("No permission to read and write.");
+                               debugPrint("No permission to read and write.");
                             }
 
                          },
@@ -119,40 +120,47 @@ class _OpenMediaState extends State<OpenMedia> {
                   maxHeight: MediaQuery.sizeOf(context).height-50,
               maxWidth: MediaQuery.sizeOf(context).width-50),
               child:
-              (widget.type=="image")? Image.network(widget.mediamodel.fileUrl ,cacheWidth: 700,):
-               (widget.type=="video")?   
-               FutureBuilder(
+              (widget.type=="image")
+              ? Image.network(widget.mediamodel.fileUrl ,cacheWidth: 700,)
+              : (widget.type=="video")
+              ? FutureBuilder(
                         future: _initializeVideoPlayerFuture,
                         builder: (BuildContext context,
                             AsyncSnapshot<dynamic> snapshot) {
-                          return Center(
-                            child: Stack(
-                              children: [
-                                AspectRatio(
-                                  aspectRatio: videoController!.value.aspectRatio,
-                                  child: VideoPlayer(videoController!),
-                                ),
+                          return BlocProvider<VideoStateBloc>(
+                            create: (_)=> VideoStateBloc(false),
+                            child: BlocBuilder<VideoStateBloc,bool>(
+                              builder: (BuildContext context, state) {  
+                              return Center(
+                                child: Stack(
+                                  children: [
+                                    AspectRatio(
+                                      aspectRatio: videoController!.value.aspectRatio,
+                                      child: VideoPlayer(videoController!),
+                                    ),
                                 Positioned(
-                                  top: MediaQuery.sizeOf(context).height / 3,
-                                  child: Container(
-                                    width: MediaQuery.sizeOf(context).width,
+                                  top: videoController!.value.size.width,
+                                  child: SizedBox(
+                                    width: 
+                                     MediaQuery.sizeOf(context).width,
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
                                         IconButton(
                                           onPressed: () {
-                                            if (videoController!
-                                                .value.isPlaying) {
+                                            if (videoController!.value.isPlaying) {
                                               videoController!.pause();
+                                              context.read<VideoStateBloc>().add(VideoPause()); 
                                             } else {
                                               videoController!.play();
+                                              context.read<VideoStateBloc>().add(VideoPlay()); 
                                             }
                                           },
                                           icon: Icon(
-                                            videoController!.value.isPlaying
-                                                ? Icons.pause
-                                                : Icons.play_circle,
+                                          ( context.watch<VideoStateBloc>().state==false)
+                                                ? Icons.play_circle
+                                                :Icons.pause ,
                                             size: 80,
                                             color: Colors.white,
                                           ),
@@ -161,11 +169,15 @@ class _OpenMediaState extends State<OpenMedia> {
                                     ),
                                   ),
                                 ),
-                              ],
+                                     
+                                  ],
+                                ),
+                              );
+                           },
                             ),
                           );
                         },
-                      ) :Placeholder()
+                      ) :const Placeholder()
                       ///
               
               ),

@@ -36,7 +36,7 @@ class _ShowStoryState extends State<ShowStory> {
               ),
               title: Text(
                 widget.userModel.name!,
-                style: TextStyle(color: Colors.white  ,fontFamily:"EuclidCircularB"),
+                style: const TextStyle(color: Colors.white  ,fontFamily:"EuclidCircularB"),
               ),
             ),
 
@@ -190,7 +190,7 @@ class _ShowStoryState extends State<ShowStory> {
 
   void recentStories(QuerySnapshot<Object?> dataSnapshot) {
     for (var i in dataSnapshot.docs) {
-      late final currentStory = MediaModel.fromMap(// data into model
+      late final currentStory = MediaModel.fromMap( // data into model
           i.data() as Map<String, dynamic>);
 
       DateTime a = currentStory.createdOn!;
@@ -200,7 +200,6 @@ class _ShowStoryState extends State<ShowStory> {
       if (diff <= 24) {
        
           recentStoryList.add(currentStory);
-    
         
       }
       // print("difference between current time ${DateTime.now().hour} and story${currentStory.createdOn!.hour} is ${diff} ");

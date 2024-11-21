@@ -31,7 +31,7 @@ class _LoginpageState extends State<Loginpage> {
           padding: const EdgeInsets.all(20),
           child: ListView(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 40,
               ),
               const Image(
@@ -67,7 +67,7 @@ class _LoginpageState extends State<Loginpage> {
                   child: Column(
                     children: [
                       TextFormField(
-                        style: TextStyle(fontFamily:"EuclidCircularB"),
+                        style: const TextStyle(fontFamily:"EuclidCircularB"),
                         decoration: const InputDecoration(
                             label: Text("Email Id",style: TextStyle(fontFamily:"EuclidCircularB")),
                             border: OutlineInputBorder()),
@@ -88,7 +88,7 @@ class _LoginpageState extends State<Loginpage> {
                         height: 10,
                       ),
                       TextFormField(
-                        style: TextStyle(fontFamily:"EuclidCircularB"),
+                        style: const TextStyle(fontFamily:"EuclidCircularB"),
                           obscureText: obscure,
                           decoration: InputDecoration(
                               suffix: GestureDetector(
@@ -105,8 +105,8 @@ class _LoginpageState extends State<Loginpage> {
                                   height: 20,
                                 ),
                               ),
-                              label: Text("Password" ,style: TextStyle(fontFamily:"EuclidCircularB")),
-                              border: OutlineInputBorder()),
+                              label: const Text("Password" ,style: TextStyle(fontFamily:"EuclidCircularB")),
+                              border: const OutlineInputBorder()),
                           validator: (value) {
                             if (value.toString().trim() == "") {
                               return "empty field";
@@ -132,14 +132,14 @@ class _LoginpageState extends State<Loginpage> {
                               }
                             },
                             style: ButtonStyle(
-                                padding: const MaterialStatePropertyAll(
+                                padding: const WidgetStatePropertyAll(
                                     EdgeInsets.all(10)),
-                                shape: MaterialStateProperty.all<
+                                shape: WidgetStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 )),
-                                backgroundColor: const MaterialStatePropertyAll(
+                                backgroundColor: const WidgetStatePropertyAll(
                                     Color.fromARGB(255, 240, 217, 148))),
                             child: const Text(
                               "Log In ",
@@ -152,7 +152,7 @@ class _LoginpageState extends State<Loginpage> {
                       ),
                     ],
                   )),
-              const Spacer(),
+              // const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -172,7 +172,7 @@ class _LoginpageState extends State<Loginpage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SignInPage()));
+                              builder: (context) => const SignInPage()));
                     },
                     child: const Text(
                       "Sign Up",
@@ -200,9 +200,9 @@ class _LoginpageState extends State<Loginpage> {
           .signInWithEmailAndPassword(email: email, password: password);
     } on auth.FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Could Not Login :$e" ,style: TextStyle(fontFamily:"EuclidCircularB"))));
+          .showSnackBar(SnackBar(content: Text("Could Not Login :$e" ,style: const TextStyle(fontFamily:"EuclidCircularB"))));
 
-      print("login exception $e");
+      debugPrint("login exception $e");
     }
     if (userCredential != null) {
       final userId = userCredential.user!.uid;

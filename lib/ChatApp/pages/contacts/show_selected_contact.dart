@@ -10,7 +10,7 @@ import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/main.dart';
 
 class ShowSelectedContacts extends StatefulWidget {
-  ShowSelectedContacts({super.key ,required this.shareContactList , this.chatRoomModel,this.groupRoomModel ,required this.userModel});
+  const ShowSelectedContacts({super.key ,required this.shareContactList , this.chatRoomModel,this.groupRoomModel ,required this.userModel});
  final List<Contact> shareContactList;
  final ChatRoomModel? chatRoomModel;
  final GroupRoomModel? groupRoomModel;
@@ -23,7 +23,7 @@ class ShowSelectedContacts extends StatefulWidget {
 class _ShowSelectedContactsState extends State<ShowSelectedContacts> {
 @override
   void initState() {
-    if(widget.shareContactList.length==0){
+    if(widget.shareContactList.isEmpty){
       setState(() {
         Navigator.pop(context);
       });
@@ -37,40 +37,40 @@ class _ShowSelectedContactsState extends State<ShowSelectedContacts> {
       appBar: AppBar(title: const Text("Share Contacts" ,style: TextStyle(fontFamily:"EuclidCircularB")),
       centerTitle: true,),
       body: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: ListView.builder(
           itemCount: widget.shareContactList.length,
           itemBuilder: (BuildContext context, int index) {
 
-           Uint8List? SelectedContactImage = widget.shareContactList[index].photo;
+           Uint8List? selectedContactImage = widget.shareContactList[index].photo;
            
             return  Column(
               children:<Widget> [
                 Row(children: [
                    (widget.shareContactList[index].photo==null) 
-                                ? CircleAvatar( radius: 30, backgroundColor: Colors.blue ,child: Icon(Icons.person ,color: Colors.white,),)
-                                : CircleAvatar(radius: 30, backgroundImage: MemoryImage(SelectedContactImage!),),
+                                ? const CircleAvatar( radius: 30, backgroundColor: Colors.blue ,child: Icon(Icons.person ,color: Colors.white,),)
+                                : CircleAvatar(radius: 30, backgroundImage: MemoryImage(selectedContactImage!),),
                        
-                 SizedBox(width: 20,),
-                 Text(widget.shareContactList[index].displayName ,style: TextStyle(fontFamily:"EuclidCircularB"))
+                 const SizedBox(width: 20,),
+                 Text(widget.shareContactList[index].displayName ,style: const TextStyle(fontFamily:"EuclidCircularB"))
                 ],),
                
                 ListTile(
-                  contentPadding: EdgeInsets.only(left: 15),
-                  leading: Icon(Icons.phone ,color: Colors.blue,),
-                  title: Text(widget.shareContactList[index].phones.first.number ,style: TextStyle(fontFamily:"EuclidCircularB")),
-                  subtitle: Text("Phone" ,style: TextStyle(fontFamily:"EuclidCircularB")),
+                  contentPadding: const EdgeInsets.only(left: 15),
+                  leading: const Icon(Icons.phone ,color: Colors.blue,),
+                  title: Text(widget.shareContactList[index].phones.first.number ,style: const TextStyle(fontFamily:"EuclidCircularB")),
+                  subtitle: const Text("Phone" ,style: TextStyle(fontFamily:"EuclidCircularB")),
                   trailing: IconButton(onPressed: (){
                     setState(() {
                        widget.shareContactList.removeAt(index); 
-                        if(widget.shareContactList.length==0){
+                        if(widget.shareContactList.isEmpty){
                         Navigator.pop(context);
                         }
                     });
                       
-                  }, icon: Icon(Icons.cancel)),
+                  }, icon: const Icon(Icons.cancel)),
                 ),
-                Divider(
+                const Divider(
                   thickness: 2,
                 )
               ],
@@ -88,7 +88,7 @@ class _ShowSelectedContactsState extends State<ShowSelectedContacts> {
                 if(length==0){
                      Navigator.pop(context);
                 }
-            }, icon: Icon(
+            }, icon: const Icon(
               Icons.send ,size: 40,color: Colors.blue,))
     );
   }

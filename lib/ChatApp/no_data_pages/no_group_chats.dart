@@ -1,24 +1,23 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/adding_people/create_group.dart';
 
-class GroupChatPage extends StatefulWidget {
-  const GroupChatPage({super.key , required this.firebaseUser, required this.userModel});
+class NoGroupChatPage extends StatefulWidget {
+  const NoGroupChatPage({super.key , required this.firebaseUser, required this.userModel});
    final UserModel userModel;
   final User firebaseUser;
 
   @override
-  State<GroupChatPage> createState() => _GroupChatPageState();
+  State<NoGroupChatPage> createState() => _NoGroupChatPageState();
 }
 
-class _GroupChatPageState extends State<GroupChatPage> {
+class _NoGroupChatPageState extends State<NoGroupChatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body:Container(
+      body:SizedBox(
         width: MediaQuery.sizeOf(context).width,
         child:
         Column(
@@ -26,16 +25,15 @@ class _GroupChatPageState extends State<GroupChatPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
           ConstrainedBox(
-            constraints: const BoxConstraints(maxHeight: 200 ,maxWidth: 200),
+            constraints:  BoxConstraints(maxHeight: MediaQuery.sizeOf(context).width/2 ,maxWidth: MediaQuery.sizeOf(context).width/2),
           child: Image.asset("assets/focus-group.png")),
           const SizedBox(height: 60,),
           ElevatedButton(
             style: const ButtonStyle(
-              backgroundColor: MaterialStatePropertyAll(
-                          Color.fromARGB(255, 239, 125, 116))
+              backgroundColor: WidgetStatePropertyAll(
+                         Color.fromARGB(255, 247, 155, 148))
                           ),
                   onPressed: () {
-                    Navigator.pop(context);
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context)=> 
                       CreateGroupPage(firebaseUser: widget.firebaseUser, userModel: widget.userModel, existing: false,)));

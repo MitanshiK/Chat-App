@@ -147,7 +147,7 @@ class _SearchPageState extends State<SearchPage> {
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // convert into type QuerySnapshot
 
-                      if (dataSnapshot.docs.length > 0) {
+                      if (dataSnapshot.docs.isNotEmpty) {
                         Map<String, dynamic> userDataMap =
                             dataSnapshot.docs[0].data() as Map<String,
                                 dynamic>; // convertig document data into map
@@ -218,7 +218,12 @@ class _SearchPageState extends State<SearchPage> {
                       return const Text("");
                     }
                   } else {
-                    return const CircularProgressIndicator();
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: 100,
+                        maxWidth: 200
+                      ),
+                    child: const CircularProgressIndicator());
                   }
                 })
           ],

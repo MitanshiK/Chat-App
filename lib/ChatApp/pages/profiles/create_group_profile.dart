@@ -5,7 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/models/ui_helper.dart';
@@ -15,7 +14,7 @@ import 'package:proj/ChatApp/pages/chatrooms/groupchatroom.dart';
 
 
 class CreateGroupProfile extends StatefulWidget {
-  CreateGroupProfile({super.key ,required this.firebaseUser , required this.userModel ,required this.groupRoomModel ,required this.groupMembers});
+  const CreateGroupProfile({super.key ,required this.firebaseUser , required this.userModel ,required this.groupRoomModel ,required this.groupMembers});
   final  UserModel userModel;
   final  User firebaseUser;  
   final GroupRoomModel  groupRoomModel;
@@ -30,6 +29,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
  File? profilePic;
   bool picked = false;
   String name = "";
+  // TextEditingController groupNameController= TextEditingController();
 
 @override
   void initState() {
@@ -62,7 +62,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                     backgroundColor: const Color.fromARGB(255, 240, 217, 148),
                     backgroundImage: (picked == true)
                         ? FileImage(profilePic!)
-                        : (widget.groupRoomModel.profilePic!=null) ?NetworkImage(widget.groupRoomModel.profilePic.toString()) : null as ImageProvider,
+                        : (widget.groupRoomModel.profilePic!=null && widget.groupRoomModel.profilePic!="") ? NetworkImage(widget.groupRoomModel.profilePic.toString()) : AssetImage("assets/multiple-users-silhouette.png") as ImageProvider,
                     // child: (picked == false)
                     //     ? const Icon(
                     //         Icons.person,
@@ -80,10 +80,10 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                         onTap: () {
                           showoptions();
                         },
-                        child: CircleAvatar(
+                        child: const CircleAvatar(
                           radius: 15,
-                          backgroundColor:  const Color.fromARGB(255, 240, 217, 148),
-                          child: const Icon(Icons.edit)))
+                          backgroundColor:  Color.fromARGB(255, 240, 217, 148),
+                          child: Icon(Icons.edit)))
                         
                         ),
               ],
@@ -96,20 +96,25 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                 child: Column(
                   children: [
                     TextFormField(
-                      initialValue: (name!="")?name :"",
+                      // controller: groupNameController,
+                      initialValue: (name!="")  ? name : "${widget.userModel.name} group",
                       decoration: const InputDecoration(
-                          label: Text("Name"  ,style: TextStyle(fontFamily:"EuclidCircularB")  ), border: OutlineInputBorder()),
+                          label: Text("Name"  ,style: TextStyle(fontFamily :"EuclidCircularB")  ), border: OutlineInputBorder()),
                           validator: (value){
                            if(value!.trim()==""){
                               return "empty name field";
                            }
                            else
-                           {return null;}
+                           {
+                            return null;
+                            }
                           },
                           onSaved: (newValue) {
+                            if(newValue!.trim()!=""){
                             setState(() {
-                              name=newValue!;
+                              name=newValue;
                             });
+                            }
                           },
                     ),
                     const SizedBox(
@@ -119,22 +124,21 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                       width: MediaQuery.sizeOf(context).width,
                       child: TextButton(
                           onPressed: () {
-
-                             groupProfileKey.currentState!.save();
-                             if( groupProfileKey.currentState!.validate())
+                             if(groupProfileKey.currentState!.validate())
                              {
+                               groupProfileKey.currentState!.save();
                              uploadData();
                              }
                           },
                           style: ButtonStyle(
-                              padding: const MaterialStatePropertyAll(
+                              padding: const WidgetStatePropertyAll(
                                   EdgeInsets.all(10)),
-                              shape: MaterialStateProperty.all<
+                              shape: WidgetStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               )),
-                              backgroundColor: const MaterialStatePropertyAll(
+                              backgroundColor: const WidgetStatePropertyAll(
                                   Color.fromARGB(255, 240, 217, 148))),
                           child: const Text(
                             "Save",
@@ -142,7 +146,8 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                              fontFamily:"EuclidCircularB",  
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                                color: Colors.black
+                                ),
                           )),
                     ),
                   
@@ -150,7 +155,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                   ],
                 )),
                   Expanded(
-                    child: Container(
+                    child: SizedBox(
                       width: MediaQuery.sizeOf(context).width/1.2,
                      height: MediaQuery.sizeOf(context).height/3,
                      
@@ -245,29 +250,30 @@ void cropImageCamera(XFile file) async {
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       compressQuality: 20
     );
-     print("path of cropped image file is ${croppedImage!.path} ");
+     debugPrint("path of cropped image file is ${croppedImage!.path} ");
      
        setState(() {
       picked = true;
       profilePic = File(croppedImage.path);
     });
-    print("path of cropped image file is ${profilePic!.path}  and picked value is $picked");
+    debugPrint("path of cropped image file is ${profilePic!.path}  and picked value is $picked");
   }
 
   // 4//////////////////////////////////////////////////to change
   void uploadData() async{
     // uploading image to the firebase storage 
     UiHelper.loadingDialogFun(context, "Saving..");
+  if(picked==true){
     final result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.groupRoomModel.groupRoomId.toString()).putFile(profilePic!);  
     
     // getting the download link of image uploaded in storage
     String? imageUrl= await result.ref.getDownloadURL();
 
-
     // saving name and imageurl in the empty fields of usermodel
-    widget.groupRoomModel.groupName=name;
     widget.groupRoomModel.profilePic =imageUrl;
+  }
 
+    widget.groupRoomModel.groupName=name;
    // updating data in firestore 
     await FirebaseFirestore.instance.collection("GroupChats").doc(widget.groupRoomModel.groupRoomId).set(widget.groupRoomModel.toMap()).then((value){
     debugPrint("profile complete !");

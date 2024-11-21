@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
@@ -12,7 +10,7 @@ import 'package:proj/ChatApp/pages/story/show_story.dart';
 import 'package:proj/ChatApp/pages/story/story_file_upload.dart';
 
 class Stories extends StatefulWidget {
-  Stories({super.key, required this.firebaseUser, required this.userModel});
+  const Stories({super.key, required this.firebaseUser, required this.userModel});
   final User firebaseUser;
   final UserModel userModel;
 
@@ -49,12 +47,15 @@ class _StoriesState extends State<Stories> {
                 children: [
                   GestureDetector(
                     onTap: () {
+                     if(hasStory == true){ 
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => ShowStory(
                                   firebaseUser: widget.firebaseUser,
-                                  userModel: widget.userModel)));
+                                  userModel: widget.userModel)
+                            ));
+                            }
                     },
                     child: CircleAvatar(
                         radius: 30,
@@ -67,9 +68,10 @@ class _StoriesState extends State<Stories> {
                               NetworkImage(widget.userModel.profileUrl!),
                         )),
                   ),
-                  const Visibility(
-                    visible:  true,
-                    child: Positioned(
+                  // const Visibility(
+                  //   visible:  true,
+                  //   child:
+                     const Positioned(
                       bottom: -5,
                       right: -5,
                       child: Icon(
@@ -77,7 +79,7 @@ class _StoriesState extends State<Stories> {
                         color: Color.fromARGB(255, 240, 217, 148),
                       ),
                     ),
-                  ),
+                  // ),
                 ],
               ),
               title: const Text("My Status" ,style: TextStyle(fontFamily:"EuclidCircularB"),),
@@ -109,27 +111,24 @@ class _StoriesState extends State<Stories> {
                                
                             builder: (context, snapshot) {
                               
-                              if (snapshot.connectionState ==
-                                  ConnectionState.done) {
+                              if (snapshot.connectionState == ConnectionState.done) {
                                 if (snapshot.hasData) {
-                                  UserModel userData =
-                                      snapshot.data as UserModel;
+                                  UserModel userData =snapshot.data as UserModel;
 
                                   return Container(
                                     margin: const EdgeInsets.only(top: 15),
                                     child: ListTile(
                                         onTap: () {
                                           Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
+                                              context, MaterialPageRoute(
                                                   builder: (context) =>
                                                       ShowStory(
-                                                          firebaseUser: widget
-                                                              .firebaseUser,
-                                                          userModel:
-                                                              userData)));
+                                                          firebaseUser: widget.firebaseUser,
+                                                          userModel:userData)
+                                                        )
+                                                      );
                                         },
-                                        title: Text(userData.name.toString(),style: TextStyle(fontFamily:"EuclidCircularB")),
+                                        title: Text(userData.name.toString(),style: const TextStyle(fontFamily:"EuclidCircularB")),
                                         leading: CircleAvatar(
                                           radius: 30,
                                           backgroundColor: const Color.fromARGB(
@@ -171,54 +170,76 @@ class _StoriesState extends State<Stories> {
     });
   }
 
-  void chooseDialog() {
+   void chooseDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Camera" ,style: TextStyle(fontFamily:"EuclidCircularB")),
+          title: const Text("Choose media type" ,style: TextStyle(fontFamily:"EuclidCircularB")),
           content: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
                  
               // for picture
-              IconButton(
-                onPressed: () async {
-                  await selectImage(FileType.image);
-                  if (pickedMedia != null) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StoryFileUpload(
-                          status: pickedMedia!.path,
-                          userModel: widget.userModel,
-                          type: 'image',
-                        ),
-                      ),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.image ,size: 40,),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                          // Navigator.pop(context);
+                  
+                      await selectImage(FileType.image);
+                      if (pickedMedia != null) {
+                        if(mounted){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => StoryFileUpload(
+                              status: pickedMedia!.path,
+                              type: 'image',
+                              userModel: widget.userModel,
+                            ),
+                          ),
+                        );
+                        }
+                       
+                      }
+                    },
+                    icon: const Icon(Icons.image ,size: 40,),
+                  ),
+                 const Text("Image" ,style: const TextStyle(fontFamily:"EuclidCircularB"),)
+                ],
               ),
 
               // for video
-              IconButton(
-                onPressed: () async {
-                  await selectImage(FileType.video);
-                  // Navigator.pop(context);
-                  if (pickedMedia != null) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StoryFileUpload(
-                            status: pickedMedia!.path,
-                            userModel: widget.userModel,
-                            type: 'video',
-                          ),
-                        ));
-                  }
-                },
-                icon: const Icon(Icons.video_camera_back ,size: 40,),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                          // Navigator.pop(context); 
+                          
+                      await selectImage(FileType.video);
+                      // Navigator.pop(context);
+                      if (pickedMedia != null) {
+                        if(mounted){
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StoryFileUpload(
+                                status: pickedMedia!.path,
+                                type: 'video', userModel: widget.userModel,
+                              ),
+                            ));
+                        }
+                        // Navigator.pop(context);
+                      }
+                    },
+                    icon: const Icon(Icons.video_camera_back ,size: 40,),
+                  ),
+                 const Text("Video" ,style: TextStyle(fontFamily:"EuclidCircularB"),)
+
+                ],
               ),
             ],
           ),
@@ -252,7 +273,7 @@ class _StoriesState extends State<Stories> {
                           /////
                   otherUsers.add(participantsList[0]);
                   } // 1st for 
-                  print ("${otherUsers.toString()}");
+                  debugPrint (otherUsers.toString());
               
             List<MediaModel> singleUserStory=[];
               for(var j in otherUsers){
@@ -264,7 +285,7 @@ class _StoriesState extends State<Stories> {
                     .orderBy("createdOn", descending: true)
                     .snapshots().listen((event) {
 
-singleUserStory.clear();  // imp
+          singleUserStory.clear();  // imp
 
                         for (var i in event.docs) {
       late final currentStory = MediaModel.fromMap(// data into model
@@ -277,18 +298,18 @@ singleUserStory.clear();  // imp
       if (diff <= 24) {
           singleUserStory.add(currentStory);
       }  
-      // print("singlestory of $j is ${currentStory.fileUrl}");
-      // print("difference between current time ${DateTime.now().hour} and story${currentStory.createdOn!.hour} is ${diff} ");
+      // debugPrint("singlestory of $j is ${currentStory.fileUrl}");
+      // debugPrint("difference between current time ${DateTime.now().hour} and story${currentStory.createdOn!.hour} is ${diff} ");
     }
     recentStoryList.add(singleUserStory);
-    if(singleUserStory.length!=0){
+    if(singleUserStory.isNotEmpty){
       setState(() {
         friendsStories.add(j);
       });
     }
-        // print("friens with stories are 1 ${friendsStories}");
-   print("singlestory of $j is ${singleUserStory.length}");
-      // print("list of all stories is ${recentStoryList[0].length} for $j  second ${recentStoryList[1].length} ");
+        // debugPrint("friens with stories are 1 ${friendsStories}");
+   debugPrint("singlestory of $j is ${singleUserStory.length}");
+      // debugPrint("list of all stories is ${recentStoryList[0].length} for $j  second ${recentStoryList[1].length} ");
 
                     }); // second stream  
                   }
@@ -317,10 +338,10 @@ singleUserStory.clear();  // imp
           singleUserStory.add(currentStory);
       }
    debugPrint(" current user stories count is ${singleUserStory.length}");
-      // print("difference between current time ${DateTime.now().hour} and story${currentStory.createdOn!.hour} is ${diff} ");
+      // debugPrint("difference between current time ${DateTime.now().hour} and story${currentStory.createdOn!.hour} is ${diff} ");
     }
      debugPrint(" current user stories count 2 is ${singleUserStory.length}");
- if(singleUserStory.length!=0){
+ if(singleUserStory.isNotEmpty){
   setState(() {
     hasStory=true;
   });

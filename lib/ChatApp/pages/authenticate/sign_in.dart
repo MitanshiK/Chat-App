@@ -39,7 +39,7 @@ String uId="";
                padding: const EdgeInsets.all(20),
               child: ListView(
                 children: [
-                  SizedBox(height: 40,),
+                  const SizedBox(height: 40,),
                   const Image(
                     image: AssetImage("assets/chat.png"),
                     height: 150,
@@ -84,8 +84,9 @@ String uId="";
                                if(value.toString().trim()==""){
                                 return "Empty field";
                               }
-                              else
-                               return null;
+                              else {
+                                 return null;
+                               }
                           
                             },
                       ),
@@ -110,8 +111,8 @@ String uId="";
                                 height: 20,
                               ),
                             ),
-                            label: Text("Password" ,style: TextStyle(fontFamily:"EuclidCircularB")),
-                            border: OutlineInputBorder()),
+                            label: const Text("Password" ,style: TextStyle(fontFamily:"EuclidCircularB")),
+                            border: const OutlineInputBorder()),
                             onSaved: (value){
                              setState(() {
                                  password=value!;
@@ -121,8 +122,8 @@ String uId="";
                            if(value.toString()==""){
                                 return "Empty field";
                               }
-                          else
-                           return null;
+                          else{
+                           return null;}
                             },
                       ),
                       const SizedBox(
@@ -144,8 +145,8 @@ String uId="";
                               else if(value.toString()==""){
                                 return "Empty field";
                               }
-                              else
-                              return null;
+                              else{
+                              return null;}
                             
                             },
                       ),
@@ -162,18 +163,18 @@ String uId="";
                               onPressed: () {
                                 signUpKey.currentState!.save();
                                 if(signUpKey.currentState!.validate()){
-                                  print("validated");
+                                  debugPrint("validated");
                                   signUpUser();
                                 }
                               },
                               style: ButtonStyle(
-                                  padding: MaterialStatePropertyAll(EdgeInsets.all(10)),
+                                  padding: const WidgetStatePropertyAll(EdgeInsets.all(10)),
                                   shape:
-                                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                                      WidgetStateProperty.all<RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   )),
-                                  backgroundColor: const MaterialStatePropertyAll(
+                                  backgroundColor: const WidgetStatePropertyAll(
                                       Color.fromARGB(255, 240, 217, 148))),
                               child: const Text(
                                 "Sign Up ",
@@ -187,7 +188,7 @@ String uId="";
                       ),
                     ],
                   )),
-                  const Spacer(),
+                  // const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -207,7 +208,7 @@ String uId="";
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignInPage()));
+                                  builder: (context) => const SignInPage()));
                         },
                         child: const Text(
                           "Log In",
@@ -242,12 +243,12 @@ String uId="";
       //                             builder: (context) => CompleteUserProfile(userModel: user, firebaseUserl: userCredential!.user!,)));
     } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        debugPrint('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        debugPrint('The account already exists for that email.');
       }
     } catch (e) {
-      print("this is Exception : $e");
+      debugPrint("this is Exception : $e");
     }
 
 // storing data in firestore

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
@@ -11,7 +10,7 @@ import 'package:proj/ChatApp/pages/contacts/read_contacts.dart';
 import 'package:proj/ChatApp/pages/for_media/send_media.dart';
 
 class ShareBottomModal extends StatefulWidget {
-  ShareBottomModal({super.key , this.chatRoomModel ,required this.userModel ,this.groupRoomModel});
+  const ShareBottomModal({super.key , this.chatRoomModel ,required this.userModel ,this.groupRoomModel});
  final GroupRoomModel? groupRoomModel;
  final UserModel userModel;
  final ChatRoomModel?   chatRoomModel;
@@ -49,8 +48,9 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                     //1
                    GestureDetector(
                     onTap: () async{
+                      // Navigator.pop(context);
                        await selectImage(FileType.image); 
-                                             Navigator.pop(context);// await bcs , it will wait for pic to be selected then navigate to next page
+                                            //  Navigator.pop(context);// await bcs , it will wait for pic to be selected then navigate to next page
                
                                            if(widget.chatRoomModel!= null){
                                             Navigator.push( context,
@@ -75,7 +75,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                                                         )));
                                             }
                                                          
-                    },
+                                      },
                      child: const Column(
                        children: [
                          CircleAvatar(
@@ -91,8 +91,9 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                    //2
                     GestureDetector(
                     onTap: ()async{
+                      
                        await selectImage(FileType.video);
-                       
+                      Navigator.pop(context);
                         
                                            if(widget.chatRoomModel!= null){
                                             Navigator.push( context,
@@ -129,38 +130,13 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                        ],
                      ),
                    ),
-
-                   //3
-                    GestureDetector(
-                    onTap: (){
-                      chooseDialog();
-                    },
-                     child: const Column(
-                       children: [
-                         CircleAvatar(
-                          radius: 30,
-                          backgroundColor: Color.fromARGB(255, 81, 131, 157),
-                          child: Icon(Icons.camera_alt,color: Colors.white,),
-                         ),
-                         Text("Camera",style: TextStyle(fontFamily:"EuclidCircularB"))
-                       ],
-                     ),
-                   )
-                    ],
-                ),
-               const SizedBox(height: 20,),
-                 // Row 2
-                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    //1
-                    GestureDetector(
+               //3
+                GestureDetector(
                     onTap: ()async{
+                                        //  Navigator.pop(context);
                                             await selectImage(FileType.audio);
                                              Navigator.pop(context); 
 
-
-                                           
                                            if(widget.chatRoomModel!= null){
                                             Navigator.push( context,
                                                 MaterialPageRoute(
@@ -183,7 +159,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                                                           type: "audio",
                                                         )));
                                             }
-                                            print(
+                                            debugPrint(
                                                 "${File(pickedMedia!.path!)} is audio path  ${pickedMedia!.path}");
                                     
                     },
@@ -199,9 +175,20 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                      ),
                    ),
 
-                   //2
+                
+                    ],
+                ),
+               const SizedBox(height: 20,),
+                 // Row 2
+                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                  
+                   
+                   //1
                     GestureDetector(
                     onTap: (){
+                      Navigator.pop(context);
                       
                     },
                      child: const Column(
@@ -216,7 +203,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                      ),
                    ),
 
-                   //3
+                   //2
                     GestureDetector(
                     onTap: (){
                       Navigator.pop(context);   
@@ -250,7 +237,14 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                          Text("Contacts",style: TextStyle(fontFamily:"EuclidCircularB"))
                        ],
                      ),
-                   )
+                   ),
+                      //3
+                    const CircleAvatar(
+                     radius: 30,
+                     backgroundColor: Colors.transparent,
+                     
+                    ),
+                   
                   ])
               ],
             ),
@@ -266,84 +260,78 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
       pickedMedia = result!.files.first;
     });
   }
-   void chooseDialog(){
+
+  //////////////////////////////
+   void chooseDialog() {
     showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                      title: const Text("Camera" ,style: TextStyle(fontFamily:"EuclidCircularB")),
-                                                      content: Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                        children: [
-                                                          // for picture
-                                                          IconButton(
-                                                            iconSize: 40,
-                                                              onPressed: () async {
-                                                                await fromCamera(
-                                                                    "picture");
-                                                                          
-                                                                if(widget.chatRoomModel!=null){
-                                                                Navigator.push(context, MaterialPageRoute(
-                                                                        builder: (context) => SendMedia(
-                                                                            mediaToSend:capturedFile!,
-                                                                            chatRoom: widget.chatRoomModel,
-                                                                            userModel: widget.userModel,
-                                                                            type: "image")));
-                                                                }
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              title: const Text("Camera",
+                  style: TextStyle(fontFamily: "EuclidCircularB")),
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  // for picture
+                  IconButton(
+                      iconSize: 40,
+                      onPressed: () async {
+                        await fromCamera("picture");
 
-                                                                else if (widget.groupRoomModel!=null){
-                                                                         Navigator.push(context, MaterialPageRoute(
-                                                                        builder: (context) => SendMedia(
-                                                                            mediaToSend:capturedFile!,
-                                                                            groupRoomModel: widget.groupRoomModel,
-                                                                            userModel: widget.userModel,
-                                                                            type: "image")));
-                                                                  
-                                                                }
-                                                              },
-                                                              icon: const Icon(
-                                                                  Icons.image)),
+                        if (widget.chatRoomModel != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SendMedia(
+                                      mediaToSend: capturedFile!,
+                                      chatRoom: widget.chatRoomModel,
+                                      userModel: widget.userModel,
+                                      type: "image")));
+                        } else if (widget.groupRoomModel != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SendMedia(
+                                      mediaToSend: capturedFile!,
+                                      groupRoomModel: widget.groupRoomModel,
+                                      userModel: widget.userModel,
+                                      type: "image")));
+                        }
+                      },
+                      icon: const Icon(Icons.image)),
 
-                                                          // for video
-                                                          IconButton(
-                                                            
-                                                             iconSize: 40,
-                                                              onPressed:
-                                                                  () async {
-                                                                Navigator.pop(
-                                                                    context);
-                                                                await fromCamera(
-                                                                    "video");
+                  // for video
+                  IconButton(
+                    iconSize: 40,
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      await fromCamera("video");
 
-
-                                                              if(widget.chatRoomModel!=null){
-                                                                Navigator.push(context, MaterialPageRoute(
-                                                                        builder: (context) => SendMedia(
-                                                                            mediaToSend:capturedFile!,
-                                                                            chatRoom: widget.chatRoomModel,
-                                                                            userModel: widget.userModel,
-                                                                            type: "video")));
-                                                                }
-
-                                                                else if (widget.groupRoomModel!=null){
-                                                                         Navigator.push(context, MaterialPageRoute(
-                                                                        builder: (context) => SendMedia(
-                                                                            mediaToSend:capturedFile!,
-                                                                            groupRoomModel: widget.groupRoomModel,
-                                                                            userModel: widget.userModel,
-                                                                            type: "video")));
-                                                                  
-                                                                }
-
-                                                              },
-                                                              icon: const Icon(Icons
-                                                                  .video_camera_back),
-                                                                  
-                                                                  )
-                                                        ],
-                                                      ));
-                                                });
+                      if (widget.chatRoomModel != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SendMedia(
+                                    mediaToSend: capturedFile!,
+                                    chatRoom: widget.chatRoomModel,
+                                    userModel: widget.userModel,
+                                    type: "video")));
+                      } else if (widget.groupRoomModel != null) {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SendMedia(
+                                    mediaToSend: capturedFile!,
+                                    groupRoomModel: widget.groupRoomModel,
+                                    userModel: widget.userModel,
+                                    type: "video")));
+                      }
+                    },
+                    icon: const Icon(Icons.video_camera_back),
+                  )
+                ],
+              ));
+        });
   }
 
   // video Or image from camera

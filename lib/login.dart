@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
                     registerUser(); // to registerUser
                   },
                   child: const Text("Login")),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   
              Text("$message")
             ])),

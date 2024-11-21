@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/screen_time_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
@@ -44,13 +43,13 @@ class _ScreentimeState extends State<Screentime> {
             //  if(snapshot.connectionState==ConnectionState.active){ 
               
               if(snapshot.hasData){
-                print(" snapshot data is ${snapshot.data!.docs.first.data()}");
+                // debugPrint(" snapshot data is ${snapshot.data!.docs.first.data()}");
 
                       for (var a in snapshot.data!.docs) {
                         ScreenTimeModel screenTimeModel = ScreenTimeModel(date: a.data().keys.first ,screenTime: a.data().values.first);
                           //   ScreenTimeModel.fromMap(a.data());
-                          //   print(" value of a is ${a.data()}");
-                          print("screentime model is ${screenTimeModel.date}");
+                          //   debugPrint(" value of a is ${a.data()}");
+                          debugPrint("screentime model is ${screenTimeModel.date}");
                         screenTimeList.add(screenTimeModel);
                       }
 
@@ -82,6 +81,9 @@ class _ScreentimeState extends State<Screentime> {
                }else if(snapshot.hasError){
                 return Center(child: Text("an error Occured ${snapshot.error}"));
                }
+               else if(snapshot.hasData==false){
+                return const Center(child: Text("No Screentime recorded"),);
+               }
                 else{
                 return const Center(child: Text("No screen Time"));
                }
@@ -102,7 +104,7 @@ class _ScreentimeState extends State<Screentime> {
     for (var dt in dataSnapshot.docs) {
      late final screenTimeModel =
           ScreenTimeModel.fromMap(dt.data() as Map<String, dynamic>);
-print("screen time is ${screenTimeModel.date}");
+debugPrint("screen time is ${screenTimeModel.date}");
           screenTimeList.add(screenTimeModel);
     }
   }
@@ -122,11 +124,11 @@ print("screen time is ${screenTimeModel.date}");
 //              }
 //              screenTimeList.addAll(screenTimeListLocal);
 //         //   screenTimeModel= ScreenTimeModel.fromMap(event.docs);
-//         print("screen time list 1 ${screenTimeList.toString()}");
+//         debugPrint("screen time list 1 ${screenTimeList.toString()}");
 //           });
-//             print("screen time list 2 ${screenTimeList.toString()}");
+//             debugPrint("screen time list 2 ${screenTimeList.toString()}");
 //     } catch (e) {
-//       print("unable to get screentime $e");
+//       debugPrint("unable to get screentime $e");
 //     }
 
 //     if (result != null) {}

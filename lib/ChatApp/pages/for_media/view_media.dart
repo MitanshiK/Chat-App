@@ -11,7 +11,7 @@ class ViewMedia extends StatefulWidget {
   final User firebaseUser;
   final UserModel usermodel;
   final String type;
-  final String mediaToSend;
+  final String? mediaToSend;
 
   @override
   State<ViewMedia> createState() => _ViewMediaState();
@@ -25,8 +25,11 @@ class _ViewMediaState extends State<ViewMedia> {
   void initState() {
     if (widget.type == "video") {
       videoController =
-          VideoPlayerController.file(File(widget.mediaToSend));
+          VideoPlayerController.file(File(widget.mediaToSend!));
       _initializeVideoPlayerFuture = videoController!.initialize();
+    }
+     if(widget.mediaToSend==null || widget.mediaToSend==""){
+      Navigator.pop(context);
     }
     super.initState();
   }
@@ -42,7 +45,7 @@ class _ViewMediaState extends State<ViewMedia> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             (widget.type == "image")
-                ? Expanded(child: Image.file(File(widget.mediaToSend) ,cacheWidth: 300,))
+                ? Expanded(child: Image.file(File(widget.mediaToSend!) ,cacheWidth: 300,))
                 : // 1st
                 (widget.type == "video")
                     ? FutureBuilder(
@@ -57,7 +60,7 @@ class _ViewMediaState extends State<ViewMedia> {
                               ),
                               Positioned(
                                 top: MediaQuery.sizeOf(context).height / 3,
-                                child: Container(
+                                child: SizedBox(
                                   width: MediaQuery.sizeOf(context).width,
                                   child: Column(
                                     crossAxisAlignment:
@@ -88,14 +91,14 @@ class _ViewMediaState extends State<ViewMedia> {
                           );
                         },
                       ) 
-                    : Placeholder(), 
+                    : const Placeholder(), 
           ],
         ),
       ),
       floatingActionButton: IconButton(
           onPressed: () {
             Navigator.pop(context);
-           Navigator.push(context, MaterialPageRoute(builder: (context)=>AllChatRooms(firebaseUser: widget.firebaseUser, userModel: widget.usermodel, type:widget.type, mediaToSend: widget.mediaToSend,) ));
+           Navigator.push(context, MaterialPageRoute(builder: (context)=>AllChatRooms(firebaseUser: widget.firebaseUser, userModel: widget.usermodel, type:widget.type, mediaToSend: widget.mediaToSend!,) ));
           },
           icon: const Icon(
             Icons.send,

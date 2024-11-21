@@ -2,16 +2,14 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/main.dart';
 import 'package:video_player/video_player.dart';
 
 class StoryFileUpload extends StatefulWidget {
-  StoryFileUpload(
+  const StoryFileUpload(
       {super.key,
       required this.status,
       required this.userModel,
@@ -69,7 +67,7 @@ class _StoryFileUploadState extends State<StoryFileUpload> {
                               ),
                               Positioned(
                                 top: MediaQuery.sizeOf(context).height / 3,
-                                child: Container(
+                                child: SizedBox(
                                   width: MediaQuery.sizeOf(context).width,
                                   child: Column(
                                     crossAxisAlignment:
@@ -100,7 +98,7 @@ class _StoryFileUploadState extends State<StoryFileUpload> {
                           );
                         },
                       ) 
-                    : Placeholder(), 
+                    : const Placeholder(), 
           ],
         ),
       ),
@@ -145,7 +143,7 @@ class _StoryFileUploadState extends State<StoryFileUpload> {
             createdOn: DateTime.now(),
             type: "image");
             }catch(e){
-              print(" unable to store in firestore $e ");
+              debugPrint(" unable to store in firestore $e ");
             }
 
       } else if (widget.type == "video") {

@@ -4,18 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/models/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/home_page.dart';
-
-
-
-
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CompleteUserProfile extends StatefulWidget {
   final  UserModel userModel;
@@ -66,7 +62,7 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                     backgroundColor: const Color.fromARGB(255, 240, 217, 148),
                     backgroundImage: (picked == true)
                         ? FileImage(profilePic!)
-                        : ((widget.userModel.profileUrl!=null) ? NetworkImage(widget.userModel.profileUrl.toString()): const AssetImage("assets/woman.png") as ImageProvider),
+                        : ((widget.userModel.profileUrl!=null && widget.userModel.profileUrl!="") ? NetworkImage(widget.userModel.profileUrl.toString()): const AssetImage("assets/user.png") as ImageProvider),
                     // child: (picked == false)
                     //     ? const Icon(
                     //         Icons.person,
@@ -130,14 +126,14 @@ class _CompleteUserProfileState extends State<CompleteUserProfile> {
                              }
                           },
                           style: ButtonStyle(
-                              padding: const MaterialStatePropertyAll(
+                              padding: const WidgetStatePropertyAll(
                                   EdgeInsets.all(10)),
-                              shape: MaterialStateProperty.all<
+                              shape: WidgetStateProperty.all<
                                       RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               )),
-                              backgroundColor: const MaterialStatePropertyAll(
+                              backgroundColor: const WidgetStatePropertyAll(
                                   Color.fromARGB(255, 240, 217, 148))),
                           child: const Text(
                             "Save",
@@ -224,21 +220,41 @@ void cropImageCamera(XFile file) async {
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
       compressQuality: 20
     );
-     print("path of cropped image file is ${croppedImage!.path} ");
+     debugPrint("path of cropped image file is ${croppedImage!.path} ");
      
        setState(() {
       picked = true;
       profilePic = File(croppedImage.path);
     });
-    print("path of cropped image file is ${profilePic!.path}  and picked value is $picked");
+    debugPrint("path of cropped image file is ${profilePic!.path}  and picked value is $picked");
   }
 
   // 4
   void uploadData() async{
     // uploading image to the firebase storage 
+  if(widget.userModel.profileUrl==null){
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please add a profile")));
+    return;
+  }
+
     UiHelper.loadingDialogFun(context, "Saving..");
-    final result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.userModel.uId.toString()).putFile(profilePic!);  
-    
+    TaskSnapshot? result;
+   
+    if(picked==true){
+     result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.userModel.uId.toString()).putFile(profilePic!);  
+    }else{
+
+          final ByteData byteData = await rootBundle.load("assets/user.png");
+
+    // Create a temporary file in the device's temporary directory
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/temp_image.png');
+
+    // Write the byte data to the temporary file
+    await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+
+       result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.userModel.uId.toString()).putFile(tempFile!);  
+    }
     // getting the download link of image uploaded in storage
     String? imageUrl= await result.ref.getDownloadURL();
 
@@ -256,6 +272,34 @@ void cropImageCamera(XFile file) async {
     });
   }
   
+
+
+Future<void> uploadAssetAsFile(String assetPath, String userId) async {
+  try {
+    // Load the asset as byte data
+    final ByteData byteData = await rootBundle.load(assetPath);
+
+    // Create a temporary file in the device's temporary directory
+    final tempDir = await getTemporaryDirectory();
+    final tempFile = File('${tempDir.path}/temp_image.png');
+
+    // Write the byte data to the temporary file
+    await tempFile.writeAsBytes(byteData.buffer.asUint8List());
+
+    // Upload the file to Firebase Storage
+    final result = await FirebaseStorage.instance
+        .ref("ProfilePictures")
+        .child(userId) // userId as a unique identifier for the file
+        .putFile(tempFile);
+
+    // Get the download URL (optional)
+    final downloadUrl = await result.ref.getDownloadURL();
+    print("File uploaded successfully. Download URL: $downloadUrl");
+  } catch (e) {
+    print("Error uploading file: $e");
+  }
+}
+
 }
 
 

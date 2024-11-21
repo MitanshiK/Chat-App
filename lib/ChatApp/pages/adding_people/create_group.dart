@@ -46,7 +46,7 @@ Future<GroupRoomModel?> getGroupRoomModel(List<UserModel> groupMembers) async {
   
 
   var matchingChatRooms = querySnapshot.docs.where((doc) {
-    var data = doc.data() as Map<String, dynamic>;
+    var data = doc.data();
     var participantIds = data['participantsId'] as Map<String, dynamic>;
     return groupMembers.every((user) => participantIds.containsKey(user.uId));
   }).toList();
@@ -54,9 +54,9 @@ Future<GroupRoomModel?> getGroupRoomModel(List<UserModel> groupMembers) async {
 
   if (matchingChatRooms.isNotEmpty) {
     // Fetch existing chat room
-    var docData = matchingChatRooms[0].data() as Map<String, dynamic>;
+    var docData = matchingChatRooms[0].data();
     groupRoomModel = GroupRoomModel.fromMap(docData);
-    print("Chatroom already exists: ${groupRoomModel.groupRoomId}");
+    debugPrint("Chatroom already exists: ${groupRoomModel.groupRoomId}");
     } 
     else {
     // Create new chat room
@@ -77,11 +77,12 @@ Future<GroupRoomModel?> getGroupRoomModel(List<UserModel> groupMembers) async {
         .set(newGroupRoomModel.toMap());
 
     groupRoomModel = newGroupRoomModel;
-    print("New chatroom created: ${groupRoomModel.groupRoomId}");
+    debugPrint("New chatroom created: ${groupRoomModel.groupRoomId}");
   }
 
   return groupRoomModel;
 }
+
 //////existing true
 Future addMemberToExisting(List<UserModel> newMemberss)async{
   try {
@@ -114,7 +115,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
   
 
   var matchingChatRooms = querySnapshot.docs.where((doc) {
-    var data = doc.data() as Map<String, dynamic>;
+    var data = doc.data();
     var participantIds = data['participantsId'] as Map<String, dynamic>;
     return  widget.exisitingMembers!.every((user) => participantIds.containsKey(user.uId));
   }).toList();
@@ -122,15 +123,15 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
 
   if (matchingChatRooms.isNotEmpty) {
     // Fetch existing chat room
-    var docData = matchingChatRooms[0].data() as Map<String, dynamic>;
+    var docData = matchingChatRooms[0].data();
     groupRoomModel = GroupRoomModel.fromMap(docData);
-    print("Chatroom already exists: ${groupRoomModel.groupRoomId}");
+    debugPrint("Chatroom already exists: ${groupRoomModel.groupRoomId}");
     } 
 
 ///////////////////////////
-    print("Participant added successfully.");
+    debugPrint("Participant added successfully.");
   } catch (e) {
-    print("Error adding participant: $e");
+    debugPrint("Error adding participant: $e");
   }
 }
 
@@ -166,7 +167,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
               
                     width: double.maxFinite,
                     decoration: BoxDecoration(
-                        color:  Color.fromARGB(255, 249, 233, 233),
+                        color:  const Color.fromARGB(255, 249, 233, 233),
                         borderRadius: BorderRadius.circular(12)),
                     padding: const EdgeInsets.all(5),
                     child: Row(
@@ -178,12 +179,12 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                           },
                           child: Container(
                             margin: const EdgeInsets.only(right: 6,left: 6),
-                            child: Icon(Icons.search)
+                            child: const Icon(Icons.search)
                           ),
                         ),
                         Expanded(
                           child: TextField(
-                           autofocus: true,
+                           autofocus: false,
                            controller: searchFieldController,
                             decoration: InputDecoration(
                                 contentPadding: EdgeInsets.zero,
@@ -234,7 +235,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // convert into type QuerySnapshot
 
-                      if (dataSnapshot.docs.length > 0) {
+                      if (dataSnapshot.docs.isNotEmpty) {
                         Map<String, dynamic> userDataMap =
                             dataSnapshot.docs[0].data() as Map<String,
                                 dynamic>; // convertig document data into map
@@ -250,7 +251,9 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                             //
                             if (flag == 0) {
                               setState(() {
+                                if(GroupMembers.contains(searchData)==false){
                                 GroupMembers.add(searchData);
+                                }
                               });
                             }
                             
@@ -269,8 +272,8 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                             //             )));
                             //             }
                           },
-                          title: Text(searchData.name.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                          subtitle: Text(searchData.email.toString()  ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
+                          title: Text(searchData.name.toString() ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
+                          subtitle: Text(searchData.email.toString()  ,style: const TextStyle(fontFamily:"EuclidCircularB")  ),
                           leading: CircleAvatar(
                               backgroundImage: (searchData.profileUrl != null)
                                   ? NetworkImage(
@@ -294,13 +297,18 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                       return const Text("No result found"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
                     }
                   } else {
-                    return const CircularProgressIndicator();
+                    return ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxHeight: 50,
+                        maxWidth: 50
+                      ),
+                    child: const CircularProgressIndicator());
                   }
                 }),
           ),
 
           /////////////////
-          (GroupMembers.length == 0)
+          (GroupMembers.isEmpty)
               ? const SizedBox()
               : Container(
                   decoration: const BoxDecoration(
@@ -335,7 +343,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Text(GroupMembers[index].name!  ,style: TextStyle(fontFamily:"EuclidCircularB")  )
+                                Text(GroupMembers[index].name!  ,style: const TextStyle(fontFamily:"EuclidCircularB")  )
                               ],
                             ),
                           ),
@@ -362,11 +370,17 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
       floatingActionButton: IconButton(
           style: const ButtonStyle(
               backgroundColor:
-                  MaterialStatePropertyAll(Color.fromARGB(255, 239, 125, 116))),
+                  WidgetStatePropertyAll(Color.fromARGB(255, 239, 125, 116))),
           onPressed: () async{
             // if we are creating a new group
                             if(widget.existing==false){
-                            GroupRoomModel? groupRoomModel=await getGroupRoomModel(GroupMembers); // getting grouproom model from function   
+                              GroupRoomModel? groupRoomModel;
+                              if(GroupMembers.length>=3){
+                             groupRoomModel=await getGroupRoomModel(GroupMembers); // getting grouproom model from function   
+                              }
+                              else{
+                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("a group should contain atleast 3 members")));
+                              }
                               if(groupRoomModel!=null){
                                 debugPrint("groupChat created");
                                  
@@ -376,7 +390,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateGroupProfile(
                                   firebaseUser: widget.firebaseUser,
                                    userModel: widget.userModel,
-                                    groupRoomModel:groupRoomModel , 
+                                    groupRoomModel:groupRoomModel! , 
                                     groupMembers: GroupMembers,)));
                                }
 
@@ -399,14 +413,16 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
 
   ////
   Future checkMembers(UserModel searchData) async {
+    flag=0;
     if (GroupMembers.isNotEmpty) {
       for (var i in GroupMembers) {
-        if (i == searchData) {
+        if (i.email==searchData.email) {
           setState(() {
             flag = 1;
           });
           debugPrint(" flag in fun $flag");
         }
+      
       }
       debugPrint(" flag in fun $flag");
     }
