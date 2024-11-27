@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
@@ -51,14 +51,14 @@ class _FetchedItemsState extends State<FetchedItems> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(10),
       color: const Color.fromARGB(255, 235, 203, 241),
       child: Column(children: [
-        Text("${widget.snapshot.value}" ,style: TextStyle(color: Colors.black),),
-        Text("age" ,style: TextStyle(color: Colors.black),),
-        Text("phone no" ,style: TextStyle(color: Colors.black),),
-        Text("address" ,style: TextStyle(color: Colors.black),),
-        Text("Email address" ,style: TextStyle(color: Colors.black),),
+        Text("${widget.snapshot.value}" ,style: const TextStyle(color: Colors.black),),
+        const Text("age" ,style:  TextStyle(color: Colors.black),),
+        const Text("phone no" ,style: TextStyle(color: Colors.black),),
+        const Text("address" ,style: TextStyle(color: Colors.black),),
+        const Text("Email address" ,style: TextStyle(color: Colors.black),),
 
         
       ],),

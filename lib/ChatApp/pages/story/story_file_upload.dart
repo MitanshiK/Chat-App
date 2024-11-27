@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:proj/ChatApp/models/media_model.dart';
+import 'package:proj/ChatApp/models/story_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/main.dart';
 import 'package:video_player/video_player.dart';
@@ -117,7 +117,7 @@ class _StoryFileUploadState extends State<StoryFileUpload> {
   }
 
   void uploadStatus() async {
-    late MediaModel statusinfo;
+    late StoryModel statusinfo;
     
 
     if (widget.status != "") {
@@ -135,25 +135,28 @@ class _StoryFileUploadState extends State<StoryFileUpload> {
 
       if (widget.type == "image") {
        try{ 
-        statusinfo = MediaModel(
+        statusinfo = StoryModel(
             // creating message
             mediaId: uuid.v1(),
             senderId: widget.userModel.uId,
             fileUrl: mediaUrl,
             createdOn: DateTime.now(),
-            type: "image");
+            type: "image",
+            likedBy:[]
+            );
             }catch(e){
               debugPrint(" unable to store in firestore $e ");
             }
 
       } else if (widget.type == "video") {
-        statusinfo = MediaModel(
+        statusinfo = StoryModel(
             // creating message
             mediaId: uuid.v1(),
             senderId: widget.userModel.uId,
             fileUrl: mediaUrl,
             createdOn: DateTime.now(),
-            type: "video");
+            type: "video",
+            likedBy:[]);
       }
       // creating a messages collection inside chatroom docs and saving messages in them
       FirebaseFirestore.instance

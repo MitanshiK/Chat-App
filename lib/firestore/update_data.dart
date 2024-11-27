@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 
 class UpdatingDocument extends StatefulWidget {
@@ -20,10 +19,10 @@ TextEditingController updateDataController=TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("updating data in doc"),),
-      body: Container(padding: EdgeInsets.all(20),
+      appBar: AppBar(title: const Text("updating data in doc"),),
+      body: Container(padding: const EdgeInsets.all(20),
       alignment: Alignment.center,
-      child: Container(
+      child: SizedBox(
         height: 600,
         width: MediaQuery.sizeOf(context).width,
         child: Column(
@@ -37,7 +36,7 @@ TextEditingController updateDataController=TextEditingController();
                     label: Text("Doc Id to update"),
                     labelStyle: TextStyle(color: Colors.black)),
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               
               // Row(children: [
                 TextField(
@@ -65,11 +64,11 @@ TextEditingController updateDataController=TextEditingController();
                   firestoreRef.doc(docIdController.text)
                   .update({fieldController.text.toString() : updateDataController.text})
                   .then((value) {
-                   print("value Updated");
+                   debugPrint("value Updated");
                   });
                   
                 }
-              }, child: Text("Update"))
+              }, child: const Text("Update"))
 
           ])
           )

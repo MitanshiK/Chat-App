@@ -16,14 +16,14 @@ class _NotifState extends State<Notif> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("push notification"),),
+      appBar: AppBar(title: const Text("push notification"),),
       body: Container(
         alignment: Alignment.center,
         child: Column(
           children: [
-            Text("notification" ,style: TextStyle(color: Colors.black,fontSize: 20),),
-            SizedBox(height: 20,),
-            Text("${message.toString()}")
+            const Text("notification" ,style: TextStyle(color: Colors.black,fontSize: 20),),
+            const SizedBox(height: 20,),
+            Text(message.toString())
           ],
         ),
       ),

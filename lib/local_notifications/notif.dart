@@ -6,7 +6,7 @@ class Notif{
 
   static Future initialNotiSettigs(FlutterLocalNotificationsPlugin FlutterLocalNotificationsPlugin) async{
 
-  var androidInitializationSettings=AndroidInitializationSettings("mipmap/chat_app_logo");
+  var androidInitializationSettings=const AndroidInitializationSettings("mipmap/chat_app_logo");
       // var iosInitializationSettings =
       //   IOSInitializationSettings();  // for IOS
 
@@ -22,7 +22,7 @@ class Notif{
   }
 
   static Future showBigTextNotification({var id=0,required String title ,required String body ,var payload ,required FlutterLocalNotificationsPlugin fn})async{
-    AndroidNotificationDetails androidPlatformChannelSpecifics =AndroidNotificationDetails(
+    AndroidNotificationDetails androidPlatformChannelSpecifics =const AndroidNotificationDetails(
       "Ch1",
       "Channel1",
       playSound: true,

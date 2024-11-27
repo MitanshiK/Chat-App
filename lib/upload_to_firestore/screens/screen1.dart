@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:proj/ChatApp/models/ui_helper.dart';
+import 'package:proj/ChatApp/helpers/ui_helper.dart';
 import 'package:proj/main.dart';
 import 'package:proj/upload_to_firestore/screens/screen2.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -40,7 +40,7 @@ class _Screen1State extends State<Screen1> {
             ElevatedButton(
                 onPressed: () async {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Screen2()));
+                      MaterialPageRoute(builder: (context) => const Screen2()));
                 },
                 child: const Text("Uploaded Images")),
           ],
@@ -50,7 +50,7 @@ class _Screen1State extends State<Screen1> {
   }
 
   Future<void> requestPermission() async {
-    final permission = Permission.camera;
+    const permission = Permission.camera;
 
     if (await permission.isDenied) {
       await permission.request();

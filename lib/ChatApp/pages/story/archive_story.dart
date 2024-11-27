@@ -1,15 +1,13 @@
 import 'package:cubit_form/cubit_form.dart';
-import 'package:dio/dio.dart';
-import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:intl/intl.dart';
 import 'package:proj/ChatApp/models/Blocs/video_arrow_bloc.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:video_player/video_player.dart';
 // opening shared media
-class OpenMedia extends StatefulWidget {
-  const OpenMedia(
+class ArchiveStory extends StatefulWidget {
+  const ArchiveStory(
       {super.key,
       required this.mediamodel,
       required this.userModel,
@@ -24,10 +22,10 @@ class OpenMedia extends StatefulWidget {
   final DateTime date;
 
   @override
-  State<OpenMedia> createState() => _OpenMediaState();
+  State<ArchiveStory> createState() => _ArchiveStoryState();
 }
 
-class _OpenMediaState extends State<OpenMedia> {
+class _ArchiveStoryState extends State<ArchiveStory> {
  VideoPlayerController? videoController; // video controller for videoPlayer
   late Future<void> _initializeVideoPlayerFuture; // future for video
 
@@ -50,64 +48,11 @@ class _OpenMediaState extends State<OpenMedia> {
       appBar: AppBar(
         title: ListTile(
           contentPadding: EdgeInsets.zero,
-          title: Text( 
-              (widget.senderUid == widget.userModel.uId) ? "You" : "Friend" ),
-          titleTextStyle: const TextStyle(color: Colors.white ,fontFamily:"EuclidCircularB"),
-          subtitle: Text("${widget.date}"),
-          subtitleTextStyle: const TextStyle(color: Colors.white,fontSize: 10 ,fontFamily:"EuclidCircularB"),
+          title:Text(DateFormat("dd/MM/yyyy").format(widget.date)),
+          titleTextStyle: const TextStyle(color: Colors.white ,fontFamily:"EuclidCircularB"),      
         ),
         backgroundColor: Colors.black,
-        actions: [
-          PopupMenuButton(
-            
-            itemBuilder: (BuildContext context) => [ 
-            PopupMenuItem(child: ListTile(
-                         onTap: () async {
-                            Map<Permission, PermissionStatus> statuses = await [
-                                Permission.storage, 
-                                //add more permission to request here.
-                            ].request();
-
-                            if(statuses[Permission.storage]!.isGranted){ 
-                                var dir = await DownloadsPathProvider.downloadsDirectory;
-                                if(dir != null){
-                                  String? savename;
-
-                                  if(widget.mediamodel.type=="image"){         // if file is image then extension is jpeg
-                                      savename = "${widget.mediamodel.mediaId}.jpeg";
-                                   }
-                                   if(widget.type=="video"){
-                                    savename="${widget.mediamodel.mediaId}.mp4";
-                                   }
-                                     
-                                      String savePath = "${dir.path}/$savename";
-                                      debugPrint(savePath);
-                                      //output:  /storage/emulated/0/Download/banner.png
-                                      try {
-                                          await Dio().download(
-                                              widget.mediamodel.fileUrl!, 
-                                              savePath,
-                                              onReceiveProgress: (received, total) {
-                                                  if (total != -1) {
-                                                      debugPrint("${(received / total * 100).toStringAsFixed(0)}%");
-                                                      //you can build progressbar feature too
-                                                  }
-                                                });
-                                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Downloaded" ,style: TextStyle(fontFamily:"EuclidCircularB")))) ; 
-                                     } catch (e) {
-                                      print(e);
-                                     }
-                                }
-                            }else{
-                               debugPrint("No permission to read and write.");
-                            }
-
-                         },
-                         title: const Text("Download" ,style: TextStyle(fontFamily:"EuclidCircularB")),
-                      ))
-            ],
-          )
-        ],
+      
       ),
       body: Container(
         alignment: Alignment.center,

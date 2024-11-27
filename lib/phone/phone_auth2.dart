@@ -1,8 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-
 class PhoneAuth2 extends StatefulWidget {
   const PhoneAuth2({super.key});
 
@@ -26,7 +23,7 @@ class _PhoneAuth2State extends State<PhoneAuth2> {
     verificationCompleted: (PhoneAuthCredential credential) async{ 
      await auth.signInWithCredential(credential).then((value) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("verification Successful"))
+        const SnackBar(content: Text("verification Successful"))
       );
      });
      },
@@ -47,12 +44,12 @@ class _PhoneAuth2State extends State<PhoneAuth2> {
 
    // verifying otp sent 
     Future<void> verifyOtpSent() async{
-    PhoneAuthCredential phoneAuthCredential=  await PhoneAuthProvider.credential(
+    PhoneAuthCredential phoneAuthCredential=   PhoneAuthProvider.credential(
       verificationId: verificationCode,
        smsCode: otpController.text);
 
        await auth.signInWithCredential(phoneAuthCredential).then((value) {
-         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
+         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Login Successful")));
        });
    }
 
@@ -78,7 +75,7 @@ class _PhoneAuth2State extends State<PhoneAuth2> {
           ),
           ElevatedButton(onPressed: ()async{
             setState(() {
-              phoneNo="+91"+phoneController.text;
+              phoneNo="+91${phoneController.text}";
             });
            verifyPhoneNo();
           }, 
@@ -100,7 +97,7 @@ class _PhoneAuth2State extends State<PhoneAuth2> {
           ElevatedButton(onPressed: (){
            verifyOtpSent();
           },
-           child: Text("Verify"))
+           child: const Text("Verify"))
           ],
           ))
         

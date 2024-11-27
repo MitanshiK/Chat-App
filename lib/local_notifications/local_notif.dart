@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_local_notifications/src/platform_flutter_local_notifications.dart';
 import 'package:proj/local_notifications/notif.dart';
 import 'package:proj/main.dart';
 
@@ -31,31 +29,31 @@ TextEditingController descController=TextEditingController();
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter Local Notification"),
+        title: const Text("Flutter Local Notification"),
       ),
       body: Container(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextFormField(
               controller: titleController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 label: Text("notification title")
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
               TextFormField(
               controller: descController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 label: Text("notification description")
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             ElevatedButton(onPressed: (){
          Notif.showBigTextNotification(title: "hello", body: "body", fn: flutterLocalNotificationsPlugin); ///
-            }, child: Text("save"))
+            }, child: const Text("save"))
 
 
           ],

@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:proj/ChatApp/models/ui_helper.dart';
+import 'package:proj/ChatApp/helpers/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/home_page.dart';
 import 'package:proj/ChatApp/pages/authenticate/sign_in.dart';
@@ -17,7 +15,7 @@ class Loginpage extends StatefulWidget {
 
 class _LoginpageState extends State<Loginpage> {
   final loginKey = GlobalKey<FormState>();
-  bool obscure = false; // visibility of password
+  bool obscure = true; // visibility of password
   String password = "";
   String email = "";
 
@@ -78,9 +76,9 @@ class _LoginpageState extends State<Loginpage> {
                           else
                          { return null;}
                         },
-                        onSaved: (Value) {
+                        onSaved: (value) {
                           setState(() {
-                            email = Value!;
+                            email = value!;
                           });
                         },
                       ),
@@ -114,9 +112,9 @@ class _LoginpageState extends State<Loginpage> {
                             else
                             {return null;}
                           },
-                          onSaved: (Value) {
+                          onSaved: (value) {
                             setState(() {
-                              password = Value!;
+                              password = value!;
                             });
                           }),
                       const SizedBox(
@@ -211,8 +209,7 @@ class _LoginpageState extends State<Loginpage> {
           .collection("ChatAppUsers")
           .doc(userId)
           .get();
-      UserModel userModel =
-          UserModel.fromMap(userData.data() as Map<String, dynamic>);
+      UserModel userModel = UserModel.fromMap(userData.data() as Map<String, dynamic>);
       Navigator.popUntil(context, (route) => route.isFirst);
       Navigator.pushReplacement(
           context,
@@ -220,7 +217,9 @@ class _LoginpageState extends State<Loginpage> {
               builder: ((context) => HomePage(
                     firebaseUser: userCredential!.user!,
                     userModel: userModel,
-                  ))));
+                  ))
+                )
+              );
     }
   }
 }

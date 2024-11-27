@@ -32,7 +32,7 @@
 //           switch (result.status) { 
 //             // If it is success it will come here 
 //             case GitHubSignInResultStatus.ok: 
-//               print("Success  ${result.token}");
+//               debugPrint("Success  ${result.token}");
 //               setState(() {}); 
 //               break; 
   
@@ -41,7 +41,7 @@
 //             case GitHubSignInResultStatus.failed: 
 //               // If it is failed due to any 
 //               // reason it will come here 
-//               print(result.errorMessage); 
+//               debugPrint(result.errorMessage); 
 //               break; 
 //           } 
 //         }
@@ -56,7 +56,7 @@
 //     // }
 //     // }catch(e){
 //     //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${e.toString()} error occurred")));
-//     //   print("error is $e");
+//     //   debugPrint("error is $e");
 //     // }
 //       }, child: Text("SignUp with Github")),),
 //     );
@@ -102,7 +102,7 @@ class _GithubAuthState extends State<GithubAuth> {
 
             switch (result.status) {
               case GitHubSignInResultStatus.ok:
-                print("GitHub Sign-In Success, token: ${result.token}");
+                debugPrint("GitHub Sign-In Success, token: ${result.token}");
                 try {
                   // Create Firebase Auth credential using GitHub token
                   AuthCredential credential = GithubAuthProvider.credential(result.token!);
@@ -114,7 +114,7 @@ class _GithubAuthState extends State<GithubAuth> {
                   User? user = userCredential.user;
 
                   if (user != null) {
-                    print("Firebase Sign-In Success, user: ${user.displayName}, email: ${user.email}");
+                    debugPrint("Firebase Sign-In Success, user: ${user.displayName}, email: ${user.email}");
                     // Navigate to the home screen
                     Navigator.pushReplacement(
                       context,
@@ -122,16 +122,16 @@ class _GithubAuthState extends State<GithubAuth> {
                     );
                   }
                 } catch (e) { 
-                  print("Firebase Sign-In Failed: $e");
+                  debugPrint("Firebase Sign-In Failed: $e");
                 }
                 break;
 
               case GitHubSignInResultStatus.cancelled:
-                print("GitHub Sign-In Cancelled");
+                debugPrint("GitHub Sign-In Cancelled");
                 break;
 
               case GitHubSignInResultStatus.failed:
-                print("GitHub Sign-In Failed: ${result.errorMessage}");
+                debugPrint("GitHub Sign-In Failed: ${result.errorMessage}");
                 break;
             }
           },

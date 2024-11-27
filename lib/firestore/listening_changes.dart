@@ -21,7 +21,7 @@ class _ListeningChangesState extends State<ListeningChanges> {
     .then((QuerySnapshot querySnapshot) {  //A QuerySnapshot is returned from a collection query, and allows you to 
                                               //inspect the collection, such as how many documents exist within it, gives access to the documents within the collectio
         querySnapshot.docs.forEach((doc) {
-            print(doc["name"]);
+            debugPrint(doc["name"]);
         });
     });
   }
@@ -46,8 +46,8 @@ docPrint2();
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("listening to changes in the firestore Data"),),
-      body: Container(padding: EdgeInsets.all(20),
+      appBar: AppBar(title: const Text("listening to changes in the firestore Data"),),
+      body: Container(padding: const EdgeInsets.all(20),
       alignment: Alignment.center,
       child:
       // getting query snapshot  
@@ -61,7 +61,7 @@ docPrint2();
       stream: usersStream,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return const Text('Something went wrong');
         }
  
         if(snapshot.hasData==true){
@@ -74,7 +74,7 @@ docPrint2();
             Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
               return 
                 // ElevatedButton(onPressed: (){
-                //   print("${data["name"]}");
+                //   debugPrint("${data["name"]}");
                 // }, child: Text("hello"));
           
               ListTile(
@@ -87,7 +87,7 @@ docPrint2();
         
         else 
        {
-          return Text("Loading");
+          return const Text("Loading");
         }
 
       },

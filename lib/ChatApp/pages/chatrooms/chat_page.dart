@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
-import 'package:proj/ChatApp/models/firebase_helper.dart';
+import 'package:proj/ChatApp/helpers/firebase_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/no_data_pages/no_chats.dart';
 import 'package:proj/ChatApp/pages/chatrooms/chat_room.dart';

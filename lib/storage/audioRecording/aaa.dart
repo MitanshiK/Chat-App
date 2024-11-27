@@ -80,6 +80,7 @@ if(Platform.isAndroid)  {
                                 Permission.microphone, 
                                 //add more permission to request here.
                             ].request();
+            // ignore: prefer_const_constructors
             }, child: Text("permission")),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,19 +1,19 @@
 import 'package:cubit_form/cubit_form.dart';
 
 sealed class ShowKeyBoard{}
-final class emojiVisiblety extends ShowKeyBoard{}
-final class emojiHide extends ShowKeyBoard{}
+final class EmojiVisiblety extends ShowKeyBoard{}
+final class EmojiHide extends ShowKeyBoard{}
 
 
 // Observing change in state using onChange and onTransition method 
 
 class EmojiVisBloc extends Bloc<ShowKeyBoard,bool>{
-  EmojiVisBloc(bool initial):super(initial){          // initializing statye with 0
- on<emojiVisiblety>((even,emit){
+  EmojiVisBloc(super.initial){          // initializing statye with 0
+ on<EmojiVisiblety>((even,emit){
   emit(!state);
     });
 
-  on<emojiHide>((even,emit){
+  on<EmojiHide>((even,emit){
   emit(false);
     });
   }

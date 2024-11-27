@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -14,9 +13,9 @@ class _AddContactState extends State<AddContact> {
 
 Future<void> _requestPermission() async {
   if (await Permission.contacts.request().isGranted) {
-    print('Contact permission granted');
+    debugPrint('Contact permission granted');
   } else {
-    print('Contact permission denied');
+    debugPrint('Contact permission denied');
   }
 }
 
@@ -36,12 +35,12 @@ void _addContact() async {
     try {
       // Add the contact to the device's contact list
       await FlutterContacts.insertContact(newContact);
-      print('Contact added successfully');
+      debugPrint('Contact added successfully');
     } catch (e) {
-      print('Failed to add contact: $e');
+      debugPrint('Failed to add contact: $e');
     }
   } else {
-    print('Contact permission not granted');
+    debugPrint('Contact permission not granted');
   }
 }
 
@@ -49,12 +48,12 @@ void _addContact() async {
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
-      title: Text('Add Contact Example'),
+      title: const Text('Add Contact Example'),
     ),
     body: Center(
       child: ElevatedButton(
         onPressed: _addContact,
-        child: Text('Add Contact'),
+        child: const Text('Add Contact'),
       ),
     ),
   );

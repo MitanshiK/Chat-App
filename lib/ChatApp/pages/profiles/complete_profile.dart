@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:proj/ChatApp/models/ui_helper.dart';
+import 'package:proj/ChatApp/helpers/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/home_page.dart';
 import 'package:flutter/services.dart';
@@ -253,7 +253,7 @@ void cropImageCamera(XFile file) async {
     // Write the byte data to the temporary file
     await tempFile.writeAsBytes(byteData.buffer.asUint8List());
 
-       result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.userModel.uId.toString()).putFile(tempFile!);  
+       result=await FirebaseStorage.instance.ref("ProfilePictures").child(widget.userModel.uId.toString()).putFile(tempFile);  
     }
     // getting the download link of image uploaded in storage
     String? imageUrl= await result.ref.getDownloadURL();
@@ -294,9 +294,9 @@ Future<void> uploadAssetAsFile(String assetPath, String userId) async {
 
     // Get the download URL (optional)
     final downloadUrl = await result.ref.getDownloadURL();
-    print("File uploaded successfully. Download URL: $downloadUrl");
+    debugPrint("File uploaded successfully. Download URL: $downloadUrl");
   } catch (e) {
-    print("Error uploading file: $e");
+    debugPrint("Error uploading file: $e");
   }
 }
 

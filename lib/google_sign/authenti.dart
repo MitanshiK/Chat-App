@@ -43,9 +43,9 @@ class GoogleAuthentication {
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
           if (e.code == 'account-exists-with-different-credential') {
-            print(" account already exists with different credentials");
+            debugPrint(" account already exists with different credentials");
           } else if (e.code == 'invalid-credential') {
-            print("invalid credentials");
+            debugPrint("invalid credentials");
           }
         } catch (e) {
           print(e);

@@ -9,7 +9,7 @@ class UpdateData extends StatefulWidget {
 }
 
 class _UpdateDataState extends State<UpdateData> {
-  final DatabaseRef = FirebaseDatabase.instance.ref("Users");
+  final databaseRef = FirebaseDatabase.instance.ref("Users");
   TextEditingController emailController = TextEditingController();
 
   TextEditingController nameController = TextEditingController();
@@ -76,7 +76,7 @@ class _UpdateDataState extends State<UpdateData> {
                 keyboardType: TextInputType.streetAddress,
                 style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
-                    label: const Text("address"),
+                    label:  Text("address"),
                     labelStyle: TextStyle(color: Colors.black)),
               ),
               ElevatedButton(onPressed: () {

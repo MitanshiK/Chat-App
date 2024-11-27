@@ -4,14 +4,14 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class Video_Player extends StatefulWidget {
-  const Video_Player({super.key});
+class VideoPlayer extends StatefulWidget {
+  const VideoPlayer({super.key});
 
   @override
-  State<Video_Player> createState() => _Video_PlayerState();
+  State<VideoPlayer> createState() => _VideoPlayerState();
 }
 
-class _Video_PlayerState extends State<Video_Player> {
+class _VideoPlayerState extends State<VideoPlayer> {
 
  VideoPlayerController? videoController; // video controller for videoPlayer
  late Future<void> _initializeVideoPlayerFuture;  // future for video
@@ -46,16 +46,18 @@ class _Video_PlayerState extends State<Video_Player> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Video Player"),),
+      appBar: AppBar(title: const Text("Video Player"),),
       body: Column(
         children: [
         FutureBuilder(future: _initializeVideoPlayerFuture, 
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           if(snapshot.connectionState==ConnectionState.done){
             return AspectRatio(aspectRatio: videoController!.value.aspectRatio,
-            child: VideoPlayer(videoController!));
+            child: const VideoPlayer());
           }
-          else return CircularProgressIndicator();
+          else {
+            return const CircularProgressIndicator();
+          }
     
           }, ),
           ElevatedButton(onPressed: (){
@@ -73,12 +75,12 @@ class _Video_PlayerState extends State<Video_Player> {
                 {
                   selectFile();
                 },
-                child: Text("select a File")),
+                child: const Text("select a File")),
             ElevatedButton(onPressed: () {
               UploadFile().then((value) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("uploaded to storage successfully")));
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("uploaded to storage successfully")));
               });
-            }, child: Text("Upload File")),
+            }, child: const Text("Upload File")),
 
       ],)
     );
@@ -98,7 +100,7 @@ class _Video_PlayerState extends State<Video_Player> {
   Future UploadFile() async{
     setState(() {
          videoController=VideoPlayerController.file(pickedFile!.path!);
-        print("${pickedFile!.path!}");
+        debugPrint("${pickedFile!.path!}");
        _initializeVideoPlayerFuture =videoController!.initialize();
     });
     // final file =File(pickedFile!.path!);

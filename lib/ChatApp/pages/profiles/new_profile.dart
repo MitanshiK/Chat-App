@@ -5,7 +5,7 @@ import 'package:proj/ChatApp/pages/for_media/open_media.dart';
 import 'package:video_player/video_player.dart';
 
 class NewProfile extends StatefulWidget {
-   NewProfile({super.key, required this.mediaList ,required this.userModel});
+   const NewProfile({super.key, required this.mediaList ,required this.userModel});
    final List<MediaModel> mediaList;
    final UserModel userModel;
 
@@ -43,13 +43,14 @@ String messageType="";
               children: List.generate(widget.mediaList.length, (int index) {
                 if (widget.mediaList[index].type == "image") {
                   messageType = "image";
-                } else if (widget.mediaList[index].type == "video") {
+                 } else if (widget.mediaList[index].type == "video") {
                   videoController = VideoPlayerController.networkUrl(
                       Uri.parse(widget.mediaList[index].fileUrl!));
                   _initializeVideoPlayerFuture = videoController!.initialize();
                   messageType = "video";
                 }
-                return Container(
+                return
+                 Container(
                   // height: MediaQuery.sizeOf(context).width/3,
                   // width: MediaQuery.sizeOf(context).width/3,
                   padding: const EdgeInsets.all(3),
@@ -73,7 +74,7 @@ String messageType="";
                                           )));
                             },
                             child: (messageType == "image")
-                                ? Container(
+                                ? SizedBox(
                                     // constraints: BoxConstraints(
                                       height:
                                           MediaQuery.sizeOf(context).width / 3,
@@ -91,7 +92,7 @@ String messageType="";
                                             AsyncSnapshot<dynamic> snapshot) {
                                           return Stack(
                                             children: [
-                                              Container(
+                                              SizedBox(
                                                 // constraints: BoxConstraints(
                                                     height:
                                                         MediaQuery.sizeOf(context).width /3,
@@ -125,6 +126,7 @@ String messageType="";
                         ),
                       ]),
                 );
+             
               }),
             ),
           ),

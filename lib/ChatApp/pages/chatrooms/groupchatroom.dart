@@ -194,7 +194,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                 backgroundImage: (widget.groupRoomModel.profilePic != null &&
                         widget.groupRoomModel.profilePic != "")
                     ? NetworkImage(widget.groupRoomModel.profilePic.toString())
-                    : AssetImage("assets/multiple-users-silhouette.png")
+                    : const AssetImage("assets/multiple-users-silhouette.png")
                         as ImageProvider,
                 backgroundColor: const Color.fromARGB(255, 240, 217, 148),
               ),
@@ -678,7 +678,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                           onPressed: () async {
                                             context
                                                 .read<EmojiVisBloc>()
-                                                .add(emojiVisiblety());
+                                                .add(EmojiVisiblety());
                                           },
                                           icon:
                                               const Icon(Icons.emoji_emotions)),
@@ -940,7 +940,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                         type: "image")));
                           },
                           icon: const Icon(Icons.image)),
-                            Text("Picture" ,style: TextStyle(fontFamily: "EuclidCircularB"),)
+                            const Text("Picture" ,style:  TextStyle(fontFamily: "EuclidCircularB"),)
                         ],
                   ),
 
@@ -964,7 +964,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                         },
                         icon: const Icon(Icons.video_camera_back),
                       ),
-                        Text("video" ,style: TextStyle(fontFamily: "EuclidCircularB"),)
+                        const Text("video" ,style: TextStyle(fontFamily: "EuclidCircularB"),)
                     ],
                   )
                 ],
@@ -998,7 +998,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
 
   Future<void> getMediaList() async {
     mediaList.clear();
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection("GroupChats")
         .doc(widget.groupRoomModel.groupRoomId)
         .collection("messages")
@@ -1013,11 +1013,11 @@ class _GroupRoomPageState extends State<GroupRoomPage>
             dt.containsValue("video") == true) {
           MediaModel mediaModel = MediaModel.fromMap(// getting media
               i.data());
-          print("media data is ${mediaModel.type}");
+          debugPrint("media data is ${mediaModel.type}");
           mediaList.add(mediaModel);
         }
       }
-      print("media list in intstate $mediaList");
+      debugPrint("media list in intstate $mediaList");
     });
   }
 }

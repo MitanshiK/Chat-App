@@ -21,7 +21,7 @@ class GoogleAuth2 {
 
         user = userCredential.user; // gets the email selected
       } catch (e) {
-        print(e);
+       print(e);
       }
     } else {
       final GoogleSignIn googleSignIn =
@@ -44,7 +44,7 @@ class GoogleAuth2 {
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
           // gets exceptions in firebase auth
-          print(e.code);
+          debugPrint(e.code);
         }
       }
     }
@@ -65,8 +65,8 @@ class GoogleAuth2 {
     await auth.signOut();
   Navigator.pop(context);
    }catch(e){
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error Cannot sign out")));
-    print(" sign out error $e");
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error Cannot sign out")));
+    debugPrint(" sign out error $e");
 
    }
 

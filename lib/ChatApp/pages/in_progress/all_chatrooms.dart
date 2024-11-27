@@ -7,10 +7,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/models/Blocs/chat_selected_bloc.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
-import 'package:proj/ChatApp/models/firebase_helper.dart';
+import 'package:proj/ChatApp/helpers/firebase_helper.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
-import 'package:proj/ChatApp/models/ui_helper.dart';
+import 'package:proj/ChatApp/helpers/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/main.dart';
 import 'package:rxdart/rxdart.dart';
@@ -45,232 +45,165 @@ class _AllChatRoomsState extends State<AllChatRooms> {
           backgroundColor: Colors.white,
           clipBehavior: Clip.none,
           title:
-              const Text("Share", style: const TextStyle(fontFamily: "EuclidCircularB"))),
+              const Text("Share", style:  TextStyle(fontFamily: "EuclidCircularB"))),
       body: Column(
         children: [
           /// all groups
-          Container(
-            child:
-                //    StreamBuilder(
-                //     stream: FirebaseFirestore.instance
-                //         .collection("GroupChats")
-                //         .where("participantsId.${widget.userModel.uId}", isEqualTo: true)
-                //         .snapshots(), // get the chatroom that contain current User
-                //     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                //       if (snapshot.connectionState == ConnectionState.active) {
-                //         if (snapshot.hasData) {
-                //           QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
-                //           return (dataSnapshot.docs.isNotEmpty)
-                //           ? ConstrainedBox(
-                //                  constraints: BoxConstraints(
-                //   maxHeight:MediaQuery.sizeOf(context).height/4
-                // ,maxWidth: MediaQuery.sizeOf(context).width/1.2),
-                //             child: ListView.builder(
-                //               itemCount: dataSnapshot.docs.length,
-                //               itemBuilder: (BuildContext context, int index) {
-                //                 GroupRoomModel groupRoomModel = GroupRoomModel.fromMap(
-                //                     dataSnapshot.docs[index].data()
-                //                         as Map<String, dynamic>);
-                //                         return StreamBuilder(
-                //                           stream:  FirebaseFirestore.instance
-                //                                     .collection("ChatAppUsers")
-                //                                     .where("uId", isEqualTo: groupRoomModel.lastMessageBy)
-                //                                      .snapshots(),
-                //                           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                //                              if (snapshot.hasData){
-                //                                  QuerySnapshot dataSnapshot = snapshot.data as QuerySnapshot;
-                //                           return  ListTile(
-                //                             onTap: () async{
-                //                             },
-                //                             title: Text(groupRoomModel.groupName.toString() ,style: TextStyle(fontFamily:"EuclidCircularB")  ),
-                //                             leading: CircleAvatar(
-                //                                radius: 25,
-                //                               backgroundColor:
-                //                                   const Color.fromARGB(255, 158, 219, 241),
-                //                               backgroundImage: NetworkImage(
-                //                                  groupRoomModel.profilePic.toString()),
-                //                             ),
-                //                                 trailing: Icon(Icons.circle_outlined),
-                //                           );
-                //                           }else{
-                //                             return const Text("no data"  ,style: TextStyle(fontFamily:"EuclidCircularB")  );
-                //                           }
-                //                           }
-                //                         );
-                //               },
-                //             ),
-                //           )
-                //           :Text("no data");
-                //           /////
-                //         } else if (snapshot.hasError) {
-                //           return Text("has error ${snapshot.error}");
-                //         } else {
-                //           return  Text("no data");
-                //         }
-                //       } else {
-                //         return const Center(
-                //            child: CircularProgressIndicator(),
-                //         );
-                //       }
-                //     },
-                //   ),
-
-                StreamBuilder<List<QuerySnapshot<Map<String, dynamic>>>>(
-              stream: CombineLatestStream.list([
-                FirebaseFirestore.instance
-                    .collection("GroupChats")
-                    .where("participantsId.${widget.userModel.uId}",
-                        isEqualTo: true)
-                    .snapshots(),
-                FirebaseFirestore.instance
-                    .collection("chatrooms")
-                    .where("participantsId.${widget.userModel.uId}",
-                        isEqualTo: true)
-                    .snapshots()
-              ]),
-              builder: (context,
-                  AsyncSnapshot<List<QuerySnapshot<Map<String, dynamic>>>>
-                      snapshot) {
-                if (!snapshot.hasData) {
-                  return const CircularProgressIndicator();
-                }
-
-                // Access your data from the snapshot
-                List<QuerySnapshot<Map<String, dynamic>>> querySnapshots =
-                    snapshot.data!;
-
-                // Combine or process your query snapshots as needed
-                // For example, you can flatten the documents from both collections
-                List<QueryDocumentSnapshot<Map<String, dynamic>>> allDocuments =[];
-                for (QuerySnapshot<Map<String, dynamic>> querySnapshot
-                    in querySnapshots) {
-                  allDocuments.addAll(querySnapshot.docs);
-                }
-                   List<bool> selected=List.filled(allDocuments.length, false);
-                // Display your combined data
-                return ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 400),
-                  child: ListView.builder(
-                    itemCount: allDocuments.length,
-                    itemBuilder: (context, index) {
-                      var doc = allDocuments[index].data();
+          StreamBuilder<List<QuerySnapshot<Map<String, dynamic>>>>(
+                        stream: CombineLatestStream.list([
+          FirebaseFirestore.instance
+              .collection("GroupChats")
+              .where("participantsId.${widget.userModel.uId}",
+                  isEqualTo: true)
+              .snapshots(),
+          FirebaseFirestore.instance
+              .collection("chatrooms")
+              .where("participantsId.${widget.userModel.uId}",
+                  isEqualTo: true)
+              .snapshots()
+                        ]),
+                        builder: (context,
+            AsyncSnapshot<List<QuerySnapshot<Map<String, dynamic>>>>
+                snapshot) {
+          if (!snapshot.hasData) {
+            return const CircularProgressIndicator();
+          }
+          
+          // Access your data from the snapshot
+          List<QuerySnapshot<Map<String, dynamic>>> querySnapshots =
+              snapshot.data!;
+          
+          // Combine or process your query snapshots as needed
+          // For example, you can flatten the documents from both collections
+          List<QueryDocumentSnapshot<Map<String, dynamic>>> allDocuments =[];
+          for (QuerySnapshot<Map<String, dynamic>> querySnapshot
+              in querySnapshots) {
+            allDocuments.addAll(querySnapshot.docs);
+          }
+             List<bool> selected=List.filled(allDocuments.length, false);
+          // Display your combined data
+          return ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 400),
+            child: ListView.builder(
+              itemCount: allDocuments.length,
+              itemBuilder: (context, index) {
+                var doc = allDocuments[index].data();
+                 
+                List<String> participantsList =
+                    getfriend(doc["participantsId"]);
+          
+                // Build your widget for each document
+                return (doc["chatRoomId"] == null)
+                    ? BlocProvider<ChatSelectedBloc>(
+                      create: (_) => ChatSelectedBloc(false), 
+                     child:  BlocBuilder<ChatSelectedBloc,bool>(
+                         builder: (BuildContext context, state) {  
+                         return ListTile(
+                            onTap: () async{    
+                              context.read<ChatSelectedBloc>().add(Chatselection());      ////////////////
+                                selected[index] = !selected[index];
+                             
+                                 if (selected[index]==true) {
+                                    // await   FirebaseFirestore.instance
+                                    //  .collection("GroupChats")
+                                    //  .doc(doc["groupRoomId"]).snapshots().listen((onData){
+          
+                                    //         ChatRoomModel chatRoomModel = ChatRoomModel.fromMap(
+                                    //                         onData.data()   as Map<String, dynamic>);
+                                    //         RoomModelList.add(chatRoomModel);           
+          
+                                    //  });
+                              
+                                  chatRoomIds
+                                      .add(doc["groupRoomId"].toString());
+                                }
+                                else if (selected[index]==false){
+                                  
+                                     chatRoomIds
+                                      .remove(doc["groupRoomId"].toString());
+                                }
+                               debugPrint("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
+                            },
+                            contentPadding:
+                                const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                            leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor:
+                                  const Color.fromARGB(255, 158, 219, 241),
+                              backgroundImage:
+                                  NetworkImage(doc["profilePic"].toString()),
+                            ),
+                            trailing: Icon((context.watch<ChatSelectedBloc>().state==true) 
+                                ? Icons.circle
+                                : Icons.circle_outlined),
+                            title: Text(doc[
+                                'groupName']), // Replace 'field_name' with your actual field name
+                            // Replace 'another_field' with your actual field name
+                          );
+                         }
+                       ),
                        
-                      List<String> participantsList =
-                          getfriend(doc["participantsId"]);
-
-                      // Build your widget for each document
-                      return (doc["chatRoomId"] == null)
-                          ? BlocProvider<ChatSelectedBloc>(
-                            create: (_) => ChatSelectedBloc(false), 
-                           child:  BlocBuilder<ChatSelectedBloc,bool>(
-                               builder: (BuildContext context, state) {  
-                               return ListTile(
-                                  onTap: () async{    
-                                    context.read<ChatSelectedBloc>().add(Chatselection());      ////////////////
+                    )
+                    : FutureBuilder(
+                        future: FirebaseHelper.getUserModelById(
+                            participantsList[
+                                0]), // passing target user id
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.hasData) {
+                              UserModel userData =
+                                  snapshot.data as UserModel;
+                              return  BlocProvider<ChatSelectedBloc>(
+                      create: (_) => ChatSelectedBloc(false), 
+                     child:  BlocBuilder<ChatSelectedBloc,bool>(
+                         builder: (BuildContext context, state) {  
+                         return ListTile(
+                                  contentPadding:
+                                      const EdgeInsets.fromLTRB(15, 15, 15, 0),
+                                  onTap: () async{
+                                   context.read<ChatSelectedBloc>().add(Chatselection());    
                                       selected[index] = !selected[index];
                                    
-                                       if (selected[index]==true) {
-                                          // await   FirebaseFirestore.instance
-                                          //  .collection("GroupChats")
-                                          //  .doc(doc["groupRoomId"]).snapshots().listen((onData){
-
-                                          //         ChatRoomModel chatRoomModel = ChatRoomModel.fromMap(
-                                          //                         onData.data()   as Map<String, dynamic>);
-                                          //         RoomModelList.add(chatRoomModel);           
-
-                                          //  });
-                                    
-                                        chatRoomIds
-                                            .add(doc["groupRoomId"].toString());
-                                      }
-                                      else if (selected[index]==false){
-                                        
-                                           chatRoomIds
-                                            .remove(doc["groupRoomId"].toString());
-                                      }
-                                     debugPrint("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
+                                      if (selected[index]==true) {
+                                        chatRoomIds.add(
+                                            doc["chatRoomId"].toString());
+                                      }  else if (selected[index]==false){
+                                     chatRoomIds
+                                      .remove(doc["chatRoomId"].toString());
+                                }
+          
+          
+                           debugPrint("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
                                   },
-                                  contentPadding:
-                                      const EdgeInsets.fromLTRB(15, 15, 15, 5),
+                                  title: Text(userData.name.toString(),
+                                      style: const TextStyle(
+                                          fontFamily: "EuclidCircularB")),
                                   leading: CircleAvatar(
                                     radius: 25,
-                                    backgroundColor:
-                                        const Color.fromARGB(255, 158, 219, 241),
-                                    backgroundImage:
-                                        NetworkImage(doc["profilePic"].toString()),
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 158, 219, 241),
+                                    backgroundImage: NetworkImage(
+                                        userData.profileUrl.toString()),
                                   ),
                                   trailing: Icon((context.watch<ChatSelectedBloc>().state==true) 
                                       ? Icons.circle
-                                      : Icons.circle_outlined),
-                                  title: Text(doc[
-                                      'groupName']), // Replace 'field_name' with your actual field name
-                                  // Replace 'another_field' with your actual field name
-                                );
-                               }
-                             ),
-                             
-                          )
-                          : FutureBuilder(
-                              future: FirebaseHelper.getUserModelById(
-                                  participantsList[
-                                      0]), // passing target user id
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  if (snapshot.hasData) {
-                                    UserModel userData =
-                                        snapshot.data as UserModel;
-                                    return  BlocProvider<ChatSelectedBloc>(
-                            create: (_) => ChatSelectedBloc(false), 
-                           child:  BlocBuilder<ChatSelectedBloc,bool>(
-                               builder: (BuildContext context, state) {  
-                               return ListTile(
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(15, 15, 15, 0),
-                                        onTap: () async{
-                                         context.read<ChatSelectedBloc>().add(Chatselection());    
-                                            selected[index] = !selected[index];
-                                         
-                                            if (selected[index]==true) {
-                                              chatRoomIds.add(
-                                                  doc["chatRoomId"].toString());
-                                            }  else if (selected[index]==false){
-                                           chatRoomIds
-                                            .remove(doc["chatRoomId"].toString());
-                                      }
-
-
-                                 debugPrint("chatRooom ${doc["groupRoomId"].toString()} selected value is ${selected[index]}");
-                                        },
-                                        title: Text(userData.name.toString(),
-                                            style: const TextStyle(
-                                                fontFamily: "EuclidCircularB")),
-                                        leading: CircleAvatar(
-                                          radius: 25,
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 158, 219, 241),
-                                          backgroundImage: NetworkImage(
-                                              userData.profileUrl.toString()),
-                                        ),
-                                        trailing: Icon((context.watch<ChatSelectedBloc>().state==true) 
-                                            ? Icons.circle
-                                            : Icons.circle_outlined));
-                                  })
-                                    );
-                                  } else {
-                                    return Container();
-                                  }
-                                } else {
-                                  return Container();
-                                }
-                              },
-                            );
-                    },
-                  ),
-                );
+                                      : Icons.circle_outlined));
+                            })
+                              );
+                            } else {
+                              return Container();
+                            }
+                          } else {
+                            return Container();
+                          }
+                        },
+                      );
               },
             ),
-          ),
+          );
+                        },
+                      ),
         ],
       ),
        floatingActionButton: IconButton(
