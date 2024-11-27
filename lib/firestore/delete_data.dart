@@ -17,7 +17,7 @@ final firestoreRef=FirebaseFirestore.instance.collection("Students");
 // to delete whole document if field name is empty
 void deleteDoc(String docId){
   firestoreRef.doc(docId).delete().then((value) {
-    print ("document deleted successfuly");
+    debugPrint ("document deleted successfuly");
   });
 }
 
@@ -25,7 +25,7 @@ void deleteDoc(String docId){
 void deleteDocField(String docId,String fieldName){
   firestoreRef.doc(docId)
   .update({fieldName : FieldValue.delete()}).then((value) {
-  print("field value deleted successfully");
+  debugPrint("field value deleted successfully");
   });
 
 }
@@ -50,7 +50,7 @@ void deleteDocField(String docId,String fieldName){
                     label: Text("Doc Id"),
                     labelStyle: TextStyle(color: Colors.black)),
               ),
-                 SizedBox(height: 10,),
+                 const SizedBox(height: 10,),
                   TextField(
                 controller: fieldNameController,
                 keyboardType: TextInputType.emailAddress,
@@ -59,7 +59,7 @@ void deleteDocField(String docId,String fieldName){
                     label: Text("Field Name(Optional)"),
                     labelStyle: TextStyle(color: Colors.black)),
               ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
               ElevatedButton(onPressed: (){
 
                 if(fieldNameController.text.trim()=="" ){
@@ -69,7 +69,7 @@ void deleteDocField(String docId,String fieldName){
                   deleteDocField(docIdController.text, fieldNameController.text);
                 }
 
-              }, child: Text("Remove Data"))
+              }, child: const Text("Remove Data"))
             ])
         )
     );

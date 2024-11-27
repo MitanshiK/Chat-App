@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
@@ -29,11 +27,11 @@ class _PhoneAuthState extends State<PhoneAuth> {
       phoneNumber: userNumber,
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then(
-              (value) => print('Logged In Successfully'),
+              (value) => debugPrint('Logged In Successfully'),
             );
       },
       verificationFailed: (FirebaseAuthException e) {
-        print(e.message);
+        debugPrint(e.message);
       },
       codeSent: (String verificationId, int? resendToken) {
         receivedID = verificationId;
@@ -53,7 +51,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     );
     await auth
         .signInWithCredential(credential)
-        .then((value) => print('User Login In Successful'));
+        .then((value) => debugPrint('User Login In Successful'));
   }
 
   @override
@@ -78,7 +76,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   border: OutlineInputBorder(),
                 ),
                 onEditingComplete: () {
-                    userNumber= "+91"+phoneController.text;
+                    userNumber= "+91${phoneController.text}";
                   }
               
               ),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class ShowData extends StatefulWidget {
@@ -40,14 +39,14 @@ class _ShowDataState extends State<ShowData> {
              setState(() {
                 allData=data1.docs.map((e) =>e.data()).toList();
               });
-             print(allData);
-               }, child: Text("id")),
-              allData==null?Text("null"): SizedBox(
+             debugPrint(allData);
+               }, child: const Text("id")),
+              allData==null?const Text("null"): SizedBox(
                 height: 500,
                 width: MediaQuery.sizeOf(context).width,
                 child: ListView(
                   children: List.generate(allData.length, (index) => Container(
-                    padding: EdgeInsets.only(top: 30),
+                    padding: const EdgeInsets.only(top: 30),
                     child: Text(allData[index].toString()))),),
               )
 
@@ -60,7 +59,7 @@ Future<void>  getData() async{
  var data1=await usersCollection.get();
 
   allData=data1.docs.map((e) =>e.data()).toList();
- print(allData);
+ debugPrint(allData);
 }
 
 }

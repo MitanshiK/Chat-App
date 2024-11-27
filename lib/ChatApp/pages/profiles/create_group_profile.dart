@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:proj/ChatApp/models/ui_helper.dart';
+import 'package:proj/ChatApp/helpers/ui_helper.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/pages/chatrooms/groupchatroom.dart';
@@ -62,7 +62,7 @@ class _CreateGroupProfileState extends State<CreateGroupProfile> {
                     backgroundColor: const Color.fromARGB(255, 240, 217, 148),
                     backgroundImage: (picked == true)
                         ? FileImage(profilePic!)
-                        : (widget.groupRoomModel.profilePic!=null && widget.groupRoomModel.profilePic!="") ? NetworkImage(widget.groupRoomModel.profilePic.toString()) : AssetImage("assets/multiple-users-silhouette.png") as ImageProvider,
+                        : (widget.groupRoomModel.profilePic!=null && widget.groupRoomModel.profilePic!="") ? NetworkImage(widget.groupRoomModel.profilePic.toString()) : const AssetImage("assets/multiple-users-silhouette.png") as ImageProvider,
                     // child: (picked == false)
                     //     ? const Icon(
                     //         Icons.person,

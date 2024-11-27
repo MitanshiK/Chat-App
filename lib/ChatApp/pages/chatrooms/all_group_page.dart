@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:proj/ChatApp/models/firebase_helper.dart';
+import 'package:proj/ChatApp/helpers/firebase_helper.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/adding_people/create_group.dart';
@@ -128,7 +128,7 @@ List<UserModel> groupMembers =[];
                                     const Color.fromARGB(255, 158, 219, 241),
                                 backgroundImage: (groupRoomModel.profilePic!= null && groupRoomModel.profilePic!="")
                                          ?  NetworkImage(groupRoomModel.profilePic.toString())
-                                         : AssetImage("assets/multiple-users-silhouette.png") as ImageProvider
+                                         : const AssetImage("assets/multiple-users-silhouette.png") as ImageProvider
                                 // (groupRoomModel.profilePic!=null && groupRoomModel.profilePic!="") 
                                 // ? NetworkImage(
                                 //    groupRoomModel.profilePic.toString(),
@@ -208,10 +208,10 @@ List<UserModel> groupMembers =[];
   }
 
   // getting usersmodel from uid and adding to members list
-Future getMembersModel(List<String> UIds)async{
+Future getMembersModel(List<String> uIds)async{
 
   List<UserModel> fungroupMembers =[]; 
-  for(var id in UIds){
+  for(var id in uIds){
      UserModel? a= await FirebaseHelper.getUserModelById(id);
      fungroupMembers.add(a!);
    }

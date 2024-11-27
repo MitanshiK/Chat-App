@@ -17,12 +17,10 @@
 // import 'package:proj/ChatApp/models/ui_helper.dart';
 // import 'package:proj/ChatApp/models/user_model.dart';
 // import 'package:proj/ChatApp/pages/splash_screen.dart';
-
+//
 // import 'package:proj/local_notifications/notif.dart';
-
+//
 // import 'package:uuid/uuid.dart';
-
-
 // // final navigatorKey=GlobalKey<NavigatorState>();  // Navigator key to navigate
 
 // // Future<void> main() async{
@@ -258,7 +256,7 @@
 //                       // the message is sent in the same minute as now time 
 //                      // both user are in part of same chatroom then send the notification       
 //                         if(UiHelper.userModel!.uId != message.senderId && message.createdOn!.minute ==DateTime.now().minute){
-//                               print("name of sender is ${sender!.name}");
+//                               debugPrint("name of sender is ${sender!.name}");
 //                               Notif.showBigTextNotification(title: groupRoom.groupName!, body: "${sender.name!}: ${message.text.toString()}", fn: flutterLocalNotificationsPlugin);
 //                           }
                                 
@@ -338,12 +336,6 @@
 //   }
 // }
 
-
-
-
-
-
-
 // // if user already logged in
 // class MyAppLoggedIn extends StatefulWidget {
 //   final UserModel userModel;
@@ -386,14 +378,14 @@
 //   void _calculateTimeOpen() {
 //     if (_startTime != null && _endTime != null) {
 //       final duration = _endTime!.difference(_startTime!);
-//       print('App was open for: ${duration.inSeconds} seconds');
+//       debugPrint('App was open for: ${duration.inSeconds} seconds');
 //       savetimeData(duration);
 //     }
 //   }
 
 // //// saving screen time to firebase
 //   void savetimeData(Duration totDuration) async{
-//   print(" inside saveTime fun");
+//   debugPrint(" inside saveTime fun");
 //  String curDate="${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
 
 // DocumentSnapshot<Map<String, dynamic>>? result;
@@ -406,19 +398,19 @@
 //                .doc(widget.userModel.uId).collection("screenTime").doc(curDate).get();
 //               //  .where("${curDate}" ,isGreaterThan: 0).get();
 //    todaytime = await result.data();
-//      print("result1 is ${result.data()} , todaytime ");
-//    // print("result1 is ${result.data()!.keys.first} , todaytime ${result.data()![curDate]}");
+//      debugPrint("result1 is ${result.data()} , todaytime ");
+//    // debugPrint("result1 is ${result.data()!.keys.first} , todaytime ${result.data()![curDate]}");
 //     }catch(e){
-//       print("the error in getting result is $e");
+//       debugPrint("the error in getting result is $e");
 //     }
-//  print("outside try");
+//  debugPrint("outside try");
 
 //   if(result!.data()!=null){
-//     //  print("result2 is ${todaytime![curDate]}");
+//     //  debugPrint("result2 is ${todaytime![curDate]}");
 // //  final docData=todaytime[curDate];
 //      prevDuration=result.data()![curDate];
 //      int newDuration=totDuration.inSeconds+ prevDuration;
-//      print("value of prevDuration is $prevDuration , new duration is $newDuration" );
+//      debugPrint("value of prevDuration is $prevDuration , new duration is $newDuration" );
 
 
 //    Map<String,int> newScreenTime={
@@ -430,7 +422,7 @@
 //   }
 
 //  if(result.data()==null){
-//    print("inside if null");
+//    debugPrint("inside if null");
 //     ///creating
 //    Map<String,int> screenTime={
 //     "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}" : totDuration.inSeconds
@@ -439,7 +431,7 @@
 //   await FirebaseFirestore.instance.collection("ChatAppUsers")
 //   .doc(widget.userModel.uId).collection("screenTime").doc(curDate).set(screenTime);
 //   }catch(e){
-//     print("could not create screentime $e");
+//     debugPrint("could not create screentime $e");
 //   }
 //   // chatRoomModel=newChatRoomModel;  // for returning
 // }
@@ -528,14 +520,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:keyboard_emoji_picker/keyboard_emoji_picker.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/contacts_model.dart';
-import 'package:proj/ChatApp/models/firebase_helper.dart';
+import 'package:proj/ChatApp/helpers/firebase_helper.dart';
 import 'package:proj/ChatApp/models/group_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/message_model.dart';
@@ -595,14 +588,10 @@ import 'package:uuid/uuid.dart';
 //   }
 // }
 
-//////////////////////////////////////chat app
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
-
-// Uuid uuid =Uuid(); 
-// /*
+//////////////////////////////////////chat app 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
 
-Uuid uuid =Uuid();  // creates unique id 
+Uuid uuid =const Uuid();  // creates unique id 
 void  main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -622,7 +611,7 @@ void  main() async {
    
    if(userModel!=null){
 
-      await FirebaseFirestore.instance
+      FirebaseFirestore.instance
                     .collection("chatrooms")
                     .where("participantsId.${userModel.uId}", isEqualTo: true)
                     .snapshots().listen((event) { 
@@ -719,7 +708,7 @@ void  main() async {
     /////////////////////////for groups notification
                   
 
-              await FirebaseFirestore.instance
+              FirebaseFirestore.instance
                     .collection("GroupChats")
                     .where("participantsId.${userModel.uId}", isEqualTo: true)
                     .snapshots().listen((event) { 
@@ -757,7 +746,7 @@ void  main() async {
                       // the message is sent in the same minute as now time 
                      // both user are in part of same chatroom then send the notification       
                         if(userModel.uId != message.senderId && message.createdOn!.minute ==DateTime.now().minute){
-                              print("name of sender is ${sender!.name}");
+                              debugPrint("name of sender is ${sender!.name}");
                               Notif.showBigTextNotification(title: groupRoom.groupName!, body: "${sender.name!}: ${message.text.toString()}", fn: flutterLocalNotificationsPlugin);
                           }
                                 
@@ -801,24 +790,26 @@ void  main() async {
 
    runApp(
   //  MaterialApp(home: LocalNotifications())
-    MyAppLoggedIn(
-      firebaseUser:currentUser,
-      userModel: userModel,
+    ProviderScope(
+      child: MyAppLoggedIn(
+        firebaseUser:currentUser,
+        userModel: userModel,
+      ),
     )
     );
    }else{
-     runApp( MyApp());
+     runApp( const ProviderScope(child: MyApp()));
    }
  
   
   } else {
-    runApp(MyApp());
+    runApp(const ProviderScope(child: MyApp()));
   }
 }
 
 // if no user is  logged in
 class MyApp extends StatefulWidget {
-   MyApp({super.key });
+   const MyApp({super.key });
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -836,7 +827,7 @@ class _MyAppState extends State<MyApp> {
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:SplashScreen(destination: 'login'),
+      home:const SplashScreen(destination: 'login'),
     );
   }
 }
@@ -885,19 +876,21 @@ class _MyAppLoggedInState extends State<MyAppLoggedIn> with WidgetsBindingObserv
       _calculateTimeOpen();
     }
   }
-
+// todayDate  ,todayDate
   void _calculateTimeOpen() {
     if (_startTime != null && _endTime != null) {
       final duration = _endTime!.difference(_startTime!);
-      print('App was open for: ${duration.inSeconds} seconds');
+      debugPrint('App was open for: ${duration.inSeconds} seconds');
       savetimeData(duration);
     }
   }
 
 //// saving screen time to firebase
   void savetimeData(Duration totDuration) async{
-  print(" inside saveTime fun");
- String curDate="${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
+     User? currentUser = FirebaseAuth.instance.currentUser;
+     debugPrint(" inside saveTime fun");
+     String curDate=DateFormat("dd/MM/yyyy").format(DateTime.now()).replaceAll("/", "-");
+//  "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}";
 
 DocumentSnapshot<Map<String, dynamic>>? result;
 Map<String, dynamic>? todaytime;
@@ -906,43 +899,45 @@ int prevDuration=0;
  ////getting
  try{
    result= await FirebaseFirestore.instance.collection("ChatAppUsers")
-               .doc(widget.userModel.uId).collection("screenTime").doc(curDate).get();
+               .doc(currentUser!.uid).collection("screenTime").doc(curDate).get();
               //  .where("${curDate}" ,isGreaterThan: 0).get();
-   todaytime = await result.data();
-     print("result1 is ${result.data()} , todaytime ");
-   // print("result1 is ${result.data()!.keys.first} , todaytime ${result.data()![curDate]}");
+   todaytime = result.data();
+     debugPrint("result1 is ${result.data()} , todaytime ");
+   // debugPrint("result1 is ${result.data()!.keys.first} , todaytime ${result.data()![curDate]}");
     }catch(e){
-      print("the error in getting result is $e");
+      debugPrint("the error in getting result is $e");
     }
- print("outside try");
+ debugPrint("outside try");
 
   if(result!.data()!=null){
-    //  print("result2 is ${todaytime![curDate]}");
+    //  debugPrint("result2 is ${todaytime![curDate]}");
 //  final docData=todaytime[curDate];
      prevDuration=result.data()![curDate];
      int newDuration=totDuration.inSeconds+ prevDuration;
-     print("value of prevDuration is $prevDuration , new duration is $newDuration" );
+     debugPrint("value of prevDuration is $prevDuration , new duration is $newDuration" );
 
 
-   Map<String,int> newScreenTime={
-    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}" : newDuration
+   Map<String,dynamic> newScreenTime={
+    DateFormat("dd/MM/yyyy").format(DateTime.now()).replaceAll("/", "-") : newDuration,
+    "todayDate":DateTime.now()
    };
        await FirebaseFirestore.instance.collection("ChatAppUsers")
-  .doc(widget.userModel.uId).collection("screenTime").doc(curDate).update(newScreenTime);
+  .doc(currentUser!.uid).collection("screenTime").doc(curDate).update(newScreenTime);
     //  final docData=result.docs[0].data()[curDate];
   }
 
  if(result.data()==null){
-   print("inside if null");
+   debugPrint("inside if null");
     ///creating
-   Map<String,int> screenTime={
-    "${DateTime.now().day}-${DateTime.now().month}-${DateTime.now().year}" : totDuration.inSeconds
+   Map<String,dynamic> screenTime={
+    DateFormat("dd/MM/yyyy").format(DateTime.now()).replaceAll("/", "-") : totDuration.inSeconds,
+     "todayDate":DateTime.now()
    };
 try{
   await FirebaseFirestore.instance.collection("ChatAppUsers")
-  .doc(widget.userModel.uId).collection("screenTime").doc(curDate).set(screenTime);
+  .doc(currentUser!.uid).collection("screenTime").doc(curDate).set(screenTime);
   }catch(e){
-    print("could not create screentime $e");
+    debugPrint("could not create screentime $e");
   }
   // chatRoomModel=newChatRoomModel;  // for returning
 }

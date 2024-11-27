@@ -23,7 +23,7 @@ class CreateGroupPage extends StatefulWidget {
 
 class _CreateGroupPageState extends State<CreateGroupPage> {
   TextEditingController searchFieldController = TextEditingController();
-  List<UserModel> GroupMembers = [];
+  List<UserModel> groupMembers = [];
   int flag = 0;
     Map<String, dynamic>? map1;
 
@@ -142,7 +142,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
   void initState() {
     
     if(widget.existing==false){
-    GroupMembers.add(widget.userModel);
+    groupMembers.add(widget.userModel);
      } // adding ourselves to the group
     super.initState();
   }
@@ -251,8 +251,8 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                             //
                             if (flag == 0) {
                               setState(() {
-                                if(GroupMembers.contains(searchData)==false){
-                                GroupMembers.add(searchData);
+                                if(groupMembers.contains(searchData)==false){
+                                groupMembers.add(searchData);
                                 }
                               });
                             }
@@ -308,7 +308,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
           ),
 
           /////////////////
-          (GroupMembers.isEmpty)
+          (groupMembers.isEmpty)
               ? const SizedBox()
               : Container(
                   decoration: const BoxDecoration(
@@ -320,7 +320,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                   height: MediaQuery.sizeOf(context).height / 8,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: GroupMembers.length,
+                    itemCount: groupMembers.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Stack(
                         children: [
@@ -328,7 +328,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                             margin: const EdgeInsets.all(5),
                             child: Column(
                               children: [
-                                (GroupMembers[index].profileUrl == null)
+                                (groupMembers[index].profileUrl == null)
                                     ? const CircleAvatar(
                                         backgroundColor: Colors.blue,
                                         child: Icon(
@@ -338,12 +338,12 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                                       )
                                     : CircleAvatar(
                                         backgroundImage: NetworkImage(
-                                            GroupMembers[index].profileUrl!),
+                                            groupMembers[index].profileUrl!),
                                       ),
                                 const SizedBox(
                                   height: 5,
                                 ),
-                                Text(GroupMembers[index].name!  ,style: const TextStyle(fontFamily:"EuclidCircularB")  )
+                                Text(groupMembers[index].name!  ,style: const TextStyle(fontFamily:"EuclidCircularB")  )
                               ],
                             ),
                           ),
@@ -353,7 +353,7 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
                               child: GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      GroupMembers.removeAt(index);
+                                      groupMembers.removeAt(index);
                                     });
                                   },
                                   child: const Icon(
@@ -375,30 +375,30 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
             // if we are creating a new group
                             if(widget.existing==false){
                               GroupRoomModel? groupRoomModel;
-                              if(GroupMembers.length>=3){
-                             groupRoomModel=await getGroupRoomModel(GroupMembers); // getting grouproom model from function   
+                              if(groupMembers.length>=3){
+                             groupRoomModel=await getGroupRoomModel(groupMembers); // getting grouproom model from function   
                               }
                               else{
-                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("a group should contain atleast 3 members")));
+                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content:  Text("a group should contain atleast 3 members")));
                               }
                               if(groupRoomModel!=null){
                                 debugPrint("groupChat created");
                                  
-                               if(GroupMembers.length>=3){
+                               if(groupMembers.length>=3){
                                
                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> AllGroupChatPage(firebaseUser: widget.firebaseUser, userModel: widget.userModel)));
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> CreateGroupProfile(
                                   firebaseUser: widget.firebaseUser,
                                    userModel: widget.userModel,
                                     groupRoomModel:groupRoomModel! , 
-                                    groupMembers: GroupMembers,)));
+                                    groupMembers: groupMembers,)));
                                }
 
                               }
                        } // existing false
 
                        if(widget.existing==true){
-                       addMemberToExisting(GroupMembers);
+                       addMemberToExisting(groupMembers);
                         Navigator.popUntil(context, (route) => route.isFirst);
                         // Navigator.push(context, MaterialPageRoute(builder: ((context) => )));
                       
@@ -414,8 +414,8 @@ Future addMemberToExisting(List<UserModel> newMemberss)async{
   ////
   Future checkMembers(UserModel searchData) async {
     flag=0;
-    if (GroupMembers.isNotEmpty) {
-      for (var i in GroupMembers) {
+    if (groupMembers.isNotEmpty) {
+      for (var i in groupMembers) {
         if (i.email==searchData.email) {
           setState(() {
             flag = 1;

@@ -67,55 +67,93 @@ class _SendMediaState extends State<SendMedia> {
                         future: _initializeVideoPlayerFuture,
                         builder: (BuildContext context,
                             AsyncSnapshot<dynamic> snapshot) {
-                          return BlocProvider<VideoStateBloc>(
+                          return
+                          //  BlocProvider<VideoStateBloc>(
+                          //   create: (_)=> VideoStateBloc(false),
+                          //   child: BlocBuilder<VideoStateBloc,bool>(
+                          //     builder: (BuildContext context, state) {  
+                          //   return Stack(
+                          //     children: [
+                          //       AspectRatio(
+                          //         aspectRatio: videoController!.value.aspectRatio,
+                          //         child: VideoPlayer(videoController!),
+                          //       ),
+                          //       Positioned(
+                          //         top: MediaQuery.sizeOf(context).height / 3,
+                          //         child: SizedBox(
+                          //           width: MediaQuery.sizeOf(context).width,
+                          //           child: Column(
+                          //             crossAxisAlignment:
+                          //                 CrossAxisAlignment.center,
+                          //             children: [
+                          //               IconButton(
+                          //                 onPressed: () {
+                          //                   if (videoController!
+                          //                       .value.isPlaying) {
+                          //                     videoController!.pause();
+                          //                         context.read<VideoStateBloc>().add(VideoPause()); 
+                         //
+                          //                   } else {
+                          //                     videoController!.play();
+                          //                         context.read<VideoStateBloc>().add(VideoPlay()); 
+//
+                          //                   }
+                          //                 },
+                          //                 icon: Icon(
+                          //                       ( context.watch<VideoStateBloc>().state==false)
+                          //                       ? Icons.play_circle
+                          //                       : Icons.pause ,
+                          //                   size: 80,
+                          //                   color: Colors.white,
+                          //                 ),
+                          //               ),
+                          //             ],
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   );
+                          //     }
+                          //   )
+                          //
+                          // );
+                        BlocProvider<VideoStateBloc>(
                             create: (_)=> VideoStateBloc(false),
-                            child: BlocBuilder<VideoStateBloc,bool>(
-                              builder: (BuildContext context, state) {  
-                            return Stack(
-                              children: [
-                                AspectRatio(
-                                  aspectRatio: videoController!.value.aspectRatio,
-                                  child: VideoPlayer(videoController!),
-                                ),
-                                Positioned(
-                                  top: MediaQuery.sizeOf(context).height / 3,
-                                  child: SizedBox(
-                                    width: MediaQuery.sizeOf(context).width,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        IconButton(
-                                          onPressed: () {
-                                            if (videoController!
-                                                .value.isPlaying) {
-                                              videoController!.pause();
-                                                  context.read<VideoStateBloc>().add(VideoPause()); 
-
-                                            } else {
-                                              videoController!.play();
-                                                  context.read<VideoStateBloc>().add(VideoPlay()); 
-
-                                            }
-                                          },
-                                          icon: Icon(
-                                                ( context.watch<VideoStateBloc>().state==false)
-                                                ? Icons.play_circle
-                                                : Icons.pause ,
-                                            size: 80,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                              }
-                            )
-                          
+                            child: 
+                            BlocBuilder<VideoStateBloc, bool>(
+  builder: (BuildContext context, state) {
+    return Center(
+      child: Stack(
+        alignment: Alignment.center, // Align children at the center
+        children: [
+          AspectRatio(
+            aspectRatio: videoController!.value.aspectRatio,
+            child: VideoPlayer(videoController!),
+          ),
+          // Center the play/pause icon
+          IconButton(
+            onPressed: () {
+              if (videoController!.value.isPlaying) {
+                videoController!.pause();
+                context.read<VideoStateBloc>().add(VideoPause());
+              } else {
+                videoController!.play();
+                context.read<VideoStateBloc>().add(VideoPlay());
+              }
+            },
+            icon: Icon(
+              state ? Icons.pause : Icons.play_circle,
+              size: 80,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  },
+)
                           );
+                        
                         },
                       ) :
                       (widget.type=="audio") ? //2nd

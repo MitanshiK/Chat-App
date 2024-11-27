@@ -1,4 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -77,7 +77,7 @@ class _LoginState extends State<Login> {
                   child: const Text("Login")),
                   const SizedBox(height: 20,),
                   
-             Text("$message")
+             Text(message)
             ])),
       ),
     );
@@ -99,7 +99,7 @@ class _LoginState extends State<Login> {
       Navigator.push(context, MaterialPageRoute(builder: (context)=> Home(username: email,))); 
     } 
     catch (e) {
-      print("this is Exception : $e");
+      debugPrint("this is Exception : $e");
     }
   }
 }

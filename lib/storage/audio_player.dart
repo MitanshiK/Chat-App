@@ -61,7 +61,7 @@ class _AudioPlayState extends State<AudioPlay> {
   @override
   Widget build(BuildContext context) {
     return  Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -69,7 +69,7 @@ class _AudioPlayState extends State<AudioPlay> {
               Text(name),
               ElevatedButton(onPressed: (){
                 selectFile();
-              }, child: Text("pick File")),
+              }, child: const Text("pick File")),
               Slider(
                 max: duration.inSeconds.toDouble(),
                 value: position.inSeconds.toDouble(),

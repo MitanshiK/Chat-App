@@ -16,21 +16,21 @@ class _QueryingCollectionState extends State<QueryingCollection> {
  // filtering for rollno 
  void RollnoQuery() async{
  await firestoreRef.where("rollNo",isLessThanOrEqualTo: 13).get().then((QuerySnapshot querySnapshot){
-   querySnapshot.docs.forEach((doc) {
-    print("${doc["name"]} ${doc["rollNo"]}");
+   for (var doc in querySnapshot.docs) {
+    debugPrint("${doc["name"]} ${doc["rollNo"]}");
     //  QueryData.add(StudentModel(doc["name"],doc["rollNo"],doc["id"],doc["email"]));
-    });
+    }
      print(QueryData.length);
   } );
  }
   
 // limit Query 
-// only prints data of specified no of rows from start 
+// only debugPrints data of specified no of rows from start 
 void limitDocs() async{
 await firestoreRef.limit(2).get().then((QuerySnapshot querySnapshot){
-  querySnapshot.docs.forEach((element) {
-    print(element["name"]);
-  });
+  for (var element in querySnapshot.docs) {
+    debugPrint(element["name"]);
+  }
 
 });
 }
@@ -39,18 +39,18 @@ await firestoreRef.limit(2).get().then((QuerySnapshot querySnapshot){
 // works same as limit 
 void limitToLastDocs() async{
 await firestoreRef.limitToLast(2).get().then((QuerySnapshot querySnapshot){
-  querySnapshot.docs.forEach((element) {
-    print(element["name"]);
-  });
+  for (var element in querySnapshot.docs) {
+    debugPrint(element["name"]);
+  }
 
 });
 }
 
 void orderby(){
   firestoreRef.orderBy("rollNo",descending: false).get().then((QuerySnapshot querySnapshot) {
-   querySnapshot.docs.forEach((doc) {
-   print("${doc["name"]}  ${doc["rollNo"]}");
-    });
+   for (var doc in querySnapshot.docs) {
+   debugPrint("${doc["name"]}  ${doc["rollNo"]}");
+    }
   });
 }
 
@@ -61,9 +61,9 @@ void endAndStartCursors(){
              .endAt([23])         // to specify ending point 
              .get()
              .then((QuerySnapshot querySnapshot) {
-              querySnapshot.docs.forEach((doc) {
-               print("${doc["name"]}  ${doc["rollNo"]}");
-               });
+              for (var doc in querySnapshot.docs) {
+               debugPrint("${doc["name"]}  ${doc["rollNo"]}");
+               }
              });
 }
 
@@ -73,37 +73,37 @@ void endAndStartCursors(){
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Querying the documents in collection"),),
-      body: Container(padding: EdgeInsets.all(20),
+      appBar: AppBar(title: const Text("Querying the documents in collection"),),
+      body: Container(padding: const EdgeInsets.all(20),
       alignment: Alignment.center,
-      child: Container(
+      child: SizedBox(
       
         height: 600,
         width: MediaQuery.sizeOf(context).width,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Query output in debug console"),
+            const Text("Query output in debug console"),
              ElevatedButton(onPressed: (){
               RollnoQuery();
-             }, child: Text("Rollno less than 13")),
+             }, child: const Text("Rollno less than 13")),
 
              ElevatedButton(onPressed: (){
               limitDocs();
-             }, child: Text("limit Query")),
+             }, child: const Text("limit Query")),
 
               ElevatedButton(onPressed: (){
               limitDocs();
-             }, child: Text("limit To LastQuery")),
+             }, child: const Text("limit To LastQuery")),
 
              ElevatedButton(onPressed: (){
               orderby();
-             }, child: Text("orderby ascending")),
+             }, child: const Text("orderby ascending")),
 
              
              ElevatedButton(onPressed: (){
               endAndStartCursors();
-             }, child: Text("starting and ending cursors"))
+             }, child: const Text("starting and ending cursors"))
           ],
         )
         // ListView(children: List.generate(QueryData.length, (index) {

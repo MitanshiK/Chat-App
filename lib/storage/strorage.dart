@@ -53,7 +53,7 @@ class _StorageState extends State<Storage> {
         title: const Text("Firebase Storage"),
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
            //////pdfViewer
@@ -71,16 +71,16 @@ class _StorageState extends State<Storage> {
         pageSnap: true,
         swipeHorizontal: true,
         onError: (error) {
-          print(error);
+          debugPrint(error);
         },
         onPageError: (page, error) {
-          print('$page: ${error.toString()}');
+          debugPrint('$page: ${error.toString()}');
         },
        
      
     )
   )
-  : Text("pdfViewer"),
+  : const Text("pdfViewer"),
 
             ////////// video player
  FutureBuilder(future: _initializeVideoPlayerFuture, 
@@ -89,7 +89,9 @@ class _StorageState extends State<Storage> {
             return AspectRatio(aspectRatio: videoController!.value.aspectRatio,
             child: VideoPlayer(videoController!));
           }
-          else return CircularProgressIndicator();
+          else {
+            return const CircularProgressIndicator();
+          }
     
           }, ),
 
@@ -113,12 +115,12 @@ class _StorageState extends State<Storage> {
                 {
                   selectFile();
                 },
-                child: Text("select a File")),
+                child: const Text("select a File")),
             ElevatedButton(onPressed: () {
               UploadFile().then((value) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("uploaded to storage successfully")));
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("uploaded to storage successfully")));
               });
-            }, child: Text("Upload File")),
+            }, child: const Text("Upload File")),
             // Text("${pickedFile..name}")
           ],
         ),
@@ -134,7 +136,7 @@ class _StorageState extends State<Storage> {
 
      ///
       videoController=VideoPlayerController.file(File(pickedFile!.path!));
-        print("${pickedFile!.path!}");
+        debugPrint(pickedFile!.path!);
        _initializeVideoPlayerFuture =videoController!.initialize();
        ////
     });

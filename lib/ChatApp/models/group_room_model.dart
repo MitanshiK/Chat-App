@@ -34,6 +34,5 @@ class GroupRoomModel {
       "lastTime": lastTime,
       "createdBy": createdBy
     };
-    
   }
 }

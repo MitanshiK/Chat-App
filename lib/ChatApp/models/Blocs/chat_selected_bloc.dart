@@ -8,7 +8,7 @@ final class Chatselection extends Selection{}
 // Observing change in state using onChange and onTransition method 
 
 class ChatSelectedBloc extends Bloc<Selection,bool>{
-  ChatSelectedBloc(bool initial):super(initial){          // initializing statye with 0
+  ChatSelectedBloc(super.initial){          // initializing statye with 0
  on<Chatselection>((even,emit){
   emit(!state);
     });

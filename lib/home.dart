@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_auth/firebase_auth.dart' as auth;
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/google_sign/auth2.dart';
 
@@ -12,13 +12,13 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text("Home Page"),),
+      appBar: AppBar(title: const Text("Home Page"),),
       body: Center(child:
        Column(
         mainAxisAlignment: MainAxisAlignment.center,
          children: [
-           Image(image: AssetImage("assets/album1.jpg"),),
-           Text("welcome ${username}"),
+           const Image(image: AssetImage("assets/album1.jpg"),),
+           Text("welcome $username"),
            ElevatedButton(onPressed: () async{
             // if(Auth2.signOutGoogle(context)==true){
             // Navigator.pop(context);
@@ -34,7 +34,7 @@ class Home extends StatelessWidget {
           //  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Some error occured ${auth.User}")));
           //   }
            }
-           , child: Text("Google Sign Out "))
+           , child: const Text("Google Sign Out "))
          ],
        ),),
     );

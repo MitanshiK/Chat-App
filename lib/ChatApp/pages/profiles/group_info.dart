@@ -10,6 +10,7 @@ import 'package:proj/ChatApp/pages/for_media/open_media.dart';
 import 'package:proj/ChatApp/pages/profiles/new_profile.dart';
 import 'package:video_player/video_player.dart';
 
+// ignore: must_be_immutable
 class GroupInfo extends StatefulWidget {
    GroupInfo(
       {super.key,
@@ -564,7 +565,7 @@ class _GroupInfoState extends State<GroupInfo> {
     // Update the participantsId field by adding the new participant
     await groupChatRef.update(
       {
-      "participantsId.${newMemberId}" :FieldValue.delete()
+      "participantsId.$newMemberId" :FieldValue.delete()
         });
 
 

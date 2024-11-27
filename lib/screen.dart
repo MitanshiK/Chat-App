@@ -1,18 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class Fire_Anyo extends StatelessWidget {
+class FireAnyo extends StatelessWidget {
+  const FireAnyo({super.key});
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
         body: Center(
-          child: Container(
+          child: SizedBox(
             height: 50,
             width: 100,
             child: ElevatedButton(
          
               onPressed: () => signInAnonymously(),
-              child: Text('Sign In'),
+              child: const Text('Sign In'),
             ),
           ),
         ),
@@ -22,9 +24,9 @@ class Fire_Anyo extends StatelessWidget {
 void signInAnonymously() async {
     try {
       final authResult = await FirebaseAuth.instance.signInAnonymously();
-      print('${authResult.user?.uid}');
+      debugPrint('${authResult.user?.uid}');
     } catch(e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 }

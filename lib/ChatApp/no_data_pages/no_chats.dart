@@ -4,7 +4,7 @@ import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/adding_people/search_page.dart';
 
 class NoChats extends StatefulWidget {
-   NoChats({super.key ,required this.firebaseUser, required this.userModel});
+   const NoChats({super.key ,required this.firebaseUser, required this.userModel});
   final User firebaseUser;
   final UserModel userModel;
 
@@ -15,11 +15,11 @@ class NoChats extends StatefulWidget {
 class _NoChatsState extends State<NoChats> {
   @override
   Widget build(BuildContext context) {
-    return  Padding(padding: EdgeInsets.all(20),
+    return  Padding(padding: const EdgeInsets.all(20),
      child: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image(image: AssetImage("assets/peoplechat.png"),
+        Image(image: const AssetImage("assets/peoplechat.png"),
         height: MediaQuery.sizeOf(context).width/2,
         width: MediaQuery.sizeOf(context).width/2,
         ),

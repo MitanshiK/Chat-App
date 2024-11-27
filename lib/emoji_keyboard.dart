@@ -93,16 +93,14 @@ late  bool isShowSticker;
           ),
 
           // Edit text
-          Flexible(
-            child: Container(
-              child: const TextField(
-                style: TextStyle(color: Colors.blueGrey, fontSize: 15.0),
-            decoration: InputDecoration.collapsed(
-              hintText: 'Type your message...',
-              hintStyle: TextStyle(color: Colors.blueGrey),
-            ),
-          ),
-        ),
+          const Flexible(
+            child:  TextField(
+              style: TextStyle(color: Colors.blueGrey, fontSize: 15.0),
+                        decoration: InputDecoration.collapsed(
+            hintText: 'Type your message...',
+            hintStyle: TextStyle(color: Colors.blueGrey),
+                        ),
+                      ),
       ),
 
       // Button send message

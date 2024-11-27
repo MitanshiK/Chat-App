@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proj/ChatApp/helpers/firebase_helper.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
-import 'package:proj/ChatApp/models/firebase_helper.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/story/show_story.dart';
@@ -207,7 +207,7 @@ class _StoriesState extends State<Stories> {
                     },
                     icon: const Icon(Icons.image ,size: 40,),
                   ),
-                 const Text("Image" ,style: const TextStyle(fontFamily:"EuclidCircularB"),)
+                 const Text("Image" ,style:  TextStyle(fontFamily:"EuclidCircularB"),)
                 ],
               ),
 
@@ -304,7 +304,9 @@ class _StoriesState extends State<Stories> {
     recentStoryList.add(singleUserStory);
     if(singleUserStory.isNotEmpty){
       setState(() {
+        if(friendsStories.contains(j)==false){
         friendsStories.add(j);
+        }
       });
     }
         // debugPrint("friens with stories are 1 ${friendsStories}");

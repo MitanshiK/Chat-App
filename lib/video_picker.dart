@@ -2,15 +2,15 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
-class Video_picker extends StatefulWidget {
-  const Video_picker({super.key});
+class VideoPicker extends StatefulWidget {
+  const VideoPicker({super.key});
 
   @override
-  State<Video_picker> createState() => _Video_pickerState();
+  State<VideoPicker> createState() => _VideoPickerState();
 }
 
 
-class _Video_pickerState extends State<Video_picker> {
+class _VideoPickerState extends State<VideoPicker> {
 
  var pickedFile;
  bool picked=false;
@@ -31,11 +31,11 @@ class _Video_pickerState extends State<Video_picker> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-    appBar: AppBar(title: Text("video Picker"),),
+    appBar: AppBar(title: const Text("video Picker"),),
     body: Column(children: [
       ElevatedButton(onPressed: (){
 
-      }, child: Text("Pick Video")),
+      }, child: const Text("Pick Video")),
       FutureBuilder(future: _initializeVideoPlayerFuture, 
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) { 
         if(snapshot.connectionState==ConnectionState.done){
@@ -43,7 +43,7 @@ class _Video_pickerState extends State<Video_picker> {
           child: VideoPlayer(videoController!),
           );
         }else{
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         }
        },
        )

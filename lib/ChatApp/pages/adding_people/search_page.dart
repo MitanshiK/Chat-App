@@ -219,7 +219,7 @@ class _SearchPageState extends State<SearchPage> {
                     }
                   } else {
                     return ConstrainedBox(
-                      constraints: BoxConstraints(
+                      constraints: const BoxConstraints(
                         maxHeight: 100,
                         maxWidth: 200
                       ),

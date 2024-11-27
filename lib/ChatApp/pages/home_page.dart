@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:proj/ChatApp/models/custom_page_route.dart';
+import 'package:proj/ChatApp/helpers/custom_page_route.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/adding_people/create_group.dart';
 import 'package:proj/ChatApp/pages/chatrooms/all_group_page.dart';
@@ -10,9 +9,10 @@ import 'package:proj/ChatApp/pages/chatrooms/chat_page.dart';
 import 'package:proj/ChatApp/pages/invite.dart';
 import 'package:proj/ChatApp/pages/profiles/complete_profile.dart';
 import 'package:proj/ChatApp/pages/authenticate/login.dart';
-import 'package:proj/ChatApp/pages/screenTime.dart';
+
 import 'package:proj/ChatApp/pages/story/story.dart';
 import 'package:proj/ChatApp/pages/for_media/view_media.dart';
+import 'package:proj/ChatApp/screen_time/screen_time2.dart';
 
 // viewing media before sending
 class HomePage extends StatefulWidget {
@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: Row(
                     children: [
                        CircleAvatar(
-                        backgroundImage: ((widget.userModel!.profileUrl!=null) ? NetworkImage(widget.userModel!.profileUrl.toString()): const AssetImage("assets/user.png") as ImageProvider),
+                        backgroundImage: ((widget.userModel.profileUrl!=null) ? NetworkImage(widget.userModel.profileUrl.toString()): const AssetImage("assets/user.png") as ImageProvider),
                         radius: 30,
                       ),
                       Container(
@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child:  Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(widget.userModel!.name.toString(), style:TextStyle(color: Theme.of(context).colorScheme.primary,fontFamily: "Euclid" ,fontSize: 20,fontWeight: FontWeight.bold)),
+                            Text(widget.userModel.name.toString(), style:TextStyle(color: Theme.of(context).colorScheme.primary,fontFamily: "Euclid" ,fontSize: 20,fontWeight: FontWeight.bold)),
                             Text("View Profile", style:TextStyle(color: Theme.of(context).colorScheme.primary,fontFamily: "Euclid" ,fontSize: 12,fontWeight: FontWeight.bold) )
                           ],
                         ),
@@ -106,15 +106,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   await FirebaseAuth.instance.signOut(); // to sign out
                   Navigator.popUntil(
                       context,
-                      (route) => route.isFirst); // pop pages until first page of app appears
+                      (route) => route.isFirst
+                  ); // pop pages until first page of app appears
                   Navigator.pushReplacement(
                       context,
                       CustomPageRoute(child: const Loginpage(),direction: AxisDirection.up)
-                       ); // replace the current page and push the provided page
+                  ); // replace the current page and push the provided page
                   // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> Loginpage()));
 
                 },
-                ),
+               ),
 
                 /// 2
                 ListTile(

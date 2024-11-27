@@ -12,7 +12,7 @@ static Future<UserModel?> getUserModelById(String uid ) async{
 
   if(result.data()!=null)
   {
-    userModel=await UserModel.fromMap(result.data() as Map<String,dynamic>);
+    userModel= UserModel.fromMap(result.data() as Map<String,dynamic>);
   }
 
   return userModel;

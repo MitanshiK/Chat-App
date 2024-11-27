@@ -1,9 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:proj/google_sign/auth2.dart';
-import 'package:proj/google_sign/authenti.dart';
 import 'package:proj/home.dart';
 import 'package:proj/login.dart';
 
@@ -73,15 +71,15 @@ class _RegisterState extends State<Register> {
                   onPressed: () async {
                     registerKey.currentState?.save();
                     registerUser(); // to registerUser
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=> Login()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> const Login()));
                   },
                   child: const Text("Submit")),
-                  SizedBox(height: 20,),
+                  const SizedBox(height: 20,),
                   
                    ElevatedButton(
          
               onPressed: () => signInAnonymously(),
-              child: Text('Sign In'),
+              child: const Text('Sign In'),
             ),
 
             ElevatedButton(onPressed: ()async {
@@ -91,7 +89,7 @@ class _RegisterState extends State<Register> {
               if(user!=null){
                 Navigator.push(context, MaterialPageRoute(builder: (context)=> Home(username: user.displayName.toString(),)));
               }
-            }, child: Text("Google Sign In"))
+            }, child: const Text("Google Sign In"))
             ])),
       ),
     );
@@ -100,28 +98,28 @@ class _RegisterState extends State<Register> {
 // email and password
   void registerUser() async {
     try {
-      final credential =
+     
           await auth.FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
     } on auth.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        debugPrint('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        debugPrint('The account already exists for that email.');
       }
     } catch (e) {
-      print("this is Exception : $e");
+      debugPrint("this is Exception : $e");
     }
   }
   // anonymous 
   void signInAnonymously() async {
     try {
       final authResult = await auth.FirebaseAuth.instance.signInAnonymously();
-      print('${authResult.user?.uid}');
+      debugPrint('${authResult.user?.uid}');
     } catch(e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
   }
 }

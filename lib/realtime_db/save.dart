@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class RealtimeDb extends StatefulWidget {
   const RealtimeDb({super.key});
@@ -72,7 +71,7 @@ String? dbData;
                 keyboardType: TextInputType.streetAddress,
                 style: const TextStyle(color: Colors.black),
                 decoration: const InputDecoration(
-                    label: const Text("address"),
+                    label:  Text("address"),
                     labelStyle: TextStyle(color: Colors.black)),
               ),
               TextField(
@@ -102,11 +101,11 @@ String? dbData;
                       // DatabaseRef.child(id.toString()).set(user);
                       // userRef.set(user);
                     } catch (e) {
-                      print("error is $e");
+                      debugPrint("error is $e");
                     }
                   },
                   child: const Text("Save Data")),
-                Text("${ dbData}")
+                Text("$dbData")
             ],
           ),
         ));
@@ -117,18 +116,18 @@ String? dbData;
     DatabaseRef.onValue.listen((event) {
       final data = event.snapshot.value;
         // values = data;
-        // print("data is  $values");
-        printData(data.toString());
+        // debugPrint("data is  $values");
+        debugPrintData(data.toString());
     });       
     // return values.toString();
   }
   
-  void printData(String data){
+  void debugPrintData(String data){
   // final  databaseReference = FirebaseDatabase.instance.ref().child("Users").orderByChild()
     setState(() {
         dbData= data; 
     });
-    print("$dbData");
+    debugPrint("$dbData");
 }
 
 }

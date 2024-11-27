@@ -9,7 +9,7 @@ final class VideoPause extends VideoState{}
 // Observing change in state using onChange and onTransition method 
 
 class VideoStateBloc extends Bloc<VideoState,bool>{
-  VideoStateBloc(bool initial):super(initial){          // initializing statye with 0
+  VideoStateBloc(super.initial){          // initializing statye with 0
  on<VideoPlay>((even,emit){
   emit(!state);
     });
