@@ -1,3 +1,4 @@
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cubit_form/cubit_form.dart';
@@ -6,10 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/helpers/firebase_helper.dart';
 import 'package:proj/ChatApp/models/Blocs/heart_vis_bloc.dart';
+import 'package:proj/ChatApp/models/Blocs/show_story_bloc.dart';
 import 'package:proj/ChatApp/models/Blocs/video_arrow_bloc.dart';
 import 'package:proj/ChatApp/models/story_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/models/Blocs/show_story_bloc.dart';
 import 'package:video_player/video_player.dart';
 
 class ShowStory extends StatefulWidget {
@@ -68,7 +69,8 @@ class _ShowStoryState extends State<ShowStory> {
                   //   create: (_)=> ShowStoryBloc(false),
                   //   child: BlocBuilder<ShowStoryBloc,bool>(
                   //     builder: (BuildContext context, state) {  
-                      return CarouselSlider(
+                      return 
+                      CarouselSlider(
                           items: List.generate(recentStoryList.length, (index) {
                             // context.read< ShowStoryBloc>().add(LikeFalse());
                             // var currentStory = recentStoryList[index];
@@ -112,8 +114,8 @@ class _ShowStoryState extends State<ShowStory> {
                       
                             if (recentStoryList[index].type == "video") {
                               // setting video in controller
-                              videoController = VideoPlayerController.networkUrl(
-                                  Uri.parse(currentStory.fileUrl!));
+                              videoController = VideoPlayerController.network(
+                                  Uri.parse(currentStory.fileUrl!).toString());
                               _initializeVideoPlayerFuture =
                                   videoController!.initialize();
                               videoController!.value.isPlaying == true;

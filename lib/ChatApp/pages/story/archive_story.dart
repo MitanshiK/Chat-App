@@ -33,7 +33,7 @@ class _ArchiveStoryState extends State<ArchiveStory> {
   void initState() {
    if(widget.type=="video"){
       videoController =
-          VideoPlayerController.networkUrl(Uri.parse(widget.mediamodel.fileUrl!));
+          VideoPlayerController.network(Uri.parse(widget.mediamodel.fileUrl!).toString());
       _initializeVideoPlayerFuture = videoController!.initialize();
     }
     super.initState();
@@ -83,10 +83,11 @@ class _ArchiveStoryState extends State<ArchiveStory> {
       child: Stack(
         alignment: Alignment.center, // Align children at the center
         children: [
-          AspectRatio(
-            aspectRatio: videoController!.value.aspectRatio,
-            child: VideoPlayer(videoController!),
-          ),
+          // AspectRatio(
+          //   aspectRatio: videoController!.value.aspectRatio,
+          //   child: 
+            VideoPlayer(videoController!),
+          // ),
           // Center the play/pause icon
           IconButton(
             onPressed: () {

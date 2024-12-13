@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:cubit_form/cubit_form.dart';
@@ -463,14 +464,28 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                                             200,
                                                                         maxWidth:
                                                                             200),
-                                                                child: Image
-                                                                    .network(
-                                                                  currentMessage
-                                                                      .fileUrl
-                                                                      .toString(),
-                                                                  cacheWidth:
-                                                                      230,
+                                                                child:  CachedNetworkImage(
+                                                                  imageUrl:currentMessage.fileUrl.toString(),
+                                                                  placeholder: (context,url) =>
+                                                                     Container(
+                                                                      width: 50,
+                                                                      height: 50,
+                                                                      child: Center(child: CircularProgressIndicator())),
+                                                                  errorWidget: (context,url,
+                                                                          error) =>const Icon(Icons.error),
+                                                                   fit: BoxFit.scaleDown,
+                                                                   memCacheWidth: 230,
                                                                 ),
+                                                                
+                                                                
+                                                                // Image
+                                                                //     .network(
+                                                                //   currentMessage
+                                                                //       .fileUrl
+                                                                //       .toString(),
+                                                                //   cacheWidth:
+                                                                //       230,
+                                                                // ),
                                                               )
                                                             : (messageType ==
                                                                     "video")
@@ -488,10 +503,11 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                                                                             constraints:
                                                                                 const BoxConstraints(maxHeight: 200, maxWidth: 200),
                                                                             child:
-                                                                                AspectRatio(
-                                                                              aspectRatio: videoController!.value.aspectRatio,
-                                                                              child: VideoPlayer(videoController!),
-                                                                            ),
+                                                                              //   AspectRatio(
+                                                                              // aspectRatio: videoController!.value.aspectRatio,
+                                                                              // child: 
+                                                                              VideoPlayer(videoController!),
+                                                                            // ),
                                                                           ),
                                                                           const Positioned(
                                                                               bottom: 10,
@@ -866,7 +882,7 @@ class _GroupRoomPageState extends State<GroupRoomPage>
                           config: const Config(
                             height: 256,
                             checkPlatformCompatibility: true,
-                            swapCategoryAndBottomBar: false,
+                            // swapCategoryAndBottomBar: false,
                             skinToneConfig: SkinToneConfig(),
                             categoryViewConfig: CategoryViewConfig(),
                             bottomActionBarConfig: BottomActionBarConfig(),

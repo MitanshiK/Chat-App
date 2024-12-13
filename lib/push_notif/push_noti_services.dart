@@ -14,7 +14,7 @@
 // class PushNotiServices {
 //   final messaging = FirebaseMessaging.instance; //
  
-// void handleMessage(RemoteMessage? message){
+// void handleMessage(RemoteMessage? message, dynamic navigatorKey){
 //   if(message == null){return;}  // if message is null , we exit
 
 //   navigatorKey.currentState!.pushNamed(    // else we navigate to this page 
@@ -32,9 +32,9 @@
 // //  FirebaseMessaging.instance.getInitialMessage().then((value){
 // //   handleMessage();
 // //  });
-//  FirebaseMessaging.instance.getInitialMessage().then(handleMessage); // responsible for performing an action when an app is opened from terminated state
+//   FirebaseMessaging.instance.getInitialMessage().then(handleMessage); // responsible for performing an action when an app is opened from terminated state
 //   FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);  // responsible for performing an action when an app is opened from background state
-//  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+//   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 //   }
 
 //   Future<void> initialize() async {

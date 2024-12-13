@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
 import 'package:proj/ChatApp/helpers/ui_helper.dart';
+import 'package:proj/ChatApp/home/home_page.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/home_page.dart';
 import 'package:proj/ChatApp/pages/authenticate/sign_in.dart';
 
 class Loginpage extends StatefulWidget {

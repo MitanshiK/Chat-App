@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/media_model.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
 import 'package:proj/ChatApp/pages/for_media/open_media.dart';
-import 'package:proj/ChatApp/pages/profiles/new_profile.dart';
+import 'package:proj/ChatApp/pages/profiles/all_shared_media.dart';
 import 'package:video_player/video_player.dart';
 
 class UserProfile extends StatefulWidget {
@@ -101,7 +102,7 @@ class _UserProfileState extends State<UserProfile> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => NewProfile(
+                              builder: (context) => AllSharedMedia(
                                     mediaList: widget.mediaList,
                                     userModel: widget.userModel,
                                   )));
@@ -187,10 +188,24 @@ class _UserProfileState extends State<UserProfile> {
                                                                                 width: 100,
                                                                                 height: 100,
                                                                                 decoration: BoxDecoration(
-                                                                                  image: DecorationImage(image: NetworkImage(widget.mediaList[index]
+                                                                                  // image: DecorationImage(image: NetworkImage(widget.mediaList[index]
+                                                                                  //       .fileUrl
+                                                                                  //       .toString(),),fit: BoxFit.cover)
+                                                                                ),
+                                                                                child:   CachedNetworkImage(
+                                                                                   imageUrl:widget.mediaList[index]
                                                                                         .fileUrl
-                                                                                        .toString(),),fit: BoxFit.cover)
-                                                                                ),)
+                                                                                        .toString(),
+                                                                                   placeholder: (context,url) =>
+                                                                                          Container(
+                                                                      width: 50,
+                                                                      height: 50,
+                                                                      child: Center(child: CircularProgressIndicator())),
+                                                                                   errorWidget: (context,url,error) =>const Icon(Icons.error),
+                                                                                   fit: BoxFit.cover,
+                                                                                  memCacheWidth: 250,
+                                                                ),
+                                                                                )
                                                                               // ConstrainedBox(
                                                                               //     constraints: const BoxConstraints(
                                                                               //         maxHeight:
@@ -217,10 +232,12 @@ class _UserProfileState extends State<UserProfile> {
                                                                                           children: [
                                                                                             ConstrainedBox(
                                                                                               constraints: const BoxConstraints(maxHeight: 100, maxWidth: 100),
-                                                                                              child: AspectRatio(
-                                                                                                aspectRatio: videoController!.value.aspectRatio,
-                                                                                                child: VideoPlayer(videoController!),
-                                                                                              ),
+                                                                                              child:
+                                                                                              //  AspectRatio(
+                                                                                              //   aspectRatio: videoController!.value.aspectRatio,
+                                                                                              //   child:
+                                                                                                 VideoPlayer(videoController!),
+                                                                                              // ),
                                                                                             ),
                                                                                              const Positioned(
                                                                                                 bottom: 10,

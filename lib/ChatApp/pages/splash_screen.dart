@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:proj/ChatApp/home/home_page.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/home_page.dart';
 import 'package:proj/ChatApp/pages/authenticate/login.dart';
 
 class SplashScreen extends StatefulWidget {

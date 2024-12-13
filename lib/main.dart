@@ -520,6 +520,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -538,6 +539,7 @@ import 'package:proj/ChatApp/pages/splash_screen.dart';
 import 'package:proj/local_notifications/notif.dart';
 
 import 'package:uuid/uuid.dart';
+import 'package:workmanager/workmanager.dart';
 
 
 // final navigatorKey=GlobalKey<NavigatorState>();  // Navigator key to navigate
@@ -592,9 +594,236 @@ import 'package:uuid/uuid.dart';
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =FlutterLocalNotificationsPlugin(); //for local notification
 
 Uuid uuid =const Uuid();  // creates unique id 
+
+
+void myTask() {
+  // Define your background task for checking for new messages or notifications
+  print("Checking for new messages...");
+
+  // Fetch messages or trigger notifications here
+}
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) {
+    myTask();
+    return Future.value(true); // Return a value after task is complete
+  });
+}
+
+
 void  main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
+ /* */
+
+Future<void> backgroundMessageHandler(RemoteMessage message) async {
+  // Here, you can handle the notification received in the background.
+  // You can use local notifications to show the message as a notification
+  print("Background message: ${message.notification?.title}");
+    User? currentUser = FirebaseAuth.instance.currentUser; // getting current user
+
+    UserModel? userModel = await FirebaseHelper.getUserModelById(currentUser!.uid);
+   if(userModel!=null){
+
+      FirebaseFirestore.instance
+                    .collection("chatrooms")
+                    .where("participantsId.${userModel.uId}", isEqualTo: true)
+                    .snapshots().listen((event) { 
+                    
+
+                        for(var i in event.docs){
+
+             ChatRoomModel chatRoom = ChatRoomModel.fromMap(  // getting chatroom
+                          i.data());
+
+                     FirebaseFirestore.instance
+                    .collection("chatrooms")
+                    .doc(chatRoom.chatRoomId)
+                    .collection("messages") .orderBy("createdOn",
+                        descending:
+                            true).snapshots().listen((event) async{
+
+                 
+
+                      // MessageModel message=MessageModel.fromMap(  // getting chatroom
+                      //     event.docs.reversed.last .data() as Map<String, dynamic>); 
+                      /// for type of message
+                       
+                      var dt = event.docs.reversed.last .data(); // map of data at particular index
+                          // var a=dt[index];
+                          late final message;
+                         late final messageType;
+
+                          ///
+
+                          if (dt.containsValue("text") == true ) {
+                          
+                            // if message is text
+                            message = MessageModel.fromMap(
+                                event.docs.reversed.last.data());
+
+                    UserModel? sender1 = await FirebaseHelper.getUserModelById(message.senderId);
+
+                       // if current user is not the user who sent the message , 
+                     // the message is sent in the same minute as now time 
+                     // both user are in part of same chatroom then send the notification       
+                        if(userModel.uId != message.senderId && message.createdOn!.minute ==DateTime.now().minute){
+                              Notif.showBigTextNotification(title: sender1!.name!, body: message.text.toString(), fn: flutterLocalNotificationsPlugin);
+                          }
+                                
+                          } else if (dt.containsValue("image") == true ||
+                              dt.containsValue("video") == true ||
+                              dt.containsValue("audio") 
+                             ) {
+                            message = MediaModel.fromMap(
+                                event.docs.reversed.last.data());
+
+
+                             if(userModel.uId != message.senderId && message.createdOn!.minute ==DateTime.now().minute){
+                              UserModel? senderModal = await FirebaseHelper.getUserModelById(message.senderId);  //get data of sender
+                              
+                              if (dt.containsValue("image") == true) {
+                              messageType = "image";
+                          
+                                  Notif.showBigTextNotification(title: senderModal!.name!, body: "image Recieved", fn: flutterLocalNotificationsPlugin);
+                          
+                              debugPrint(" its an image $messageType");
+                            } else if (dt.containsValue("video") == true) {
+                              messageType = "video";
+                               Notif.showBigTextNotification(title: senderModal!.name!, body: "video Recieved", fn: flutterLocalNotificationsPlugin);
+                            } else if (dt.containsValue("audio")) {
+                              messageType = "audio";
+                               Notif.showBigTextNotification(title: senderModal!.name!, body: "audio message Recieved", fn: flutterLocalNotificationsPlugin);
+                            }
+                            }
+
+                          } else  if(dt.containsValue("contact")==true){  // for contact
+                             message = ContactModal.fromMap(
+                                event.docs.reversed.last.data());
+                            messageType = "contact";
+                          }
+//////////////////
+                  
+                  // // getting senders info         // not in work
+                  // UserModel senderData; 
+                  //  FirebaseFirestore.instance
+                  //   .collection("ChatAppUsers")
+                  //   .where("participantsId.${message.senderId}", isEqualTo: true).snapshots().first.then((value) {
+                  //        senderData=UserModel.fromMap(  
+                  //          value.docs.first.data() as Map<String, dynamic>);
+                  //            debugPrint("${senderData.name} is the sender");
+                  //   });
+                  
+                    });
+                     
+              } // 1st for loop
+                    });
+
+    /////////////////////////for groups notification
+                  
+
+              FirebaseFirestore.instance
+                    .collection("GroupChats")
+                    .where("participantsId.${userModel.uId}", isEqualTo: true)
+                    .snapshots().listen((event) { 
+                    
+
+                        for(var i in event.docs){
+
+             GroupRoomModel groupRoom = GroupRoomModel.fromMap(  // getting chatroom
+                          i.data());
+
+                     FirebaseFirestore.instance
+                    .collection("GroupChats")
+                    .doc(groupRoom.groupRoomId)
+                    .collection("messages") .orderBy("createdOn",
+                        descending:
+                            true).snapshots().listen((event) async{
+
+                     /// for type of message
+                      var dt = event.docs.reversed.last .data(); // map of data at particular index
+                          // var a=dt[index];
+                          late final message;
+                         late final messageType;
+
+                          ///
+                          if (dt.containsValue("text") == true ) {
+                          
+                            // if message is text
+                            message = MessageModel.fromMap(
+                                event.docs.reversed.last.data());
+
+                      // for the senderdata
+                       UserModel? sender = await FirebaseHelper.getUserModelById(message.senderId);
+                 
+                       // if current user is not the user who sent the message , 
+                      // the message is sent in the same minute as now time 
+                     // both user are in part of same chatroom then send the notification       
+                        if(userModel.uId != message.senderId && message.createdOn!.minute ==DateTime.now().minute){
+                              debugPrint("name of sender is ${sender!.name}");
+                              Notif.showBigTextNotification(title: groupRoom.groupName!, body: "${sender.name!}: ${message.text.toString()}", fn: flutterLocalNotificationsPlugin);
+                          }
+                                
+                          } else if (dt.containsValue("image") == true ||
+                              dt.containsValue("video") == true ||
+                              dt.containsValue("audio") 
+                             ) {
+                            message = MediaModel.fromMap(
+                                event.docs.reversed.last.data());
+
+
+                             if(userModel.uId != message.senderId && message.createdOn!.minute ==DateTime.now().minute){
+                              UserModel? senderModal = await FirebaseHelper.getUserModelById(message.senderId);  //get data of sender
+                             
+                              if (dt.containsValue("image") == true) {
+                              messageType = "image";
+                          
+                             Notif.showBigTextNotification(title: senderModal!.name!, body: "image Recieved", fn: flutterLocalNotificationsPlugin);
+                          
+                              debugPrint(" its an image $messageType");
+                            } else if (dt.containsValue("video") == true) {
+                              messageType = "video";
+                               Notif.showBigTextNotification(title: senderModal!.name!, body: "video Recieved", fn: flutterLocalNotificationsPlugin);
+                            } else if (dt.containsValue("audio")) {
+                              messageType = "audio";
+                               Notif.showBigTextNotification(title: senderModal!.name!, body: "audio message Recieved", fn: flutterLocalNotificationsPlugin);
+                            } 
+                            }
+
+                          } else  if(dt.containsValue("contact")==true){  // for contact
+                             message = ContactModal.fromMap(
+                                event.docs.reversed.last.data());
+                            messageType = "contact";
+                          }
+                  
+                    });
+                     
+              } // 1st for loop
+                    });
+
+
+
+   
+   }
+}
+FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
+
+
+
+  // Initialize WorkManager
+  // Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
+  // Schedule the periodic task
+  // Workmanager().registerPeriodicTask(
+  //   '1',
+  //   'simpleTask',
+  //   frequency: Duration(hours: 1), // Periodically check for new messages
+  //   initialDelay: Duration(seconds: 10),
+  // );
+
+
+/* */
 
   try{
  Notif.initialNotiSettigs(flutterLocalNotificationsPlugin ); 
@@ -797,6 +1026,7 @@ void  main() async {
       ),
     )
     );
+   
    }else{
      runApp( const ProviderScope(child: MyApp()));
    }

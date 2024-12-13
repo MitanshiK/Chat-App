@@ -236,6 +236,8 @@ String uId="";
         email: email,
         password: password,
       );
+    
+
       //  Navigator.push( context,
       //                         MaterialPageRoute(
       //                             builder: (context) => CompleteUserProfile(userModel: user, firebaseUserl: userCredential!.user!,)));
@@ -261,7 +263,7 @@ String uId="";
           email: email,
           profileUrl: "");
 
-     await FirebaseFirestore.instance  
+       await FirebaseFirestore.instance  
           .collection("ChatAppUsers")
           .doc(userCredential.user!.uid) // userId created by firebase auth as doc id 
           .set(userdata.toMap()); 
