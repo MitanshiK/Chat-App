@@ -559,6 +559,7 @@ class _ShareBottomModalState extends State<ShareBottomModal> {
                     top: Radius.circular(20))),
             child:  Column(
               children: <Widget>[
+             
                 // Row 1
                  Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -1359,3 +1360,5 @@ final  result = await FirebaseStorage.instance
 }
 }
 */
+
+

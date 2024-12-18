@@ -158,8 +158,8 @@ class _ScreentimeState extends State<Screentime> {
                               if (allStories[index].type == "image") {
                                 messageType = "image";
                               } else if (allStories[index].type == "video") {
-                                videoController = VideoPlayerController.networkUrl(
-                                    Uri.parse(allStories[index].fileUrl!));
+                                videoController = VideoPlayerController.network(
+                                    Uri.parse(allStories[index].fileUrl!).toString());
                                 _initializeVideoPlayerFuture =
                                     videoController!.initialize();
                                 messageType = "video";

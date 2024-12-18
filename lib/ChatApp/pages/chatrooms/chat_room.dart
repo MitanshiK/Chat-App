@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:cubit_form/cubit_form.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:file_picker/file_picker.dart';
@@ -13,9 +12,8 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:proj/ChatApp/models/Blocs/emoji_bloc.dart';
-
 import 'package:proj/ChatApp/models/Blocs/player_bloc.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:proj/ChatApp/models/chat_room_model.dart';
 import 'package:proj/ChatApp/models/contacts_model.dart';
 import 'package:proj/ChatApp/helpers/custom_page_route.dart';
@@ -51,14 +49,13 @@ class ChatRoomPage extends StatefulWidget {
   State<ChatRoomPage> createState() => _ChatRoomPageState();
 }
 
-class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMixin {
-  
+class _ChatRoomPageState extends State<ChatRoomPage>
+    with TickerProviderStateMixin {
   bool showPlayer = false;
   ap.AudioSource? audioSource;
   String? audioFilePath;
   bool emojiVisible = false;
   List<MediaModel> mediaList = []; // to send to userProfile
-
 
   // late final animationController =
   //     AnimationController(vsync: this, duration: const Duration(seconds: 2));
@@ -71,13 +68,12 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
   String? messageType;
   String? time;
 
-@override
+  @override
   void dispose() {
     // animationController.dispose();
     // videoController!.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +90,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
             text: msg,
             seen: false,
             createdOn: DateTime.now(),
-            type: "text"
-            );
+            type: "text");
 
         // creating a messages collection inside chatroom docs and saving messages in them
         FirebaseFirestore.instance
@@ -164,8 +159,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                       defaultBg = true;
                                     });
                                   },
-                                  title: const Text("Default")
-                                  )),
+                                  title: const Text("Default"))),
 
                           //pic bgImage
                           PopupMenuItem(
@@ -180,18 +174,18 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                   ])
         ],
         title: GestureDetector(
-          onTap: () async{
+          onTap: () async {
             // await getMediaList();
             Navigator.push(
                 context,
                 CustomPageRoute(
-                   child: UserProfile(
-                          firebaseUser: widget.firebaseUser,
-                          userModel: widget.targetUser,
-                          targetUser: widget.targetUser,
-                          chatRoomModel: widget.chatRoomModel,
-                           mediaList: mediaList,
-                        )));
+                    child: UserProfile(
+                  firebaseUser: widget.firebaseUser,
+                  userModel: widget.targetUser,
+                  targetUser: widget.targetUser,
+                  chatRoomModel: widget.chatRoomModel,
+                  mediaList: mediaList,
+                )));
             // Navigator.push(context, MaterialPageRoute(builder: (context)=>NewProfile(mediaList: mediaList, userModel: widget.userModel,)));
           },
           child: Row(
@@ -245,8 +239,8 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                     if (snapshot.hasData) {
                       QuerySnapshot dataSnapshot = snapshot.data
                           as QuerySnapshot; // converting into QuerySnapshot dataType
-///////////////              
-        getMediaList();
+///////////////
+                      getMediaList();
                       // List<bool> msgRowSelected = List.generate(
                       //     dataSnapshot.docs.length,
                       //     (index) => false); // if message  is selected or not
@@ -447,16 +441,26 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                                                             200,
                                                                         maxWidth:
                                                                             200),
-                                                                child: Image
-                                                                    .network(
-                                                                  currentMessage
-                                                                      .fileUrl
-                                                                      .toString(),
-                                                                  cacheWidth:
-                                                                      250,
-                                                                  fit: BoxFit
-                                                                      .scaleDown,
+                                                                child:
+                                                                    CachedNetworkImage(
+                                                                  imageUrl:currentMessage.fileUrl.toString(),
+                                                                  placeholder: (context,url) =>
+                                                                      const CircularProgressIndicator(),
+                                                                  errorWidget: (context,url,
+                                                                          error) =>const Icon(Icons.error),
+                                                                   fit: BoxFit.scaleDown,
+                                                                   memCacheWidth: 250,
                                                                 ),
+                                                                //  Image
+                                                                //     .network(
+                                                                  // currentMessage
+                                                                  //     .fileUrl
+                                                                  //     .toString(),
+                                                                //   cacheWidth:
+                                                                //       250,
+                                                                  // fit: BoxFit
+                                                                  //     .scaleDown,
+                                                                // ),
                                                               )
                                                             : (messageType ==
                                                                     "video")
@@ -474,10 +478,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                                                             constraints:
                                                                                 const BoxConstraints(maxHeight: 200, maxWidth: 200),
                                                                             child:
-                                                                                AspectRatio(
-                                                                              aspectRatio: videoController!.value.aspectRatio,
-                                                                              child: VideoPlayer(videoController!),
-                                                                            ),
+                                                                                //   AspectRatio(
+                                                                                // aspectRatio: videoController!.value.aspectRatio,
+                                                                                // child:
+                                                                                VideoPlayer(videoController!),
+                                                                            // ),
                                                                           ),
                                                                           const Positioned(
                                                                               bottom: 10,
@@ -637,8 +642,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                             padding: const EdgeInsets.fromLTRB(10, 5, 5, 0),
                             margin: const EdgeInsets.fromLTRB(10, 10, 0, 10),
                             decoration: BoxDecoration(
-                                color:
-                                    const Color.fromARGB(255, 230, 229, 229),
+                                color: const Color.fromARGB(255, 230, 229, 229),
                                 borderRadius: BorderRadius.circular(20)),
                             child: context.watch<PlayerVisBloc>().state
                                 ? // Audio Player
@@ -667,9 +671,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                                 .read<EmojiVisBloc>()
                                                 .add(EmojiVisiblety());
                                           },
-                                          icon: const Icon(
-                                              Icons.emoji_emotions)),
-                  
+                                          icon:
+                                              const Icon(Icons.emoji_emotions)),
+
                                       // message Field
                                       Expanded(
                                         child: TextFormField(
@@ -699,7 +703,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                         ),
                                       ),
                                       // for media
-                  
+
                                       // modal sheet for media
                                       IconButton(
                                           onPressed: () {
@@ -714,13 +718,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                                   return ShareBottomModal(
                                                     chatRoomModel:
                                                         widget.chatRoomModel,
-                                                    userModel:
-                                                        widget.userModel,
+                                                    userModel: widget.userModel,
                                                   );
                                                 });
                                           },
-                                          icon:
-                                              const Icon(Icons.attach_file)),
+                                          icon: const Icon(Icons.attach_file)),
                                       // camera
                                       Visibility(
                                         visible:
@@ -760,11 +762,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                               .child("sharedMedia")
                                               .child(uuid.v1())
                                               .putFile(File(audioFilePath!));
-                  
+
                                           // getting download url
-                                          String? mediaUrl = await result.ref
-                                              .getDownloadURL();
-                  
+                                          String? mediaUrl =
+                                              await result.ref.getDownloadURL();
+
                                           final newMessage = MediaModel(
                                               // creating message
                                               mediaId: uuid.v1(),
@@ -772,7 +774,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                               fileUrl: mediaUrl,
                                               createdOn: DateTime.now(),
                                               type: "audio");
-                  
+
                                           // creating a messages collection inside chatroom docs and saving messages in them
                                           FirebaseFirestore.instance
                                               .collection("chatrooms")
@@ -784,7 +786,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                               .then((value) {
                                             debugPrint("message sent");
                                           });
-                  
+
                                           // setting last message in chatroom and saving in firestore
                                           widget.chatRoomModel.lastMessage =
                                               newMessage.type;
@@ -792,16 +794,16 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                               .collection("chatrooms")
                                               .doc(widget
                                                   .chatRoomModel.chatRoomId)
-                                              .set(widget.chatRoomModel
-                                                  .toMap());
-                  
+                                              .set(
+                                                  widget.chatRoomModel.toMap());
+
                                           /////////////////////////
                                           context.read<PlayerVisBloc>().add(
                                               PlayerVisibility()); // make audio player visible
                                           context
                                               .read<MessageBloc>()
                                               .add(NoText());
-                  
+
                                           debugPrint(
                                               "${File(audioFilePath!)} is path $audioFilePath ");
                                         } catch (e) {
@@ -850,7 +852,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                           config: const Config(
                             height: 256,
                             checkPlatformCompatibility: true,
-                            swapCategoryAndBottomBar: false,
+                            // swapCategoryAndBottomBar: false,
                             skinToneConfig: SkinToneConfig(),
                             categoryViewConfig: CategoryViewConfig(),
                             bottomActionBarConfig: BottomActionBarConfig(),
@@ -909,7 +911,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                          IconButton(
+                      IconButton(
                           iconSize: 40,
                           onPressed: () async {
                             await fromCamera("picture");
@@ -924,8 +926,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                                         type: "image")));
                           },
                           icon: const Icon(Icons.image)),
-                          const Text("Picture" ,style:  TextStyle(fontFamily: "EuclidCircularB"),)
-                        ],
+                      const Text(
+                        "Picture",
+                        style: TextStyle(fontFamily: "EuclidCircularB"),
+                      )
+                    ],
                   ),
 
                   // for video
@@ -936,7 +941,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                         iconSize: 40,
                         onPressed: () async {
                           await fromCamera("video");
-                            Navigator.pop(context);
+                          Navigator.pop(context);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -948,8 +953,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
                         },
                         icon: const Icon(Icons.video_camera_back),
                       ),
-                          const Text("Video" ,style: TextStyle(fontFamily: "EuclidCircularB"),)
-
+                      const Text(
+                        "Video",
+                        style: TextStyle(fontFamily: "EuclidCircularB"),
+                      )
                     ],
                   )
                 ],
@@ -957,7 +964,7 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
         });
   }
 
- /* Future chooseDialog() async {
+  /* Future chooseDialog() async {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -1025,32 +1032,30 @@ class _ChatRoomPageState extends State<ChatRoomPage> with TickerProviderStateMix
       return false;
     }
   }
-///get list of media and send it to userprofile when profiled opened
 
- Future<void>  getMediaList() async{
-  mediaList.clear();
-         FirebaseFirestore.instance
-          .collection("chatrooms")
-          .doc(widget.chatRoomModel.chatRoomId)
-          .collection("messages")
-          .orderBy("createdOn", descending: false)
-          .snapshots()
-          .listen((value) {
-        for (var i in value.docs) {
-          var dt = i.data() as Map<String, dynamic>;
+  ///get list of media and send it to userprofile when profiled opened
 
-          if (dt.containsValue("image") == true || dt.containsValue("video") == true) {
-               MediaModel mediaModel = MediaModel.fromMap(  // getting media
-                        i.data());
-                        debugPrint("media data is ${mediaModel.type}");
-                mediaList.add(mediaModel);
-           }
-       
+  Future<void> getMediaList() async {
+    mediaList.clear();
+    FirebaseFirestore.instance
+        .collection("chatrooms")
+        .doc(widget.chatRoomModel.chatRoomId)
+        .collection("messages")
+        .orderBy("createdOn", descending: false)
+        .snapshots()
+        .listen((value) {
+      for (var i in value.docs) {
+        var dt = i.data() as Map<String, dynamic>;
+
+        if (dt.containsValue("image") == true ||
+            dt.containsValue("video") == true) {
+          MediaModel mediaModel = MediaModel.fromMap(// getting media
+              i.data());
+          debugPrint("media data is ${mediaModel.type}");
+          mediaList.add(mediaModel);
         }
-         debugPrint("media list in intstate $mediaList");
-      });
+      }
+      debugPrint("media list in intstate $mediaList");
+    });
   }
-
-
-
 }

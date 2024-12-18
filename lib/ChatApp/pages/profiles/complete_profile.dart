@@ -8,8 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:proj/ChatApp/helpers/ui_helper.dart';
+import 'package:proj/ChatApp/home/home_page.dart';
 import 'package:proj/ChatApp/models/user_model.dart';
-import 'package:proj/ChatApp/pages/home_page.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 

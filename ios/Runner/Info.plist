@@ -59,5 +59,10 @@
     <string>dev.flutter.background.refresh</string>
 </array>
 
+<!-- for workmanager -->
+<key>UIBackgroundModes</key>
+<array>
+    <string>fetch</string>
+</array>
 </dict>
 </plist>

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cubit_form/cubit_form.dart';
 import 'package:dio/dio.dart';
 import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
@@ -122,7 +123,19 @@ class _OpenMediaState extends State<OpenMedia> {
               maxWidth: MediaQuery.sizeOf(context).width-50),
               child:
               (widget.type=="image")
-              ? Image.network(widget.mediamodel.fileUrl! ,cacheWidth: 700)
+              ?  CachedNetworkImage(
+                imageUrl:widget.mediamodel.fileUrl!,
+                                                                  placeholder: (context,url) =>
+                                                                    Container(
+                                                                      width: 50,
+                                                                      height: 50,
+                                                                      child: CircularProgressIndicator()),
+                                                                  errorWidget: (context,url,
+                                                                          error) =>const Icon(Icons.error),
+                                                                  //  fit: BoxFit.scaleDown,
+                                                                   memCacheWidth: 700,
+                                                                )
+              // Image.network(widget.mediamodel.fileUrl! ,cacheWidth: 700)
               : (widget.type=="video")
               ? FutureBuilder(
                         future: _initializeVideoPlayerFuture,
