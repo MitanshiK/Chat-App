@@ -811,10 +811,10 @@ FirebaseMessaging.onBackgroundMessage(backgroundMessageHandler);
 
 
 
-  // Initialize WorkManager
+  //// Initialize WorkManager
   // Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
 
-  // Schedule the periodic task
+  //// Schedule the periodic task
   // Workmanager().registerPeriodicTask(
   //   '1',
   //   'simpleTask',
